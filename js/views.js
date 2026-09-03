@@ -758,6 +758,7 @@
   }
 
   function renderHeroStats() {
+    if (!el("hero-stats")) return; // hero stat strip was removed from the page
     var gas = u.numKeys(D.annual.gasoline);
     var years = Object.keys(gas).map(Number).sort(function (a, b) { return a - b; });
     var y0 = years[0], yLast = years[years.length - 1];
