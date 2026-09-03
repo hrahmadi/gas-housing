@@ -374,49 +374,41 @@
   }
 
   function drawRentWageIndex() {
-    // Data: official-style Tehran rent index & statutory min-wage index (base 1388=100),
-    // 1388–1403, from data/rent_wage_index.csv (S12). Not derived from the district map rents.
-    var rows = (D.rent_wage_index || []).slice().sort(function (a, b) { return a.y - b.y; });
-    if (!rows.length) return;
-    var years = rows.map(function (r) { return r.y; });
+    // District-derived rent index (citywide avg of 22 district rents, S1/S4) vs
+    // statutory minimum-wage index (S3), base 1388 = 100, 1388–1400. Same rent
+    // series as the map in Figure 2, so the two stay comparable through 1400.
+    var rent = citywideRent();
+    var mw = u.numKeys(D.annual.min_wage);
+    var baseR = rent[1388], baseW = mw[1388] / 10;
+    var years = Object.keys(rent).map(Number).sort(function (a, b) { return a - b; });
     var idxR = {}, idxW = {};
     var ymax = 100;
-    rows.forEach(function (r) {
-      idxR[r.y] = r.rent;
-      idxW[r.y] = r.wage;
-      ymax = Math.max(ymax, r.rent, r.wage);
+    years.forEach(function (y) {
+      idxR[y] = rent[y] / baseR * 100;
+      idxW[y] = (mw[y] / 10) / baseW * 100;
+      ymax = Math.max(ymax, idxR[y], idxW[y]);
     });
-    ymax = Math.ceil((ymax + 50) / 1000) * 1000; // 3000
+    ymax = Math.ceil((ymax + 20) / 200) * 200;
 
-    var y0 = years[0], y1 = years[years.length - 1];
-    var W = 760, H = 340, pl = 54, pr = 34, pt = 34, pb = 46;
+    var W = 720, H = 300, pl = 46, pr = 26, pt = 26, pb = 42;
     var iw = W - pl - pr, ih = H - pt - pb;
-    var X = function (y) { return pl + (y - y0) / (y1 - y0) * iw; };
+    var X = function (y) { return pl + (y - 1388) / (1400 - 1388) * iw; };
     var Y = function (v) { return pt + (1 - v / ymax) * ih; };
 
     var host = el("rent-wage-chart");
-    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "g-chart", role: "img", "aria-label": "رشد شاخص اجاره تهران و حداقل دستمزد، ۱۳۸۸ تا ۱۴۰۳" });
+    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "g-chart", role: "img", "aria-label": "رشد شاخص اجاره تهران و حداقل دستمزد، ۱۳۸۸ تا ۱۴۰۰" });
     host.innerHTML = "";
     host.appendChild(svg);
 
-    [1000, 2000, 3000].forEach(function (v) {
+    [200, 400, 600, 800, 1000].forEach(function (v) {
       if (v > ymax) return;
       var y = Y(v);
       svg.appendChild(u.svgEl("line", { x1: pl, x2: W - pr, y1: y, y2: y, "class": "grid-line" }));
-      var t = u.svgEl("text", { x: pl - 10, y: y + 4, "class": "axis-txt", "text-anchor": "end" });
+      var t = u.svgEl("text", { x: pl - 8, y: y + 4, "class": "axis-txt", "text-anchor": "end" });
       t.textContent = u.toFaDigits(v);
       svg.appendChild(t);
     });
-
-    // visible 100 baseline
-    var yb = Y(100);
-    svg.appendChild(u.svgEl("line", { x1: pl, x2: W - pr, y1: yb, y2: yb, stroke: "#6c7788", "stroke-dasharray": "3 5", "stroke-width": 1 }));
-    var tb = u.svgEl("text", { x: pl - 10, y: yb + 4, "class": "axis-txt", "text-anchor": "end", style: "fill:#6c7788" });
-    tb.textContent = u.toFaDigits(100) + " پایه";
-    svg.appendChild(tb);
-
-    [1388, 1391, 1394, 1397, 1400, 1403].forEach(function (y) {
-      if (idxR[y] == null) return;
+    [1388, 1392, 1396, 1400].forEach(function (y) {
       var t = u.svgEl("text", { x: X(y), y: H - 10, "class": "axis-txt", "text-anchor": "middle" });
       t.textContent = u.toFaDigits(y);
       svg.appendChild(t);
@@ -430,27 +422,20 @@
     svg.appendChild(u.svgEl("path", { d: linePath(idxR), fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round" }));
     svg.appendChild(u.svgEl("path", { d: linePath(idxW), fill: "none", stroke: "#7fb7ff", "stroke-width": 2.4, "stroke-linejoin": "round" }));
 
-    // subtle dots with hover values (hover-only is a bonus; legend carries the reading)
-    function dots(map, colour, label) {
-      years.forEach(function (y) {
-        var c = u.svgEl("circle", { cx: X(y), cy: Y(map[y]), r: 2.6, fill: colour });
-        var t = u.svgEl("title");
-        t.textContent = "سال " + u.toFaDigits(y) + " — " + label + " " + u.toFaDigits(Math.round(map[y]));
-        c.appendChild(t);
-        svg.appendChild(c);
-      });
-    }
-    dots(idxR, "#f2b632", "اجاره");
-    dots(idxW, "#7fb7ff", "دستمزد");
-
-    // end labels with values (inline style keeps colour over .axis-txt)
+    // end labels (anchor right; inline style keeps colour over the .axis-txt class)
     function endLbl(map, txt, fill, dy) {
-      var t = u.svgEl("text", { x: X(y1) - 6, y: Y(map[y1]) + (dy || -8), "text-anchor": "end", "class": "axis-txt", "font-size": "12", "font-weight": "800", style: "fill:" + fill });
+      var t = u.svgEl("text", { x: X(1400) - 8, y: Y(map[1400]) + (dy || -8), "text-anchor": "end", "class": "axis-txt", "font-size": "12", "font-weight": "800", style: "fill:" + fill });
       t.textContent = txt;
       svg.appendChild(t);
     }
-    endLbl(idxR, "اجاره تهران " + u.toFaDigits(Math.round(idxR[y1])), "#f2b632", -16);
-    endLbl(idxW, "حداقل دستمزد " + u.toFaDigits(Math.round(idxW[y1])), "#7fb7ff", 18);
+    endLbl(idxR, "اجاره تهران", "#f2b632", -10);
+    endLbl(idxW, "حداقل دستمزد", "#7fb7ff", 18);
+
+    // Extension plan: to go beyond Summer 1400, add the Central Bank series
+    // «شاخص اجاره مسکن در تهران» (monthly 1396/01–1403/05; CBI) into an
+    // intermediate annual table, then append here with a source-transition marker
+    // near 1396 and an annual-average rule (1403 covers only to Mordad). Do NOT
+    // splice incompatible series silently; do NOT hard-code endpoints in JS.
   }
 
   /* ============================================================

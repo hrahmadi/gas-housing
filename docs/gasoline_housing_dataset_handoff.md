@@ -210,6 +210,28 @@ Potential derived measures:
 
 **Confidence:** A/B
 
+### Derived: Tehran rent vs minimum-wage index — Figure 2B (base 1388 = 100)
+
+Computed by the article from the district-level rent dataset (§5, mean of the 22 districts, up to Summer 1400) and the statutory minimum wage (§8). Not a separate observed series; generated in `js/views.js` from `data/tehran_rent_district.csv` + `data/annual.csv`. Runs to **1400** (district data ends there).
+
+| Year | Rent index | Min-wage index |
+|---|---:|---:|
+| 1388 | 100.0 | 100.0 |
+| 1389 | 113.6 | 115.0 |
+| 1390 | 139.3 | 125.3 |
+| 1391 | 189.6 | 147.9 |
+| 1392 | 226.1 | 184.9 |
+| 1393 | 247.4 | 231.1 |
+| 1394 | 273.8 | 270.3 |
+| 1395 | 300.2 | 308.2 |
+| 1396 | 346.5 | 352.9 |
+| 1397 | 438.6 | 421.7 |
+| 1398 | 596.0 | 575.6 |
+| 1399 | 837.3 | 696.5 |
+| 1400 | 1146.1 | 1007.7 |
+
+Caveat: this is a citywide **average** of district rents (for the map's spatial reading use the per-district series, not this index). To extend beyond Summer 1400, splice the Central Bank monthly Tehran rent index (1396/01–1403/05) via an intermediate annual table with a source-transition marker; do not hard-code endpoints.
+
 ---
 
 # 9. Iran gasoline consumption
