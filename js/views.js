@@ -509,16 +509,33 @@
     updateMapNote();
   }
 
+  function affordableRegions() {
+    var ids = [];
+    Object.keys(D.district_names).forEach(function (r) {
+      var rt = ratioFor(r);
+      if (rt != null && rt <= 1) ids.push(+r);
+    });
+    return ids;
+  }
+
   function updateMapNote() {
-    var n = mapSummary();
+    var ids = affordableRegions();
+    var n = ids.length;
     var mwT = u.faCompact(D.annual.min_wage[String(MAP.year)] / 10 * MAP.mult, "تومان");
     var extra = "";
     if (MAP.mult === 1 && n === 0) {
       extra = " با حداقل دستمزد، طبق همین فرض‌های مدل (متراژ و سقف سهم اجاره)، هیچ منطقه‌ای از آستانه نمی‌گذرد. این فقط نتیجه این مدل است، نه پیش‌بینی محل سکونت خانوارها.";
+    } else if (n > 0 && n < 7) {
+      // conservative geography clause only for small affordable sets
+      var se = [15, 16, 17, 18, 19, 20];
+      var allSE = ids.every(function (id) { return se.indexOf(id) !== -1; });
+      if (allSE) {
+        extra = " در این سناریو، مناطق قابل استطاعت عمدتا در بخش‌های کم‌هزینه‌تر جنوب و جنوب شرقی تهران قرار دارند — توان پرداخت، جغرافیا دارد.";
+      }
     }
-    var txt = "فرض: درآمد خانوار " + u.toFaDigits(MAP.mult) + "× حداقل دستمزد سال " + u.toFaDigits(MAP.year) +
-      " (حدود " + mwT + ")؛ آپارتمان " + u.toFaDigits(MAP.size) + " متری؛ سهم اجاره " + u.toFaDigits(MAP.share) + "٪ درآمد. " +
-      n + " منطقه از ۲۲ منطقه داخل توان‌اند." + extra;
+    var txt = "سناریوی خانوار فرضی: درآمد " + u.toFaDigits(MAP.mult) + " برابر حداقل دستمزد قانونی سال " + u.toFaDigits(MAP.year) +
+      " (حدود " + mwT + ")؛ خانه " + u.toFaDigits(MAP.size) + " متری؛ سقف سهم اجاره " + u.toFaDigits(MAP.share) + "٪ از درآمد. " +
+      u.toFaDigits(n) + " منطقه از " + u.toFaDigits(22) + " منطقه داخل توان اجاره‌اند." + extra;
     el("map-note").textContent = txt;
   }
 
@@ -606,12 +623,13 @@
       '<div class="calc-card"><div class="l">مسافت ماهانه (۲۲ روز کاری)</div><div class="v">' + u.toFaDigits(o.kmM) + ' <small>km</small></div></div>' +
       '<div class="calc-card hot"><div class="l">بنزین رفت‌وآمدِ کار در ماه</div><div class="v">' + u.toFaDigits(Math.round(o.L)) + ' <small>لیتر</small></div></div>' +
       '<div class="calc-card"><div class="l">هزینه سوخت در ماه</div><div class="v">' + u.faCompact(o.cost, "تومان") + "</div></div>" +
-      '<div class="calc-card hot"><div class="l">سهم سوخت از حقوق</div><div class="v">' + u.faPct(o.share, 1) + "</div></div>";
+      '<div class="calc-card hot"><div class="l">سهم سوخت از درآمد</div><div class="v">' + u.faPct(o.share, 1) + "</div></div>";
 
     el("calc-burden-fill").style.width = Math.min(o.share, 100).toFixed(1) + "%";
     el("calc-note").textContent =
-      "سناریوی مصرف خودرو: ۷ = کم‌مصرف · ۹ = فرض میانی · ۱۲ = فرسوده/پرمصرف. فرض‌ها: ۲۲ روز کاری و مسافت انتخابی. با ۷ تا ۱۲ لیتر، ماهانه بین " +
-      u.toFaDigits(Math.round(Llow)) + " تا " + u.toFaDigits(Math.round(Lhigh)) + " لیتر. حقوق پایه (۶ میلیون تومان) نزدیک حداقل دستمزد ۱۴۰۲ است. — محاسبه بر اساس داده و فرض‌های اعلام‌شده";
+      "سناریوی امروزی (خانوار فرضی): درآمد " + u.toFaDigits(CALC.wage) + " میلیون تومان/ماه؛ " + u.toFaDigits(CALC.eff) +
+      " لیتر/۱۰۰km؛ ۲۲ روز کاری. با ۷ تا ۱۲ لیتر، ماهانه بین " + u.toFaDigits(Math.round(Llow)) + " تا " +
+      u.toFaDigits(Math.round(Lhigh)) + " لیتر. رابطه این درآمد نمونه با حداقل دستمزد در روش‌شناسی پایان گزارش. — محاسبه بر اساس داده و فرض‌های اعلام‌شده";
   }
 
   /* ============================================================

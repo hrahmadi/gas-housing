@@ -34,7 +34,8 @@ docs/                       دست‌نوشته‌های پژوهشی/بازبی
 ```
 
 **نکته:** هر تغییری در داده باید در فایل‌های `data/*.csv` و `data/assumptions.json` انجام شود و سپس
-`python3 scripts/build_data.py /tmp/regions8800.geojson /tmp/infl.json` اجرا شود تا `data.js` بازتولید شود.
+`python3 scripts/build_data.py` اجرا شود تا `data.js` بازتولید شود.
+ورودی خام (هندسه مناطق + شاخص دستمزد) در `data/raw/` قرار دارد؛ منبع و یادداشت در `data/raw/README.md`.
 
 ## انتشار روی GitHub Pages
 

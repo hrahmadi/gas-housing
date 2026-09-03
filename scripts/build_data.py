@@ -5,7 +5,8 @@ Build script for the Gas–Housing interactive article.
 
 Reads:
   - data/annual.csv, data/periphery.csv, data/sources.csv, data/assumptions.json
-  - <SOURCE_GEOJSON>  (Ali Tayebi Tehran 22-district rent GeoJSON, downloaded externally)
+  - data/raw/regions8800.geojson + data/raw/infl.json   (Ali Tayebi Tehran 22-district rent project; vendored input)
+  (overridable via argv: python3 scripts/build_data.py <GEOJSON> <INFL>)
 
 Writes:
   - data/tehran_rent_district.csv   (long format, quarterly, per district)
@@ -17,9 +18,10 @@ Usage:
 """
 import csv, json, math, sys, os
 
-GEO = sys.argv[1] if len(sys.argv) > 1 else "/tmp/regions8800.geojson"
-INFL = sys.argv[2] if len(sys.argv) > 2 else "/tmp/infl.json"
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GEO = sys.argv[1] if len(sys.argv) > 1 else os.path.join(_BASE, "data", "raw", "regions8800.geojson")
+INFL = sys.argv[2] if len(sys.argv) > 2 else os.path.join(_BASE, "data", "raw", "infl.json")
+ROOT = _BASE
 
 LAT0 = 35.72          # projection reference latitude (deg)
 LON0 = 51.32          # projection reference longitude (deg)

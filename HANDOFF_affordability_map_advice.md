@@ -8,9 +8,9 @@
 
 ## 1. What the article claims (narrative-first)
 
-Iran’s gasoline consumption roughly doubled in two decades (56 → 120 million L/day, 1382–1402). The article’s thesis: part of that fuel is not “joyriding”; it is the **energy cost of spatial inequality** — housing unaffordability pushes workers toward cheaper housing on the periphery of Tehran, so the distance between affordable housing and employment grows, and the daily commute becomes a fixed energy cost.
+Iran’s gasoline consumption roughly doubled in two decades (56 → 120 million L/day, 1382–1402). The article’s thesis: part of that fuel consumption **may reflect** the energy cost of spatial inequality — as housing becomes less affordable near employment centres, some workers may live farther away in cheaper peripheral areas, increasing the distance they need to travel for work, and that distance carries an energy cost (gasoline being its most visible form).
 
-The article must **not** claim a national causal coefficient, and must keep OBSERVED vs CALCULATED vs ESTIMATED clearly separated. Scene 2 is supposed to make the housing-side mechanism concrete.
+The article must **not** claim a national causal coefficient or a quantified share of gasoline consumption, and must keep OBSERVED vs CALCULATED vs ESTIMATED clearly separated. Scene 2 is supposed to make the housing-side mechanism concrete.
 
 ## 2. The centerpiece interaction (Scene 2) and the problem
 
