@@ -189,7 +189,8 @@ scale = TARGET_W / (maxx - minx)
 H = (maxy - miny) * scale
 
 def norm(p):
-    return (round((p[0] - minx) * scale, 2), round(H - (p[1] - miny) * scale, 2))
+    # x grows east, y grows south (north at top): y=(p[1]-miny)*scale
+    return (round((p[0] - minx) * scale, 2), round((p[1] - miny) * scale, 2))
 
 geo_out = []
 for d in districts:
