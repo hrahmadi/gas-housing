@@ -20,6 +20,8 @@ year,variable,value,unit,source_id
 1400,gasoline,88,million_liter_per_day,S5
 1401,gasoline,105,million_liter_per_day,S5
 1402,gasoline,120,million_liter_per_day,S5
+1403,gasoline,124,million_liter_per_day,S11
+1404,gasoline,129,million_liter_per_day,S11
 1382,house_price,0.599,million_toman_per_m2,S2
 1383,house_price,0.584,million_toman_per_m2,S2
 1384,house_price,0.649,million_toman_per_m2,S2

@@ -43,7 +43,7 @@
       " L" + X(y0).toFixed(1) + " " + (pt + ih) + " Z";
 
     if (!GAS_SVG) {
-      GAS_SVG = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "g-chart", role: "img", "aria-label": "نمودار مصرف روزانه بنزین ایران از ۱۳۸۲ تا ۱۴۰۲" });
+      GAS_SVG = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "g-chart", role: "img", "aria-label": "نمودار مصرف روزانه بنزین ایران از ۱۳۸۲ تا ۱۴۰۴" });
       el("gas-chart").appendChild(GAS_SVG);
     }
     GAS_SVG.innerHTML = "";
@@ -61,7 +61,7 @@
       t.textContent = u.toFaDigits(v);
       GAS_SVG.appendChild(t);
     });
-    [1382, 1386, 1390, 1394, 1398, 1402].forEach(function (y) {
+    [1382, 1386, 1390, 1394, 1398, 1402, 1404].forEach(function (y) {
       var t = u.svgEl("text", { x: X(y), y: H - 12, "class": "axis-txt", "text-anchor": "middle" });
       t.textContent = u.toFaDigits(y);
       GAS_SVG.appendChild(t);
@@ -89,8 +89,8 @@
       t.textContent = label;
       GAS_SVG.appendChild(t);
     }
-    endLabel(y0, u.toFaDigits(data[y0]) + " · ۱۳۸۲");
-    endLabel(y1, u.toFaDigits(data[y1]) + " · ۱۴۰۲");
+    endLabel(y0, u.toFaDigits(data[y0]) + " · " + u.toFaDigits(y0));
+    endLabel(y1, u.toFaDigits(data[y1]) + " · " + u.toFaDigits(y1));
     // covid label
     var tl = u.svgEl("text", { x: X(cy) + 8, y: Y(data[cy]) - 10, "class": "axis-txt", "font-size": "11", fill: "#7fb7ff" });
     tl.textContent = "۱۳۹۹ · کرونا";
@@ -759,11 +759,13 @@
 
   function renderHeroStats() {
     var gas = u.numKeys(D.annual.gasoline);
-    var g0 = gas[1382], g1 = gas[1402];
+    var years = Object.keys(gas).map(Number).sort(function (a, b) { return a - b; });
+    var y0 = years[0], yLast = years[years.length - 1];
+    var g0 = gas[y0], g1 = gas[yLast];
     var strip = el("hero-stats");
     var items = [
-      { n: u.toFaDigits(g1), l: "میلیون لیتر بنزین در روز (۱۴۰۲) — وزارت نفت/شانا" },
-      { n: u.toFaDigits(Math.round(g1 / g0 * 10) / 10) + "×", l: "مصرف روزانه نسبت به سال ۱۳۸۲" },
+      { n: u.toFaDigits(g1), l: "میلیون لیتر بنزین در روز (" + u.toFaDigits(yLast) + ") — وزارت نفت/شانا" },
+      { n: u.toFaDigits(Math.round(g1 / g0 * 10) / 10) + "×", l: "مصرف روزانه نسبت به سال " + u.toFaDigits(y0) },
       { n: "۳۰–۴۰ هزار", l: "مسافر روزانه بین پرند و تهران (برآورد گزارش‌ها)" },
       { n: "~۱۰۰ km", l: "رفت‌وبرگشت روزانه در سناریوی پرند" }
     ];
