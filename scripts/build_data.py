@@ -109,6 +109,7 @@ def read_csv(name):
 annual_rows = read_csv("annual.csv")
 periphery_rows = read_csv("periphery.csv")
 sources_rows = read_csv("sources.csv")
+rent_wage_rows = read_csv("rent_wage_index.csv")
 
 with open(os.path.join(ROOT, "data", "assumptions.json"), encoding="utf-8") as f:
     assumptions = json.load(f)
@@ -260,6 +261,13 @@ district_names = {
     21: "منطقه ۲۱", 22: "منطقه ۲۲",
 }
 
+# Official-style Tehran rent & minimum-wage indices, base 1388 = 100 (user-supplied series)
+rent_wage_index = [
+    {"y": int(r["year"]), "rent": float(r["rent_index_1388"]), "wage": float(r["wage_index_1388"]),
+     "coverage": (r.get("coverage") or "").strip()}
+    for r in sorted(rent_wage_rows, key=lambda r: int(r["year"]))
+]
+
 data = {
     "meta": {
         "title": "بنزین، مسکن و نابرابری فضایی در ایران",
@@ -267,6 +275,7 @@ data = {
         "version": "0.1",
     },
     "annual": annual,
+    "rent_wage_index": rent_wage_index,
     "district_annual_rent": {str(k): v for k, v in district_annual.items()},
     "district_names": {str(k): v for k, v in district_names.items()},
     "periphery": periphery,
@@ -278,6 +287,7 @@ data = {
         "house_price": "OBSERVED",
         "min_wage": "OBSERVED",
         "tehran_rent": "OBSERVED",
+        "rent_wage_index": "OBSERVED",
         "district_annual_rent": "OBSERVED",
         "periphery": "OBSERVED",
     },
