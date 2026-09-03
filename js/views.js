@@ -668,7 +668,8 @@
       var rect = u.svgEl("rect", { x: x, y: y, width: barW, height: h, rx: 4, fill: sel ? "#f2b632" : "#3b4353", opacity: sel ? 1 : 0.65, style: "cursor:pointer", "data-i": i });
       svg.appendChild(rect);
       var tv = u.svgEl("text", { x: x + barW / 2, y: Math.max(y - 6, pt + 10), "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "700" });
-      tv.textContent = u.toFaDigits(share < 10 ? Math.round(share * 10) / 10 : Math.round(share)) + "٪";
+      var pctStr = share > 99 ? u.toFaDigits(Math.round(share)) + "٪" : u.faPct(share, 1);
+      tv.textContent = pctStr;
       svg.appendChild(tv);
       var tl = u.svgEl("text", { x: x + barW / 2, y: H - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "11" });
       tl.textContent = i === 0 ? "پایه" : "×" + u.toFaDigits(p / SHOCK.prices[0]);
