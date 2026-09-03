@@ -126,16 +126,18 @@
       </div>
       <div class="map-story" id="map-story"></div>
       <div class="map-delta" id="map-delta"></div>
-      <div class="map-footnote">سبز = داخل توان اجاره · خاکستری = خارج از توان · راه‌راه = فاقد داده. این محاسبه تقریبی است و محل سکونت واقعی خانوارها را پیش‌بینی نمی‌کند؛ داده اجاره مناطق تا تابستان ۱۴۰۰ در دسترس است.</div>
+      <div class="map-footnote">سبز = داخل توان · خاکستری = خارج از توان · راه‌راه = فاقد داده. محاسبه تقریبی (اجاره منطقه‌ای، حداقل دستمزد، سهم فرضی از درآمد)؛ داده مناطق تا تابستان ۱۴۰۰؛ محل سکونت واقعی خانوارها را پیش‌بینی نمی‌کند.</div>
     </div>
     <div class="panel" style="margin-top:1rem">
-      <div class="panel-title"><span class="dot"></span>شاخص اجاره تهران در برابر شاخص حداقل دستمزد (پایه ۱۳۸۸ = ۱۰۰)</div>
+      <div class="panel-title"><span class="dot"></span>رشد اجاره در برابر حداقل دستمزد</div>
+      <div class="panel-sub">شاخص تجمعی، پایه ۱۳۸۸ = ۱۰۰</div>
+      <div class="fig-note context">رشد اجاره و حداقل دستمزد همیشه با یک سرعت حرکت نکرده‌اند؛ برای همین تعداد مناطق قابل استطاعت در نقشه، سال‌به‌سال یکنواخت کم نمی‌شود.</div>
       <div id="rent-wage-chart"></div>
-      <div class="fig-note">
-        اگر فقط نسبت اجاره به حداقل دستمزد را نگاه کنیم، بعضی سال‌ها حتی بهبود موقت قدرت پرداخت دیده می‌شود؛
-        این نتیجه تغییرات سالانه دستمزد و تفاوت میان حداقل دستمزد و درآمد واقعی خانوارهاست.
-        برای فهم مسئله فضایی، فقط یک شاخص سالانه کافی نیست.
+      <div class="legend" id="rw-legend">
+        <span><span class="sw" style="background:#f2b632"></span>اجاره تهران</span>
+        <span><span class="sw" style="background:#7fb7ff"></span>حداقل دستمزد</span>
       </div>
+      <div class="fig-note">مقایسه روندهاست، نه اندازه‌گیری مستقیم استطاعت. اجاره: میانگین ۲۲ منطقه تهران (مرکز آمار) تا تابستان ۱۴۰۰؛ دستمزد: حداقل دستمزد قانونی سالانه. تازه‌ترین شاخص رسمی اجاره تهران (بانک مرکزی، ماهانه از ۱۳۹۶) هنوز اضافه نشده است.</div>
     </div>
     <!-- توضیح و سلب مسئولیت شکل ۲ درون خود پنل و پانوشت آن آمده است -->
   </div>
@@ -546,10 +548,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=11"></script>
-<script src="assets/geo/tehran_districts.js?v=11"></script>
-<script src="js/util.js?v=11"></script>
-<script src="js/views.js?v=11"></script>
-<script src="js/article.js?v=11"></script>
+<script src="data/data.js?v=12"></script>
+<script src="assets/geo/tehran_districts.js?v=12"></script>
+<script src="js/util.js?v=12"></script>
+<script src="js/views.js?v=12"></script>
+<script src="js/article.js?v=12"></script>
 </body>
 </html>

@@ -367,22 +367,20 @@
     svg.appendChild(u.svgEl("path", { d: linePath(idxR), fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round" }));
     svg.appendChild(u.svgEl("path", { d: linePath(idxW), fill: "none", stroke: "#7fb7ff", "stroke-width": 2.4, "stroke-linejoin": "round", "stroke-dasharray": "1 0" }));
 
-    // end labels (anchor to the right so they stay inside the viewBox)
+    // end labels (anchor right; inline style keeps colour over the .axis-txt class)
     function endLbl(map, txt, fill, dy) {
-      var t = u.svgEl("text", { x: X(1400) - 8, y: Y(map[1400]) + (dy || -8), "text-anchor": "end", "class": "axis-txt", "font-size": "12", fill: fill, "font-weight": "800" });
+      var t = u.svgEl("text", { x: X(1400) - 8, y: Y(map[1400]) + (dy || -8), "text-anchor": "end", "class": "axis-txt", "font-size": "12", "font-weight": "800", style: "fill:" + fill });
       t.textContent = txt;
       svg.appendChild(t);
     }
-    endLbl(idxR, "اجاره ≈ " + u.toFaDigits(Math.round(idxR[1400])), "#f2b632", -10);
-    endLbl(idxW, "حداقل دستمزد ≈ " + u.toFaDigits(Math.round(idxW[1400])), "#7fb7ff", 18);
+    endLbl(idxR, "اجاره تهران", "#f2b632", -10);
+    endLbl(idxW, "حداقل دستمزد", "#7fb7ff", 18);
 
-    // inline legend (top-left)
-    var t1 = u.svgEl("text", { x: pl, y: 18, "class": "axis-txt", "font-size": "12", fill: "#f2b632", "font-weight": "700" });
-    t1.textContent = "— اجاره (میانگین ۲۲ منطقه)";
-    svg.appendChild(t1);
-    var t2 = u.svgEl("text", { x: pl + 200, y: 18, "class": "axis-txt", "font-size": "12", fill: "#7fb7ff", "font-weight": "700" });
-    t2.textContent = "— حداقل دستمزد قانونی";
-    svg.appendChild(t2);
+    // Extension plan: to go beyond Summer 1400, add the Central Bank series
+    // «شاخص اجاره مسکن در تهران» (monthly 1396/01–1403/05; Daraian/CBI) into an
+    // intermediate annual table, then append here with a source-transition marker
+    // near 1396 and an annual-average rule (1403 covers only to Mordad). Do NOT
+    // splice incompatible series silently; do NOT hard-code endpoints in JS.
   }
 
   /* ============================================================

@@ -267,6 +267,8 @@ input[type="range"]::-webkit-slider-thumb {
 .map-footnote { font-size: .74rem; color: var(--ink-faint); margin-top: .7rem; line-height: 1.9; text-align: center; }
 .panel-sub { color: var(--ink-dim); font-size: .92rem; margin-bottom: .6rem; line-height: 1.9; }
 .fig-lead { color: var(--ink-dim); font-size: .98rem; line-height: 2.1; margin: 0 0 .9rem; }
+.fig-note.context { text-align: center; font-size: .84rem; color: var(--ink-dim); margin-bottom: .7rem; }
+#rw-legend { margin-top: .5rem; margin-bottom: .3rem; justify-content: center; }
 
 /* ------------------------------------------------------------
    Generic chart text
