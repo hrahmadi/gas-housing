@@ -269,90 +269,175 @@
   }
 
   /* ============================================================
-     FIGURE 4 — Parand route stepper (one-way / daily / monthly)
+     FIGURE 4 — Parand commute scene
+     خانه در پرند، کار در تهران:
+     a route that doubles every day and accumulates into a monthly
+     burden (and, at 22 workdays, into litres of fuel).
      ============================================================ */
-  var PARAND = { stage: "day" };
+  var PARAND = { days: 22, autoRan: false, reduce: false, raf: 0 };
+  var P4 = { svg: null, dot: null, pill: null, homeX: 325, workX: 675, y: 150 };
 
-  function drawParandRoute() {
+  function p4txt(id, html) { var e = el(id); if (e) e.innerHTML = html; }
+
+  function setParandCycle(html) { p4txt("parand-cycle", html); }
+
+  function buildParandScene() {
     var W = 1000, H = 300;
-    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "parand-svg", role: "img", "aria-label": "شماتیک مسیر پرند تا تهران" });
+    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "parand-svg", role: "img", "aria-label": "مسیر رفت و آمد روزانه پرند تا تهران" });
+    P4.svg = svg;
 
-    var parX = 190, tehX = 830, y = 150;
-    var par = { x: parX, y: y, name: "پرند" };
-    var teh = { x: tehX, y: y, name: "تهران" };
-
-    // city blocks
-    function city(cx, cy, name, w) {
-      var r = u.svgEl("rect", { x: cx - w / 2, y: cy - 46, width: w, height: 92, rx: 14, fill: "#1b2230", stroke: "rgba(242,182,50,0.4)", "stroke-width": 1.5 });
-      svg.appendChild(r);
-      var t = u.svgEl("text", { x: cx, y: cy + 6, "text-anchor": "middle", "class": "axis-txt", "font-size": "20", fill: "#edf0f5", "font-weight": "800" });
-      t.textContent = name;
-      svg.appendChild(t);
+    function card(cx, emoji, name, sub, accent) {
+      var g = u.svgEl("g");
+      g.appendChild(u.svgEl("rect", { x: cx - 130, y: 84, width: 260, height: 132, rx: 18, fill: "#1b2230", stroke: accent || "rgba(242,182,50,0.35)", "stroke-width": 1.4 }));
+      function txt(x, y, str, size, weight, fill) {
+        var t = u.svgEl("text", { x: x, y: y, "text-anchor": "middle", "font-size": size, "font-weight": weight, fill: fill });
+        t.textContent = str;
+        g.appendChild(t);
+      }
+      txt(cx, 114, emoji, 22, 400, "#fff");
+      txt(cx, 158, name, 23, 800, "#edf0f5");
+      txt(cx, 190, sub, 12.5, 600, "#8a94a6");
+      svg.appendChild(g);
     }
-    city(parX, y, "پرند", 220);
-    city(tehX, y, "تهران", 240);
+    card(150, "🏠", "پرند", "خانه", "rgba(242,182,50,0.5)");
+    card(850, "💼", "تهران", "محل کار", "rgba(127,183,255,0.45)");
 
     // road
-    svg.appendChild(u.svgEl("line", { x1: parX + 110, y1: y, x2: tehX - 120, y2: y, stroke: "#39414f", "stroke-width": 4 }));
-    svg.appendChild(u.svgEl("line", { x1: parX + 110, y1: y, x2: tehX - 120, y2: y, stroke: "#f2b632", "stroke-width": 2, "stroke-dasharray": "10 8", opacity: 0.85 }));
+    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: "#39414f", "stroke-width": 4 }));
+    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: "#f2b632", "stroke-width": 1.6, "stroke-dasharray": "10 8", opacity: 0.6 }));
 
-    // moving pulse marker
-    var marker = u.svgEl("circle", { cx: parX + 110, cy: y, r: 9, fill: "#f2b632" });
-    var anim = u.svgEl("animateMotion", { dur: "3.2s", repeatCount: "indefinite", path: "M " + (parX + 110) + " " + y + " L " + (tehX - 120) + " " + y });
-    marker.appendChild(anim);
-    svg.appendChild(marker);
+    // distance pill directly on the route (one-way, later round trip)
+    var pill = u.svgEl("g");
+    pill.appendChild(u.svgEl("rect", { x: 452, y: P4.y - 15, width: 96, height: 30, rx: 15, fill: "#0c0f15", stroke: "rgba(242,182,50,0.65)", "stroke-width": 1.2 }));
+    var pillT = u.svgEl("text", { x: 500, y: P4.y + 6, "text-anchor": "middle", "font-size": "16", "font-weight": "900", fill: "#f2b632" });
+    pillT.textContent = "۳۵–۵۰ km";
+    pill.appendChild(pillT);
+    svg.appendChild(pill);
+    P4.pill = pillT;
 
-    // distance bracket (one-way 35–50 km) drawn under the road
-    var by = y + 70;
-    var seg = u.svgEl("g", { "class": "seg" });
-    seg.appendChild(u.svgEl("line", { x1: parX + 110, y1: by, x2: tehX - 120, y2: by, stroke: "#7fb7ff", "stroke-width": 1.4 }));
-    seg.appendChild(u.svgEl("line", { x1: parX + 110, y1: by - 8, x2: parX + 110, y2: by + 8, stroke: "#7fb7ff", "stroke-width": 1.4 }));
-    seg.appendChild(u.svgEl("line", { x1: tehX - 120, y1: by - 8, x2: tehX - 120, y2: by + 8, stroke: "#7fb7ff", "stroke-width": 1.4 }));
-    var lab = u.svgEl("text", { x: (parX + tehX) / 2, y: by + 30, "text-anchor": "middle", "class": "axis-txt", "font-size": "16", fill: "#7fb7ff", "font-weight": "800" });
-    lab.textContent = "یک‌طرفه: ۳۵ تا ۵۰ کیلومتر";
-    seg.appendChild(lab);
-    svg.appendChild(seg);
+    // commuter dot (moved along the road by JS)
+    var dot = u.svgEl("circle", { cx: P4.homeX, cy: P4.y, r: 9, fill: "#f2b632", stroke: "#0c0f15", "stroke-width": 2 });
+    svg.appendChild(dot);
+    P4.dot = dot;
 
     var host = el("parand-route");
     host.innerHTML = "";
     host.appendChild(svg);
-
-    // stage chips + stat cards
-    var stages = [
-      { id: "oneway", label: "۱ · فاصله یک‌طرفه", stat: { v: "۳۵–۵۰", l: "کیلومتر یک‌طرفه (مقصد داخل تهران)" } },
-      { id: "day", label: "۲ · رفت‌وبرگشت روزانه", stat: { v: "~۱۰۰", l: "کیلومتر در روز، برای بعضی مسیرها" } },
-      { id: "month", label: "۳ · مسافت ماهانه", stat: { v: "۲٬۲۰۰", l: "کیلومتر در ماه (۲۲ روز کاری)" } }
-    ];
-    var stats = el("parand-stats");
-    stats.innerHTML = "";
-    var chipsWrap = u.h("div", { "class": "chips", style: "margin-top:.9rem" });
-    stages.forEach(function (s) {
-      var b = u.h("button", { type: "button", "class": "chip" + (s.id === PARAND.stage ? " active" : ""), "data-stage": s.id }, s.label);
-      b.addEventListener("click", function () {
-        PARAND.stage = s.id;
-        var cs = chipsWrap.children;
-        for (var i = 0; i < cs.length; i++) cs[i].classList.toggle("active", cs[i].getAttribute("data-stage") === s.id);
-        renderParandStats();
-      });
-      chipsWrap.appendChild(b);
-    });
-    stats.appendChild(chipsWrap);
-    renderParandStats();
+    host.style.cursor = "pointer";
+    host.title = "برای دیدن دوبارهٔ یک روز کاری، مسیر را لمس کن";
+    host.addEventListener("click", function () { runParandCycle(true); });
   }
 
-  function renderParandStats() {
-    var defs = {
-      oneway: { v: "۳۵–۵۰", l: "کیلومتر یک‌طرفه، وقتی مقصد داخل تهران است (برآورد)" },
-      day: { v: "~۱۰۰", l: "کیلومتر رفت‌وبرگشت روزانه؛ ۳۰ تا ۴۰ هزار مسافر در روز (برآورد)" },
-      month: { v: "۲٬۲۰۰", l: "کیلومتر در ماه برای رفتن به سر کار، با ۲۲ روز کاری (محاسبه)" }
-    };
-    var d = defs[PARAND.stage];
-    var stats = el("parand-stats");
-    var existing = stats.querySelector(".parand-stat");
-    if (existing) existing.remove();
-    var card = u.h("div", { "class": "parand-stat" }, '<div class="v">' + d.v + "</div><div class='l'>" + d.l + "</div>");
-    // insert after chips
-    stats.appendChild(card);
+  function p4moveTo(x, dur, cb) {
+    if (P4.raf) cancelAnimationFrame(P4.raf);
+    var dot = P4.dot, x0 = +dot.getAttribute("cx"), t0 = null;
+    function frame(t) {
+      if (t0 == null) t0 = t;
+      var p = Math.min(1, (t - t0) / dur);
+      var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; // easeInOut
+      dot.setAttribute("cx", x0 + (x - x0) * e);
+      if (p < 1) P4.raf = requestAnimationFrame(frame);
+      else { P4.raf = 0; if (cb) cb(); }
+    }
+    if (dur <= 0) { dot.setAttribute("cx", x); if (cb) cb(); return; }
+    P4.raf = requestAnimationFrame(frame);
+  }
+
+  function runParandCycle(replay) {
+    if (!replay && PARAND.autoRan) return;
+    PARAND.autoRan = true;
+    if (P4.raf) cancelAnimationFrame(P4.raf);
+    var dot = P4.dot;
+    dot.setAttribute("cx", P4.homeX);
+    var z = PARAND.reduce ? 0 : 1;
+    setParandCycle('<span class="ph">صبح</span> · پرند → تهران');
+    p4moveTo(P4.workX, 2400 * z, function () {
+      setParandCycle('<span class="ph">محل کار</span> · تهران');
+      setTimeout(function () {
+        setParandCycle('<span class="ph">عصر</span> · تهران → پرند');
+        p4moveTo(P4.homeX, 2400 * z, function () {
+          P4.pill.textContent = "~۱۰۰ km";
+          setParandCycle('رفت و برگشت روزانه: <b>تا حدود ۱۰۰ کیلومتر</b>');
+          var h = el("parand-heart");
+          if (h) h.classList.add("show");
+        });
+      }, 1300 * z);
+    });
+  }
+
+  function renderParandOutput() {
+    var d = PARAND.days;
+    var kmM = d * 100; // ~100 km round trip per working day
+    var out = el("parand-out"), fu = el("parand-fuel"), nx = el("parand-next");
+    if (!out) return;
+    if (d === 1) {
+      out.innerHTML =
+        '<div class="po-card"><div class="po-v">تا ۱۰۰</div><div class="po-u">کیلومتر در روز · رفت و برگشت</div>' +
+        '<div class="po-s">۳۵ تا ۵۰ کیلومتر یک‌طرفه، بسته به مقصد در تهران</div></div>';
+    } else {
+      out.innerHTML =
+        '<div class="po-card hot"><div class="po-v">' + u.fa(kmM) + '</div><div class="po-u">کیلومتر در ماه</div>' +
+        '<div class="po-s">' + u.toFaDigits(d) + ' روز کاری × تا حدود ۱۰۰ کیلومتر در روز</div></div>';
+    }
+    if (d === 22) {
+      fu.className = "parand-fuel in";
+      fu.innerHTML =
+        '<div class="pf-lab">با مصرف فرضی ۹ لیتر در هر ۱۰۰ کیلومتر:</div>' +
+        '<div class="pf-v">۱۹۸ <small>لیتر بنزین در ماه</small></div>' +
+        '<div class="pf-s">۲٬۲۰۰ ÷ ۱۰۰ × ۹ ≈ ۱۹۸ لیتر</div>';
+      if (nx) nx.style.display = "";
+    } else {
+      fu.className = "parand-fuel";
+      fu.innerHTML = "";
+      if (nx) nx.style.display = "none";
+    }
+  }
+
+  function drawParandRoute() {
+    PARAND.reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var heart = el("parand-heart");
+    if (heart) heart.classList.remove("show");
+    setParandCycle("مسیر روزانه: صبح از پرند به تهران، عصر برگشت");
+    buildParandScene();
+    var host = el("parand-days-chips");
+    host.innerHTML = "";
+    [1, 5, 10, 15, 22].forEach(function (d) {
+      var b = u.h("button", { type: "button", "class": "chip" + (d === PARAND.days ? " active" : ""), "data-days": d }, u.toFaDigits(d) + " روز");
+      b.addEventListener("click", function () {
+        PARAND.days = d;
+        var cs = host.children;
+        for (var i = 0; i < cs.length; i++) cs[i].classList.toggle("active", +cs[i].getAttribute("data-days") === PARAND.days);
+        renderParandOutput();
+      });
+      host.appendChild(b);
+    });
+    renderParandOutput();
+    // Start the one-day commute cycle once the scene scrolls into view.
+    // Use both IntersectionObserver and a scroll check so it is robust.
+    function p4MaybeRun() {
+      if (PARAND.autoRan) { cleanup(); return; }
+      var r = el("parand-route");
+      if (!r) { cleanup(); return; }
+      var b = r.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (b.top < vh * 0.85 && b.bottom > 0) runParandCycle(false);
+    }
+    function cleanup() {
+      window.removeEventListener("scroll", p4MaybeRun);
+      window.removeEventListener("resize", p4MaybeRun);
+    }
+    if ("IntersectionObserver" in window) {
+      var ob = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { ob.disconnect(); cleanup(); runParandCycle(false); }
+        });
+      }, { threshold: 0.3 });
+      ob.observe(el("parand-route"));
+    }
+    window.addEventListener("scroll", p4MaybeRun, { passive: true });
+    window.addEventListener("resize", p4MaybeRun, { passive: true });
+    // safety: never leave the figure as a static one-way diagram for long
+    setTimeout(function () { if (!PARAND.autoRan) p4MaybeRun(); }, 900);
   }
 
   /* ============================================================
