@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^for f in js/views\\.js js/article\\.js; do node --check \"\\$f\" && echo \"OK \\$f\" \\|\\| echo \"FAIL \\$f\"; done$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^perl -pi -e 's/\\\\\\?v=3/\\\\\\?v=4/g' index\\.html && grep -o '\\?v=4' index\\.html \\| wc -l$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

@@ -1,0 +1,21 @@
+name,metric,value,unit,source_id,confidence
+Tehran,built_up_growth_2010_2020,4.8,percent,S6,B
+Pardis,built_up_growth_2010_2020,244.8,percent,S6,B
+Pakdasht,built_up_growth_2010_2020,162.3,percent,S6,B
+Pishva,built_up_growth_2010_2020,187.8,percent,S6,B
+Robat Karim,built_up_growth_2010_2020,138.5,percent,S6,B
+Shahriar,built_up_growth_2010_2020,82.9,percent,S6,B
+Rey,built_up_growth_2010_2020,58.0,percent,S6,B
+Tehran,functional_indicator,13.052,index,S8,B
+Robat Karim,functional_indicator,2.921,index,S8,B
+Eslamshahr,functional_indicator,2.794,index,S8,B
+Pardis,functional_indicator,2.033,index,S8,B
+Varamin,functional_indicator,1.826,index,S8,B
+Pakdasht,functional_indicator,1.122,index,S8,B
+Hashtgerd,functional_indicator,1.288,index,S8,B
+Shahriar,functional_indicator,0.971,index,S8,B
+Parand,daily_travelers_to_tehran,30000,persons,S9,C
+Parand,daily_travelers_to_tehran_high,40000,persons,S9,C
+Parand,one_way_distance_low,35,km,S9,C
+Parand,one_way_distance_high,50,km,S9,C
+Parand,round_trip_scenario,100,km_per_day,S9,C

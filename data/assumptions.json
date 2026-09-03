@@ -1,0 +1,46 @@
+{
+  "fuelEfficiency": {
+    "low": 7,
+    "mid": 9,
+    "high": 12,
+    "unit": "liter_per_100km",
+    "status": "ESTIMATED"
+  },
+  "workdaysPerMonth": {
+    "value": 22,
+    "status": "ESTIMATED"
+  },
+  "parandCommute": {
+    "oneWayKm": 50,
+    "roundTripKm": 100,
+    "scenarioNote": "35–50 km one-way reported; 100 km/day round trip used as transparent scenario",
+    "status": "ESTIMATED"
+  },
+  "rentBurden": {
+    "value": 30,
+    "unit": "percent_of_wage",
+    "note": "Maximum rent share of income conventionally ~30%",
+    "status": "ESTIMATED"
+  },
+  "apartmentSize": {
+    "value": 60,
+    "unit": "m2",
+    "status": "ESTIMATED"
+  },
+  "gasolinePriceScenarios": {
+    "current": 3000,
+    "unit": "toman_per_liter",
+    "steps": [3000, 6000, 9000, 15000, 30000],
+    "status": "ESTIMATED"
+  },
+  "incomeScenarios": {
+    "baseYear": 1400,
+    "multipliers": [1, 2, 3],
+    "note": "1x = statutory minimum wage",
+    "status": "OBSERVED"
+  },
+  "covidDipNote": {
+    "year": 1399,
+    "note": "1399 decline is a COVID mobility shock, not housing evidence"
+  }
+}

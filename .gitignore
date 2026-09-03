@@ -1,0 +1,10 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local scratch (do not commit derived scratch output that isn't needed)
+/tmp
+
+# If you ever install a static-server dependency locally
+node_modules/

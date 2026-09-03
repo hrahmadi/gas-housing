@@ -1,0 +1,12 @@
+source_id,title,url,accessed_date,notes
+S1,Ali Tayebi — تغییر توان اجاره‌نشینی در تهران (rent/affordability map project),https://github.com/alitayebi/maps/tree/master/rent,2026-09-03,Quarterly district-level Tehran rent per m2 by 22 municipal districts, Spring 1388–Summer 1400. Underlying data: Iran Statistics Center.
+S2,Central Bank of Iran (بانک مرکزی ایران),https://www.cbi.ir/,2026-09-03,Tehran housing market reporting: average transaction price per m2 and average rent series. Figures supplied in research workbook.
+S3,Ministry of Cooperatives Labour and Social Welfare / High Labour Council — annual minimum wage decisions,https://www.mcls.gov.ir/,2026-09-03,Statutory annual minimum wage set around Persian New Year; rial/month.
+S4,Iran Statistics Center (مرکز آمار ایران),https://www.amar.org.ir/,2026-09-03,Official quarterly rent statistics underlying the Tayebi district dataset.
+S5,SHANA / Oil Ministry gasoline reporting,https://www.shana.ir/news/477056/,2026-09-03,National average daily gasoline consumption; 1402 figure approx 120 million L/day.
+S6,Tehran Metropolitan Region housing/periphery built-up growth research 2010–2020,https://www.sciencedirect.com/science/article/pii/S1757780225001064,2026-09-03,Housing transactions + satellite-derived built-up data for counties of Tehran Metropolitan Region.
+S7,Tehran Functional Urban Area research (RMTO travel-to-work flows),https://doi.org/10.1016/j.pirs.2024.100075,2026-09-03,Functional urban area defined from inter-city travel-to-work flows 1996/2006/2016. Raw OD matrix not public.
+S8,Functional spatial structure research — functional linkage indicators,https://doi.org/10.1111/rsp3.12627,2026-09-03,DII-style functional indicators; NOT commuter headcounts.
+S9,Tehran new-town / Parand research and contemporary reporting,https://doi.org/10.1080/19463138.2011.652359,2026-09-03,Parand case study: new town, dormitory relation to Tehran core, ~30–40k daily travelers, 35–50 km one-way. Traveler/distance figures are reported estimates.
+S10,Traffic Research Laboratory — national transport plan update (≈250 OD matrices),https://trafficlab.ir/,2026-09-03,Lead only; raw matrices not yet publicly downloadable.
+C1,Statistical Center of Iran population censuses 1385/1390/1395,https://www.amar.org.ir/,2026-09-03,Tehran city census population ~7.71m / ~8.15m / 8.69m.
