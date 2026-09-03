@@ -181,7 +181,9 @@
     var n = PERI.selected;
     var info = PERI_INFO[n] || { modes: [], dist: "—", note: "" };
     var g = PERI.growth[n];
-    var gTxt = g == null ? "— (در این مجموعه ثبت نشده)" : u.toFaDigits(u.group(g, 1)) + "٪";
+    var gTxt = n === "Parand"
+      ? "در رقم شهرستان رباط‌کریم (۱۳۸.۵٪) لحاظ شده است"
+      : (g == null ? "—" : u.toFaDigits(u.group(g, 1)) + "٪");
     box.innerHTML =
       '<span class="nm">' + u.faName(n) + "</span>" +
       '<span class="row">رشد سطح ساخته‌شده (۲۰۱۰–۲۰۲۰): <b>' + gTxt + "</b></span>" +
@@ -217,17 +219,25 @@
     names.forEach(function (n) {
       var P = PERI.pos[n];
       var g = PERI.growth[n];
-      var r = g == null ? 9 : Math.max(7, Math.sqrt(g / maxG) * PERI_RMAX);
+      var isParand = n === "Parand";
+      var r = g == null ? (isParand ? 14 : 9) : Math.max(7, Math.sqrt(g / maxG) * PERI_RMAX);
       var fill = g == null ? "#5c6677" : mix("#3b4353", "#f2b632", Math.pow(g / maxG, 0.6));
       var c = u.svgEl("circle", { cx: P[0], cy: P[1], r: r, fill: fill, "class": "county", "data-name": n, "stroke": "#0c0f15", "stroke-width": 1.2 });
       var t = u.svgEl("title");
-      t.textContent = u.faName(n) + (g == null ? " (شهر جدید)" : " — " + u.toFaDigits(u.group(g, 1)) + "٪ رشد");
+      t.textContent = isParand
+        ? "پرند — شهر جدید؛ رشدش جداگانه ثبت نشده و در رقم شهرستان رباط‌کریم (۱۳۸.۵٪) گنجانده شده است"
+        : (u.faName(n) + (g == null ? "" : " — " + u.toFaDigits(u.group(g, 1)) + "٪ رشد"));
       c.appendChild(t);
       svg.appendChild(c);
       PERI.circles[n] = c;
 
+      if (isParand) {
+        // dashed ring so it is not misread as a tiny/no-growth dot
+        svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: r + 7, fill: "none", stroke: "#8fa3b8", "stroke-dasharray": "3 5", "stroke-width": 1.2, opacity: 0.85 }));
+      }
+
       var nl = u.svgEl("text", { x: P[0], y: P[1] + r + 20, "class": "axis-txt", "font-size": "13", "text-anchor": "middle", style: "fill:#edf0f5", "font-weight": "700" });
-      nl.textContent = u.faName(n);
+      nl.textContent = isParand ? "پرند (شهر جدید)" : u.faName(n);
       svg.appendChild(nl);
       if (g != null) {
         var vl = u.svgEl("text", { x: P[0], y: P[1] - r - 8, "class": "axis-txt", "font-size": "12", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
@@ -257,7 +267,7 @@
     });
 
     el("peri-note").textContent =
-      "اندازه دایره = رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ (پژوهش منطقه کلان‌شهری تهران). دو الگوی دسترسی دیده می‌شود: شهرهای روی خط ریلی (پرند، رباط‌کریم، پاکدشت، پیشوا، ری) در برابر شهرهای وابسته به اتوبوس و خودرو (پردیس، شهریار). منبع دسترسی: گزارش‌های خطوط حومه‌ای، ۱۴۰۴.";
+      "اندازه دایره = رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ (پژوهش منطقه کلان‌شهری تهران). پرند، شهر جدیدی درون شهرستان رباط‌کریم است؛ رشدش جداگانه ثبت نشده و در رقم رباط‌کریم (۱۳۸.۵٪) گنجانده شده است. دو الگوی دسترسی دیده می‌شود: شهرهای روی خط ریلی (پرند، رباط‌کریم، پاکدشت، پیشوا، ری) در برابر شهرهای وابسته به اتوبوس و خودرو (پردیس، شهریار). منبع دسترسی: گزارش‌های خطوط حومه‌ای، ۱۴۰۴.";
     updatePeriDetail();
   }
 
