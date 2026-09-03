@@ -245,21 +245,28 @@ input[type="range"]::-webkit-slider-thumb {
    Map
    ------------------------------------------------------------ */
 .map-wrap { position: relative; }
-#map-svg { width: 100%; height: auto; display: block; }
+#map-svg { width: auto; max-width: 100%; height: auto; max-height: 400px; display: block; margin: 0 auto; }
 #map-svg .district { stroke: #0c0f15; stroke-width: 1; transition: fill .25s ease; cursor: pointer; }
 #map-svg .district:hover { filter: brightness(1.35); }
 #map-svg .district.sel { stroke: #fff; stroke-width: 2; }
+.map-badge { position: absolute; top: 10px; inset-inline-start: 10px; z-index: 2; background: rgba(12,15,21,.88); border: 1px solid rgba(242,182,50,.55); border-radius: 12px; padding: .3rem .85rem; text-align: center; pointer-events: none; line-height: 1.5; }
+.map-badge b { display: block; color: var(--accent); font-size: 1rem; font-weight: 800; }
+.map-badge span { color: var(--ink-faint); font-size: .7rem; }
+.map-hint { margin-top: .9rem; font-size: .88rem; color: #7fb7ff; font-weight: 700; text-align: center; animation: hintPulse 2.6s ease-in-out infinite; }
+.map-hint.hidden { display: none; }
+@keyframes hintPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
 .legend {
   display: flex; gap: 1.1rem; flex-wrap: wrap; align-items: center;
   margin-top: .7rem; font-size: .74rem; color: var(--ink-faint);
 }
 .legend .sw { width: 16px; height: 12px; border-radius: 3px; display: inline-block; margin-inline-end: .3rem; vertical-align: -1px; border:1px solid rgba(255,255,255,.12); }
-.map-detail {
-  margin-top: .8rem; background: var(--bg-2); border:1px solid var(--line);
-  border-radius: 12px; padding: .7rem .9rem; font-size: .86rem; color: var(--ink-dim); min-height: 3.2em;
-}
-.map-detail b { color: var(--ink); }
-.map-note { font-size: .72rem; color: var(--ink-faint); margin-top: .6rem; line-height: 1.8;}
+.map-story { margin-top: 1rem; text-align: center; }
+.map-story .main { font-size: 1.12rem; line-height: 2.1; color: var(--ink); font-weight: 800; }
+.map-story .sub { font-size: .9rem; color: var(--ink-dim); margin-top: .2rem; line-height: 2; }
+.map-delta { margin-top: .4rem; text-align: center; font-size: .84rem; color: #7fb7ff; min-height: 1.3em; font-weight: 600; }
+.map-footnote { font-size: .74rem; color: var(--ink-faint); margin-top: .7rem; line-height: 1.9; text-align: center; }
+.panel-sub { color: var(--ink-dim); font-size: .92rem; margin-bottom: .6rem; line-height: 1.9; }
+.fig-lead { color: var(--ink-dim); font-size: .98rem; line-height: 2.1; margin: 0 0 .9rem; }
 
 /* ------------------------------------------------------------
    Generic chart text

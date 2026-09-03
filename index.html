@@ -101,12 +101,9 @@
   <div class="fig-scene">
     <div class="fig-index">شکل ۲ · تعامل</div>
     <div class="panel">
-      <div class="panel-title"><span class="dot"></span>توان اجاره‌نشینی در ۲۲ منطقه تهران: با این درآمد، کجا می‌توانم اجاره کنم؟</div>
-      <div class="map-wrap">
-        <svg id="map-svg" role="img" aria-label="نقشه توان اجاره‌نشینی مناطق تهران"></svg>
-      </div>
-      <div class="map-detail" id="map-detail">روی هر منطقه بزن تا جزئیاتش را ببینی.</div>
-      <div class="legend" id="map-legend"></div>
+      <div class="panel-title"><span class="dot"></span>کجا می‌توانم زندگی کنم؟</div>
+      <div class="panel-sub">سناریوی یک خانوار با درآمد معادل ۲ برابر حداقل دستمزد قانونی</div>
+      <p class="fig-lead">یک سناریوی ساده را امتحان کنیم: خانواری با درآمدی معادل دو برابر حداقل دستمزد، برای خانه‌ای ۳۵ متری حداکثر ۳۵ درصد درآمدش را صرف اجاره می‌کند.</p>
       <div class="controls" id="map-controls">
         <div class="ctrl-row">
           <span class="ctrl-label">سال</span>
@@ -114,21 +111,22 @@
           <span class="ctrl-value" id="map-year-lbl">۱۳۸۸</span>
         </div>
         <div class="ctrl-row">
-          <span class="ctrl-label">درآمد خانوار</span>
-          <div class="chips" id="map-income"></div>
+          <span class="ctrl-label">متراژ خانه</span>
+          <div class="chips" id="map-size-chips"></div>
         </div>
         <div class="ctrl-row">
-          <span class="ctrl-label">متراژ</span>
-          <input type="range" id="map-size" min="20" max="90" step="5" value="35">
-          <span class="ctrl-value" id="map-size-lbl">۳۵</span>
-        </div>
-        <div class="ctrl-row">
-          <span class="ctrl-label">سهم اجاره</span>
-          <input type="range" id="map-share" min="20" max="60" step="5" value="35">
-          <span class="ctrl-value" id="map-share-lbl">۳۵٪</span>
+          <span class="ctrl-label">سهم اجاره از درآمد</span>
+          <div class="chips" id="map-share-chips"></div>
         </div>
       </div>
-      <div class="map-note" id="map-note"></div>
+      <div class="map-hint" id="map-hint">کنترل‌ها را تغییر بده و ببین نقشه چطور عوض می‌شود.</div>
+      <div class="map-wrap" id="map-wrap">
+        <svg id="map-svg" role="img" aria-label="نقشه مناطق قابل پرداخت تهران"></svg>
+        <div class="map-badge" id="map-badge"></div>
+      </div>
+      <div class="map-story" id="map-story"></div>
+      <div class="map-delta" id="map-delta"></div>
+      <div class="map-footnote">سبز = داخل توان اجاره · خاکستری = خارج از توان · راه‌راه = فاقد داده. این محاسبه تقریبی است و محل سکونت واقعی خانوارها را پیش‌بینی نمی‌کند؛ داده اجاره مناطق تا تابستان ۱۴۰۰ در دسترس است.</div>
     </div>
     <div class="panel" style="margin-top:1rem">
       <div class="panel-title"><span class="dot"></span>شاخص اجاره تهران در برابر شاخص حداقل دستمزد (پایه ۱۳۸۸ = ۱۰۰)</div>
@@ -139,16 +137,7 @@
         برای فهم مسئله فضایی، فقط یک شاخص سالانه کافی نیست.
       </div>
     </div>
-    <div class="fig-cap">
-      <b>تعامل:</b> سال و سطح درآمد را تغییر بده و ببین در هر سال کدام مناطق برای آن خانوار قابل پرداخت‌اند؛
-      سبز یعنی اجاره از سقفِ سهم تعیین‌شده درآمد بیشتر نمی‌شود.
-      <br><b>سناریوی پیش‌فرض (خانوار فرضی):</b> درآمد ۲ برابر حداقل دستمزد قانونی سال ۱۳۸۸، خانه ۳۵ متری، سقف سهم اجاره ۳۵٪.
-      در این سناریو ۴ منطقه داخل توان اجاره‌اند؛ نکته مهم این است که این مناطق تصادفی نیستند — عمدتا در بخش‌های کم‌هزینه‌تر
-      جنوب و جنوب شرقی تهران قرار دارند.
-      <br><b>مهم:</b> این نقشه محل واقعی سکونت خانوارها را پیش‌بینی نمی‌کند؛ یک مدل تاریخیِ توان پرداخت است (بر اساس اجاره ثبت‌شده
-      مناطق، درآمد فرضیِ چند برابر حداقل دستمزد قانونی و سقف سهم اجاره). داده تفکیکی اجاره مناطق در این مجموعه تا تابستان ۱۴۰۰
-      در دسترس است؛ بنابراین این نقشه وضعیت سال‌های پس از ۱۴۰۰ را نشان نمی‌دهد. (محاسبه بر اساس داده و فرض‌های اعلام‌شده)
-    </div>
+    <!-- توضیح و سلب مسئولیت شکل ۲ درون خود پنل و پانوشت آن آمده است -->
   </div>
 
   <div class="prose-body">
@@ -160,6 +149,7 @@
     <p>
       خانوار فقط خانه ارزان‌تری انتخاب نمی‌کند؛ ممکن است مجبور شود خانه را در <span class="tk">جای ارزان‌تری</span> پیدا کند.
     </p>
+    <p>اگر محل کار در بخش‌های مرکزی شهر باشد، این انتخاب می‌تواند به معنای رفت‌وآمد طولانی‌تر باشد.</p>
   </div>
 
   <div class="pull">و این یعنی <span class="accent">تغییر جغرافیای زندگی</span>.</div>
@@ -556,10 +546,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=10"></script>
-<script src="assets/geo/tehran_districts.js?v=10"></script>
-<script src="js/util.js?v=10"></script>
-<script src="js/views.js?v=10"></script>
-<script src="js/article.js?v=10"></script>
+<script src="data/data.js?v=11"></script>
+<script src="assets/geo/tehran_districts.js?v=11"></script>
+<script src="js/util.js?v=11"></script>
+<script src="js/views.js?v=11"></script>
+<script src="js/article.js?v=11"></script>
 </body>
 </html>

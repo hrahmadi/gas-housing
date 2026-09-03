@@ -387,8 +387,10 @@
 
   /* ============================================================
      FIGURE 2 — Tehran 22-district affordability map
+     Editorial sequence: question → controls → map → answer → interpretation
      ============================================================ */
-  var MAP = { year: 1388, mult: 2, size: 35, share: 35, selected: null };
+  var MAP = { year: 1388, mult: 2, size: 35, share: 35, selected: null, touched: false };
+  var MAP_LAST = null; // { count, key } of the previous (pre-change) state
 
   var AFF_STOPS = [[0, "#1e9e63"], [0.55, "#3ec47f"], [1, "#9ce6ac"]];
   function affColor(ratio) {
@@ -420,13 +422,125 @@
     return D.district_names[regStr] || ("منطقه " + u.toFaDigits(regStr));
   }
 
-  function mapSummary() {
-    var n = 0;
+  function affordableRegions() {
+    var ids = [];
     Object.keys(D.district_names).forEach(function (r) {
       var rt = ratioFor(r);
-      if (rt != null && rt <= 1) n++;
+      if (rt != null && rt <= 1) ids.push(+r);
     });
-    return n;
+    return ids;
+  }
+
+  var SE_BAND = [15, 16, 17, 18, 19, 20];
+  var CENTER = [1, 2, 3, 4, 5, 6, 7, 8, 11, 12];
+  function hasCentral(ids) {
+    return ids.some(function (id) { return CENTER.indexOf(id) !== -1; });
+  }
+  function setKey(ids) {
+    return ids.slice().sort(function (a, b) { return a - b; }).join(",");
+  }
+
+  function paintOne(path, isSel) {
+    var r = ratioFor(path.getAttribute("data-reg"));
+    path.setAttribute("fill", r == null ? "url(#hatch)" : (r <= 1 ? affColor(r) : "#39414f"));
+    path.classList.toggle("sel", !!isSel);
+  }
+
+  function paintMap() {
+    var paths = document.querySelectorAll("#map-svg .district");
+    for (var i = 0; i < paths.length; i++) {
+      paintOne(paths[i], paths[i].getAttribute("data-reg") === MAP.selected);
+    }
+  }
+
+  function buildChips(hostId, items, getter, setter) {
+    var host = el(hostId);
+    if (!host) return;
+    host.innerHTML = "";
+    items.forEach(function (it) {
+      var b = u.h("button", { type: "button", "class": "chip" + (getter() === it.v ? " active" : ""), "data-v": it.v }, it.label);
+      b.addEventListener("click", function () {
+        setter(it.v);
+        MAP.touched = true;
+        syncMapControls();
+        updateMap(true);
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function refreshChips(hostId, items, getter) {
+    var host = el(hostId);
+    if (!host) return;
+    for (var i = 0; i < host.children.length; i++) {
+      host.children[i].classList.toggle("active", +host.children[i].getAttribute("data-v") === getter());
+    }
+  }
+
+  function hideHintIfTouched() {
+    var h = el("map-hint");
+    if (h && MAP.touched) h.classList.add("hidden");
+  }
+
+  function updateMapStory(ids) {
+    var story = el("map-story");
+    if (!story) return;
+    var n = ids.length;
+    var main = "", sub = "";
+    if (n === 0) {
+      main = "در این سناریو هیچ منطقه‌ای داخل توان نیست؛ فرض‌ها را تغییر بده.";
+    } else if (hasCentral(ids)) {
+      main = "با تغییر فرض‌ها، مناطق بیشتری از بخش‌های مرکزی شهر هم وارد محدوده قابل پرداخت شده‌اند.";
+    } else {
+      main = "در این سناریو، مناطق قابل پرداخت بیشتر در بخش‌های کم‌هزینه‌تر جنوب و جنوب شرق تهران قرار گرفته‌اند.";
+      sub = "با تغییر فرض‌های سال، متراژ و سهم اجاره، دامنه انتخاب می‌تواند به مناطق بیشتری از شهر گسترش پیدا کند.";
+    }
+    story.innerHTML = '<div class="main">' + main + "</div>" + (sub ? '<div class="sub">' + sub + "</div>" : "");
+  }
+
+  function updateMapDelta(ids) {
+    var box = el("map-delta");
+    if (!box) return;
+    box.textContent = "";
+    if (!MAP.touched || !MAP_LAST) return;
+    var n = ids.length;
+    var k = setKey(ids);
+    if (n !== MAP_LAST.count) {
+      var diff = n - MAP_LAST.count;
+      box.textContent = "اکنون " + u.toFaDigits(n) + " منطقه قابل پرداخت است؛ " + u.toFaDigits(Math.abs(diff)) +
+        " منطقه " + (diff > 0 ? "بیشتر" : "کمتر") + " از حالت قبل.";
+    } else if (k !== MAP_LAST.key) {
+      box.textContent = "تعداد مناطق قابل پرداخت تغییری نکرده، اما ترکیب مناطق تغییر کرده است.";
+    }
+  }
+
+  function updateMapBadge(ids) {
+    var badge = el("map-badge");
+    if (!badge) return;
+    badge.innerHTML = "<b>" + u.toFaDigits(ids.length) + " منطقه قابل پرداخت</b>" +
+      "<span>از " + u.toFaDigits(22) + " منطقه</span>";
+  }
+
+  function updateMap(fromControl) {
+    var ids = affordableRegions();
+    paintMap();
+    updateMapStory(ids);
+    updateMapBadge(ids);
+    updateMapDelta(ids);
+    MAP_LAST = { count: ids.length, key: setKey(ids) };
+    if (fromControl) MAP.touched = true;
+    hideHintIfTouched();
+  }
+
+  function syncMapControls() {
+    el("map-year").value = MAP.year;
+    el("map-year-lbl").textContent = u.toFaDigits(MAP.year);
+    refreshChips("map-size-chips",
+      [{ v: 30, label: "۳۰ متر" }, { v: 35, label: "۳۵ متر" }, { v: 40, label: "۴۰ متر" }, { v: 50, label: "۵۰ متر" }],
+      function () { return MAP.size; });
+    refreshChips("map-share-chips",
+      [{ v: 30, label: "۳۰٪" }, { v: 35, label: "۳۵٪" }, { v: 40, label: "۴۰٪" }],
+      function () { return MAP.share; });
   }
 
   function buildMap() {
@@ -452,126 +566,31 @@
       svg.appendChild(path);
     });
 
-    el("map-legend").innerHTML =
-      '<span><span class="sw" style="background:#3ec47f"></span>داخل توان اجاره</span>' +
-      '<span><span class="sw" style="background:#39414f"></span>خارج از توان</span>' +
-      '<span><span class="sw" style="background:repeating-linear-gradient(45deg,#262c37,#262c37 3px,#3a4250 3px,#3a4250 6px)"></span>فاقد داده</span>';
-
-    var chips = el("map-income");
-    chips.innerHTML = "";
-    [1, 2, 3, 5].forEach(function (m) {
-      var b = u.h("button", { type: "button", "class": "chip" + (m === MAP.mult ? " active" : ""), "data-mult": m }, "×" + u.toFaDigits(m) + " حداقل دستمزد");
-      b.addEventListener("click", function () {
-        MAP.mult = m;
-        syncMapControls();
-        updateMap();
-      });
-      chips.appendChild(b);
-    });
-
+    // click to select a district (visual emphasis only; hover uses CSS)
     svg.addEventListener("click", function (e) {
       var p = e.target.closest ? e.target.closest(".district") : null;
-      if (p) { MAP.selected = p.getAttribute("data-reg"); paintMap(); updateDetail(); }
+      if (!p) return;
+      MAP.selected = p.getAttribute("data-reg") === MAP.selected ? null : p.getAttribute("data-reg");
+      paintMap();
     });
-    svg.addEventListener("pointerover", function (e) {
-      var p = e.target.closest ? e.target.closest(".district") : null;
-      if (p) paintOne(p, false);
-    });
-    svg.addEventListener("pointerout", function () { paintMap(); });
 
-    function bindSlider(id, key, min, max, set) {
-      var inp = el(id);
-      inp.addEventListener("input", function () {
-        MAP[key] = +inp.value;
-        syncMapControls();
-        updateMap();
-      });
-    }
-    bindSlider("map-year", "year");
-    bindSlider("map-size", "size");
-    bindSlider("map-share", "share");
+    // year slider
+    el("map-year").addEventListener("input", function () {
+      MAP.year = +el("map-year").value;
+      MAP.touched = true;
+      syncMapControls();
+      updateMap(true);
+    });
+
+    buildChips("map-size-chips",
+      [{ v: 30, label: "۳۰ متر" }, { v: 35, label: "۳۵ متر" }, { v: 40, label: "۴۰ متر" }, { v: 50, label: "۵۰ متر" }],
+      function () { return MAP.size; }, function (v) { MAP.size = v; });
+    buildChips("map-share-chips",
+      [{ v: 30, label: "۳۰٪" }, { v: 35, label: "۳۵٪" }, { v: 40, label: "۴۰٪" }],
+      function () { return MAP.share; }, function (v) { MAP.share = v; });
 
     syncMapControls();
-    updateMap();
-  }
-
-  function syncMapControls() {
-    el("map-year").value = MAP.year;
-    el("map-size").value = MAP.size;
-    el("map-share").value = MAP.share;
-    el("map-year-lbl").textContent = u.toFaDigits(MAP.year);
-    el("map-size-lbl").textContent = u.toFaDigits(MAP.size) + " متر";
-    el("map-share-lbl").textContent = u.toFaDigits(MAP.share) + "٪";
-    var chips = el("map-income").children;
-    for (var i = 0; i < chips.length; i++) {
-      chips[i].classList.toggle("active", +chips[i].getAttribute("data-mult") === MAP.mult);
-    }
-    updateMapNote();
-  }
-
-  function affordableRegions() {
-    var ids = [];
-    Object.keys(D.district_names).forEach(function (r) {
-      var rt = ratioFor(r);
-      if (rt != null && rt <= 1) ids.push(+r);
-    });
-    return ids;
-  }
-
-  function updateMapNote() {
-    var ids = affordableRegions();
-    var n = ids.length;
-    var mwT = u.faCompact(D.annual.min_wage[String(MAP.year)] / 10 * MAP.mult, "تومان");
-    var extra = "";
-    if (MAP.mult === 1 && n === 0) {
-      extra = " با حداقل دستمزد، طبق همین فرض‌های مدل (متراژ و سقف سهم اجاره)، هیچ منطقه‌ای از آستانه نمی‌گذرد. این فقط نتیجه این مدل است، نه پیش‌بینی محل سکونت خانوارها.";
-    } else if (n > 0 && n < 7) {
-      // conservative geography clause only for small affordable sets
-      var se = [15, 16, 17, 18, 19, 20];
-      var allSE = ids.every(function (id) { return se.indexOf(id) !== -1; });
-      if (allSE) {
-        extra = " در این سناریو، مناطق قابل استطاعت عمدتا در بخش‌های کم‌هزینه‌تر جنوب و جنوب شرقی تهران قرار دارند — توان پرداخت، جغرافیا دارد.";
-      }
-    }
-    var txt = "سناریوی خانوار فرضی: درآمد " + u.toFaDigits(MAP.mult) + " برابر حداقل دستمزد قانونی سال " + u.toFaDigits(MAP.year) +
-      " (حدود " + mwT + ")؛ خانه " + u.toFaDigits(MAP.size) + " متری؛ سقف سهم اجاره " + u.toFaDigits(MAP.share) + "٪ از درآمد. " +
-      u.toFaDigits(n) + " منطقه از " + u.toFaDigits(22) + " منطقه داخل توان اجاره‌اند." + extra;
-    el("map-note").textContent = txt;
-  }
-
-  function paintOne(path, isSel) {
-    var r = ratioFor(path.getAttribute("data-reg"));
-    path.setAttribute("fill", r == null ? "url(#hatch)" : (r <= 1 ? affColor(r) : "#39414f"));
-    path.classList.toggle("sel", !!isSel);
-  }
-
-  function paintMap() {
-    var paths = document.querySelectorAll("#map-svg .district");
-    for (var i = 0; i < paths.length; i++) paintOne(paths[i], paths[i].getAttribute("data-reg") === MAP.selected);
-  }
-
-  function updateMap() { paintMap(); updateDetail(); }
-
-  function updateDetail() {
-    var box = el("map-detail");
-    if (!MAP.selected) {
-      box.innerHTML = "روی هر منطقه بزن تا جزئیاتش را ببینی. در این حالت، <b>" + u.toFaDigits(mapSummary()) + "</b> منطقه از ۲۲ منطقه داخل توان اجاره‌اند.";
-      return;
-    }
-    var regStr = MAP.selected;
-    var rent = districtRent(regStr, MAP.year);
-    var budget = mapBudget();
-    var name = regionName(regStr);
-    if (rent == null) {
-      box.innerHTML = "<b>" + name + "</b> — داده اجاره برای این سال در دسترس نیست.";
-      return;
-    }
-    var cost = rent * MAP.size;
-    var ratio = cost / budget;
-    var verdict = ratio <= 1 ? "<b style='color:var(--pos)'>داخل توان اجاره</b>" : "<b style='color:#c98d8a'>خارج از توان اجاره</b>";
-    box.innerHTML = "<b>" + name + "</b> · سال " + u.toFaDigits(MAP.year) + " · اجاره ~" + u.toFaDigits(rent) +
-      " تومان/متر · " + u.toFaDigits(MAP.size) + " متری ≈ " + u.faCompact(cost, "تومان") + " در ماه · نسبت به بودجه اجاره: " +
-      u.toFaDigits(Math.round(ratio * 100) / 100) + "× → " + verdict;
+    updateMap(false);
   }
 
   /* ============================================================
