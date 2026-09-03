@@ -102,11 +102,10 @@
   }
 
   /* ============================================================
-     FIGURE 3 — Tehran metropolitan-region built-up growth map
-     (schematic proportional-symbol map)
+     FIGURE 3 — Choose a peripheral city: growth + how people get to Tehran
+     (schematic proportional-symbol map; interaction reveals transit access)
      ============================================================ */
   var PERI = {
-    // county -> [x, y] approx projected on the schematic canvas
     pos: {
       "Tehran": [535, 202],
       "Pardis": [894, 150],
@@ -117,103 +116,149 @@
       "Rey": [577, 282],
       "Parand": [128, 386]
     },
-    selected: null
+    selected: null,
+    svg: null,
+    route: null,
+    circles: {},
+    growth: {}
   };
-  var PERI_RMAX = 58;
+  var PERI_RMAX = 54;
+  var PERI_ORDER = ["Parand", "Robat Karim", "Shahriar", "Rey", "Pakdasht", "Pishva", "Pardis"];
 
-  function periData(name) {
+  // transit evidence per peripheral city (rail vs road-dependent)
+  var PERI_INFO = {
+    "Parand": { dist: "~۳۵ km تا لبه تهران (برآورد گزارش‌ها)", modes: ["🚆 قطار حومه‌ای", "🚇 مترو", "🚌 اتوبوس"], note: "ده‌ها هزار نفر روزانه میان پرند و تهران رفت‌وآمد می‌کنند." },
+    "Robat Karim": { dist: "~۳۶ km (هوایی تقریبی)", modes: ["🚆 قطار حومه‌ای"], note: "روی خط قطار حومه‌ای تهران–پرند." },
+    "Pakdasht": { dist: "~۳۶ km (هوایی تقریبی)", modes: ["🚆 قطار حومه‌ای"], note: "ایستگاه روی خط تهران–ورامین–پیشوا." },
+    "Pishva": { dist: "~۵۲ km (هوایی تقریبی)", modes: ["🚆 قطار حومه‌ای"], note: "خدمات قطار حومه‌ای تهران–پیشوا." },
+    "Rey": { dist: "~۱۱ km (هوایی تقریبی)", modes: ["🚇 مترو", "🚆 قطار حومه‌ای"], note: "روی کریدور ریلی تهران–ورامین–پیشوا." },
+    "Pardis": { dist: "~۳۶ km (هوایی تقریبی)", modes: ["🚌 اتوبوس"], note: "متروی مستقیم یا قطار حومه‌ای فعال ندارد." },
+    "Shahriar": { dist: "~۳۰ km (هوایی تقریبی)", modes: ["🚌 اتوبوس"], note: "خط ریلی حومه‌ای فعال ندارد؛ حمل‌ونقل عمدتا جاده‌ای." }
+  };
+
+  function periGrowth(name) {
     var p = D.periphery[name];
-    return p ? p.built_up_growth_2010_2020 : null;
+    return p && p.built_up_growth_2010_2020 ? p.built_up_growth_2010_2020.value : null;
+  }
+
+  function periModesHtml(info) {
+    var m = info.modes.slice();
+    m.push("🚗 خودرو/جاده");
+    return m.map(function (x) { return '<span class="mode">' + x + "</span>"; }).join("");
+  }
+
+  function paintPeriView() {
+    var sel = PERI.selected;
+    var any = !!sel;
+    Object.keys(PERI.circles).forEach(function (name) {
+      var c = PERI.circles[name];
+      var isSel = name === sel;
+      c.setAttribute("opacity", any && !isSel ? "0.18" : "1");
+      c.classList.toggle("sel", isSel);
+    });
+    if (PERI.route) {
+      var T = PERI.pos.Tehran;
+      if (sel && PERI.pos[sel]) {
+        var P = PERI.pos[sel];
+        PERI.route.setAttribute("x1", P[0]);
+        PERI.route.setAttribute("y1", P[1]);
+        PERI.route.setAttribute("x2", T[0]);
+        PERI.route.setAttribute("y2", T[1]);
+        PERI.route.setAttribute("style", "display:block");
+      } else {
+        PERI.route.setAttribute("style", "display:none");
+      }
+    }
+  }
+
+  function updatePeriDetail() {
+    var box = el("peri-detail");
+    if (!box) return;
+    if (!PERI.selected) {
+      box.innerHTML = "روی هر شهر بزن تا مسیر و راه‌های دسترسی‌اش به تهران را ببینی.";
+      return;
+    }
+    var n = PERI.selected;
+    var info = PERI_INFO[n] || { modes: [], dist: "—", note: "" };
+    var g = PERI.growth[n];
+    var gTxt = g == null ? "— (در این مجموعه ثبت نشده)" : u.toFaDigits(u.group(g, 1)) + "٪";
+    box.innerHTML =
+      '<span class="nm">' + u.faName(n) + "</span>" +
+      '<span class="row">رشد سطح ساخته‌شده (۲۰۱۰–۲۰۲۰): <b>' + gTxt + "</b></span>" +
+      '<span class="row">فاصله تقریبی تا تهران: ' + (info.dist || "—") + "</span>" +
+      '<span class="row">راه‌های دسترسی:</span><span class="modes">' + periModesHtml(info) + "</span>" +
+      (info.note ? '<span class="note">' + info.note + "</span>" : "");
   }
 
   function drawPeriMap() {
-    var names = ["Pardis", "Pishva", "Pakdasht", "Robat Karim", "Shahriar", "Rey", "Tehran"];
-    var values = {};
+    var names = PERI_ORDER;
     var maxG = 1;
-    names.forEach(function (n) { var d = periData(n); if (d) { values[n] = d.value; maxG = Math.max(maxG, d.value); } });
+    names.forEach(function (n) {
+      var g = periGrowth(n);
+      PERI.growth[n] = g;
+      if (g) maxG = Math.max(maxG, g);
+    });
 
-    var W = 1000, H = 600;
-    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "peri-svg", role: "img", "aria-label": "نقشه رشد سطح ساخته‌شده منطقه کلان‌شهری تهران" });
+    var W = 1000, H = 620;
+    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "peri-svg", role: "img", "aria-label": "نقشه شهرهای پیرامون تهران و راه‌های دسترسی" });
+    PERI.svg = svg;
+    PERI.circles = {};
 
-    // subtle guide: faint metro halo around Tehran
-    var halo = u.svgEl("circle", { cx: PERI.pos.Tehran[0], cy: PERI.pos.Tehran[1], r: 150, fill: "rgba(242,182,50,0.05)", stroke: "rgba(242,182,50,0.18)", "stroke-dasharray": "4 6", "stroke-width": 1 });
+    var T = PERI.pos.Tehran;
+    var halo = u.svgEl("circle", { cx: T[0], cy: T[1], r: 150, fill: "rgba(242,182,50,0.05)", stroke: "rgba(242,182,50,0.18)", "stroke-dasharray": "4 6", "stroke-width": 1 });
     svg.appendChild(halo);
 
-    // dashed links to Tehran
-    names.forEach(function (n) {
-      if (n === "Tehran") return;
-      var p = PERI.pos[n];
-      svg.appendChild(u.svgEl("line", { x1: p[0], y1: p[1], x2: PERI.pos.Tehran[0], y2: PERI.pos.Tehran[1], stroke: "rgba(255,255,255,0.14)", "stroke-dasharray": "3 6", "stroke-width": 1 }));
-    });
-
-    function label(n, x, y, txt, fill, anchor) {
-      var t = u.svgEl("text", { x: x, y: y, "text-anchor": anchor || "middle", "class": "axis-txt", "font-size": "13", fill: fill || "#a4aeba", "font-weight": "600" });
-      t.textContent = txt;
-      svg.appendChild(t);
-    }
-
-    // Tehran centre marker
-    var tc = PERI.pos.Tehran;
-    label("Tehran", tc[0], tc[1] - 16, "تهران (مرکز اشتغال)", "#f2b632", "middle");
+    // Tehran reference node
+    svg.appendChild(u.svgEl("circle", { cx: T[0], cy: T[1], r: 16, fill: "#0c0f15", stroke: "#f2b632", "stroke-width": 2.5 }));
+    var tL = u.svgEl("text", { x: T[0], y: T[1] - 24, "class": "axis-txt", "font-size": "14", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
+    tL.textContent = "تهران";
+    svg.appendChild(tL);
 
     names.forEach(function (n) {
-      if (n === "Tehran") return;
-      var p = PERI.pos[n];
-      var v = values[n];
-      if (v == null) return;
-      var r = Math.max(7, Math.sqrt(v / maxG) * PERI_RMAX);
-      var color = mix("#3b4353", "#f2b632", Math.pow(v / maxG, 0.6));
-      var c = u.svgEl("circle", { cx: p[0], cy: p[1], r: r, fill: color, "class": "county", "data-name": n, opacity: 0.92 });
+      var P = PERI.pos[n];
+      var g = PERI.growth[n];
+      var r = g == null ? 9 : Math.max(7, Math.sqrt(g / maxG) * PERI_RMAX);
+      var fill = g == null ? "#5c6677" : mix("#3b4353", "#f2b632", Math.pow(g / maxG, 0.6));
+      var c = u.svgEl("circle", { cx: P[0], cy: P[1], r: r, fill: fill, "class": "county", "data-name": n, "stroke": "#0c0f15", "stroke-width": 1.2 });
       var t = u.svgEl("title");
-      t.textContent = u.faName(n) + " — " + u.toFaDigits(v, 1) + "٪ رشد";
+      t.textContent = u.faName(n) + (g == null ? " (شهر جدید)" : " — " + u.toFaDigits(u.group(g, 1)) + "٪ رشد");
       c.appendChild(t);
       svg.appendChild(c);
-      label(n, p[0], p[1] + r + 15, u.faName(n), "#edf0f5", "middle");
-      label("v-" + n, p[0], p[1] - r - 6, u.toFaDigits(u.group(v, 1)) + "٪", "#f2b632", "middle");
+      PERI.circles[n] = c;
+
+      var nl = u.svgEl("text", { x: P[0], y: P[1] + r + 20, "class": "axis-txt", "font-size": "13", "text-anchor": "middle", style: "fill:#edf0f5", "font-weight": "700" });
+      nl.textContent = u.faName(n);
+      svg.appendChild(nl);
+      if (g != null) {
+        var vl = u.svgEl("text", { x: P[0], y: P[1] - r - 8, "class": "axis-txt", "font-size": "12", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
+        vl.textContent = u.toFaDigits(u.group(g, 1)) + "٪";
+        svg.appendChild(vl);
+      }
     });
 
-    // north arrow + scale note (decorative, honest about schematic nature)
-    var comp = u.svgEl("text", { x: 20, y: 30, "class": "axis-txt", "font-size": "11", fill: "#6c7788" });
+    var comp = u.svgEl("text", { x: 20, y: 28, "class": "axis-txt", "font-size": "11", style: "fill:#6c7788" });
     comp.textContent = "شماتیک — موقعیت‌ها تقریبی‌اند؛ اندازه دایره = رشد ۲۰۱۰–۲۰۲۰";
     svg.appendChild(comp);
+
+    PERI.route = u.svgEl("line", { "class": "peri-route", style: "display:none" });
+    svg.appendChild(PERI.route);
 
     var host = el("peri-map");
     host.innerHTML = "";
     host.appendChild(svg);
 
-    // interactions
     svg.addEventListener("click", function (e) {
       var c = e.target.closest ? e.target.closest(".county") : null;
       if (!c) return;
-      PERI.selected = c.getAttribute("data-name");
-      paintPeri(svg, values);
-      updatePeriDetail(values);
+      var name = c.getAttribute("data-name");
+      PERI.selected = (PERI.selected === name) ? null : name;
+      paintPeriView();
+      updatePeriDetail();
     });
-    paintPeri(svg, values);
-    updatePeriDetail(values);
+
     el("peri-note").textContent =
-      "میزان رشد: پردیس ۲۴۴.۸٪ · پیشوا ۱۸۷.۸٪ · پاکدشت ۱۶۲.۳٪ · رباط‌کریم ۱۳۸.۵٪ · شهریار ۸۲.۹٪ · ری ۵۸٪ · تهران ۴.۸٪ (منبع: پژوهش منطقه کلان‌شهری تهران — مشاهده‌شده).";
-  }
-
-  function paintPeri(svg, values) {
-    var cs = svg.querySelectorAll(".county");
-    for (var i = 0; i < cs.length; i++) {
-      cs[i].classList.toggle("sel", cs[i].getAttribute("data-name") === PERI.selected);
-    }
-  }
-
-  function updatePeriDetail(values) {
-    var box = el("peri-detail");
-    if (!PERI.selected) {
-      box.innerHTML = "روی هر شهرستان بزن تا میزان رشد را ببینی. سبز/کهربایی پررنگ‌تر یعنی رشد سریع‌تر.";
-      return;
-    }
-    var n = PERI.selected;
-    var v = values[n];
-    var isTeh = n === "Tehran";
-    box.innerHTML = isTeh
-      ? "<b>تهران (شهرستان)</b> — مرکز اشتغال؛ رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ فقط <b>~۵٪</b>."
-      : "<b>" + u.faName(n) + "</b> — رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ حدود <b>" + u.toFaDigits(u.group(v, 1)) + "٪</b>؛ چند برابر تهران.";
+      "اندازه دایره = رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ (پژوهش منطقه کلان‌شهری تهران). دو الگوی دسترسی دیده می‌شود: شهرهای روی خط ریلی (پرند، رباط‌کریم، پاکدشت، پیشوا، ری) در برابر شهرهای وابسته به اتوبوس و خودرو (پردیس، شهریار). منبع دسترسی: گزارش‌های خطوط حومه‌ای، ۱۴۰۴.";
+    updatePeriDetail();
   }
 
   /* ============================================================
