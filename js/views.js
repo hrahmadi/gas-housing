@@ -274,7 +274,7 @@
      a route that doubles every day and accumulates into a monthly
      burden (and, at 22 workdays, into litres of fuel).
      ============================================================ */
-  var PARAND = { days: 22, autoRan: false, reduce: false, raf: 0 };
+  var PARAND = { days: 22, autoRan: false, reduce: false, raf: 0, stepTimers: [] };
   var P4 = { svg: null, dot: null, pill: null, homeX: 325, workX: 675, y: 150 };
 
   function p4txt(id, html) { var e = el(id); if (e) e.innerHTML = html; }
@@ -343,7 +343,7 @@
     P4.raf = requestAnimationFrame(frame);
   }
 
-  function runParandCycle(replay) {
+  function runParandCycle(replay, thenStep) {
     if (!replay && PARAND.autoRan) return;
     PARAND.autoRan = true;
     if (P4.raf) cancelAnimationFrame(P4.raf);
@@ -351,52 +351,59 @@
     dot.setAttribute("cx", P4.homeX);
     var z = PARAND.reduce ? 0 : 1;
     setParandCycle('<span class="ph">صبح</span> · پرند → تهران');
-    p4moveTo(P4.workX, 2400 * z, function () {
+    p4moveTo(P4.workX, 1200 * z, function () {
       setParandCycle('<span class="ph">محل کار</span> · تهران');
       setTimeout(function () {
         setParandCycle('<span class="ph">عصر</span> · تهران → پرند');
-        p4moveTo(P4.homeX, 2400 * z, function () {
+        p4moveTo(P4.homeX, 1200 * z, function () {
           P4.pill.textContent = "~۱۰۰ km";
           setParandCycle('رفت و برگشت روزانه: <b>تا حدود ۱۰۰ کیلومتر</b>');
-          var h = el("parand-heart");
-          if (h) h.classList.add("show");
+          if (thenStep) p4AutoStep();
         });
-      }, 1300 * z);
+      }, 700 * z);
+    });
+  }
+
+  function p4SetDays(d) {
+    PARAND.days = d;
+    var host = el("parand-days-chips");
+    if (host) {
+      var cs = host.children;
+      for (var i = 0; i < cs.length; i++) cs[i].classList.toggle("active", +cs[i].getAttribute("data-days") === PARAND.days);
+    }
+    renderParandOutput();
+  }
+
+  // On first view, briefly step the workdays 1→5→10→15→22 so a passive
+  // reader sees the accumulation happen, then settle on 22 (the default).
+  function p4AutoStep() {
+    if (PARAND.reduce) return;
+    var seq = [1, 5, 10, 15, 22];
+    seq.forEach(function (d, i) {
+      PARAND.stepTimers.push(setTimeout(function () { p4SetDays(d); }, 1300 + i * 480));
     });
   }
 
   function renderParandOutput() {
     var d = PARAND.days;
-    var kmM = d * 100; // ~100 km round trip per working day
+    var kmM = d * 100;          // scenario: ~100 km round trip per working day
+    var L = Math.round(kmM * 9 / 100); // 9 L / 100 km scenario
     var out = el("parand-out"), fu = el("parand-fuel"), nx = el("parand-next");
     if (!out) return;
-    if (d === 1) {
-      out.innerHTML =
-        '<div class="po-card"><div class="po-v">تا ۱۰۰</div><div class="po-u">کیلومتر در روز · رفت و برگشت</div>' +
-        '<div class="po-s">۳۵ تا ۵۰ کیلومتر یک‌طرفه، بسته به مقصد در تهران</div></div>';
-    } else {
-      out.innerHTML =
-        '<div class="po-card hot"><div class="po-v">' + u.fa(kmM) + '</div><div class="po-u">کیلومتر در ماه</div>' +
-        '<div class="po-s">' + u.toFaDigits(d) + ' روز کاری × تا حدود ۱۰۰ کیلومتر در روز</div></div>';
-    }
-    if (d === 22) {
-      fu.className = "parand-fuel in";
-      fu.innerHTML =
-        '<div class="pf-lab">با مصرف فرضی ۹ لیتر در هر ۱۰۰ کیلومتر:</div>' +
-        '<div class="pf-v">۱۹۸ <small>لیتر بنزین در ماه</small></div>' +
-        '<div class="pf-s">۲٬۲۰۰ ÷ ۱۰۰ × ۹ ≈ ۱۹۸ لیتر</div>';
-      if (nx) nx.style.display = "";
-    } else {
-      fu.className = "parand-fuel";
-      fu.innerHTML = "";
-      if (nx) nx.style.display = "none";
-    }
+    var peak = d === 22;
+    out.innerHTML =
+      '<div class="po-card' + (peak ? " hot" : "") + '"><div class="po-v">' + u.fa(kmM) + '</div><div class="po-u">کیلومتر در ماه</div>' +
+      '<div class="po-s">' + u.toFaDigits(d) + ' روز کاری × سناریوی ۱۰۰ کیلومتر رفت‌وبرگشت در روز</div></div>';
+    fu.className = "parand-fuel in" + (peak ? " peak" : "");
+    fu.innerHTML =
+      '<div class="pf-lab">با مصرف فرضی ۹ لیتر در هر ۱۰۰ کیلومتر:</div>' +
+      '<div class="pf-v">' + u.fa(L) + ' <small>لیتر بنزین در ماه</small></div>' +
+      '<div class="pf-s">' + u.fa(kmM) + ' کیلومتر ÷ ۱۰۰ × ۹ ≈ ' + u.fa(L) + ' لیتر</div>';
+    if (nx) nx.style.display = "";
   }
 
   function drawParandRoute() {
     PARAND.reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    var heart = el("parand-heart");
-    if (heart) heart.classList.remove("show");
     setParandCycle("مسیر روزانه: صبح از پرند به تهران، عصر برگشت");
     buildParandScene();
     var host = el("parand-days-chips");
@@ -404,23 +411,24 @@
     [1, 5, 10, 15, 22].forEach(function (d) {
       var b = u.h("button", { type: "button", "class": "chip" + (d === PARAND.days ? " active" : ""), "data-days": d }, u.toFaDigits(d) + " روز");
       b.addEventListener("click", function () {
-        PARAND.days = d;
-        var cs = host.children;
-        for (var i = 0; i < cs.length; i++) cs[i].classList.toggle("active", +cs[i].getAttribute("data-days") === PARAND.days);
-        renderParandOutput();
+        // a manual choice cancels any pending auto-step demo
+        PARAND.autoRan = true;
+        for (var k = 0; k < PARAND.stepTimers.length; k++) clearTimeout(PARAND.stepTimers[k]);
+        PARAND.stepTimers = [];
+        p4SetDays(+b.getAttribute("data-days"));
       });
       host.appendChild(b);
     });
     renderParandOutput();
-    // Start the one-day commute cycle once the scene scrolls into view.
-    // Use both IntersectionObserver and a scroll check so it is robust.
+    // Play the one-day commute cycle once the scene scrolls into view, then
+    // step the workdays 1→…→22. Use IO + a scroll check so it is robust.
     function p4MaybeRun() {
       if (PARAND.autoRan) { cleanup(); return; }
       var r = el("parand-route");
       if (!r) { cleanup(); return; }
       var b = r.getBoundingClientRect();
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      if (b.top < vh * 0.85 && b.bottom > 0) runParandCycle(false);
+      if (b.top < vh * 0.85 && b.bottom > 0) { runParandCycle(false, true); }
     }
     function cleanup() {
       window.removeEventListener("scroll", p4MaybeRun);
@@ -429,7 +437,7 @@
     if ("IntersectionObserver" in window) {
       var ob = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
-          if (e.isIntersecting) { ob.disconnect(); cleanup(); runParandCycle(false); }
+          if (e.isIntersecting) { ob.disconnect(); cleanup(); runParandCycle(false, true); }
         });
       }, { threshold: 0.3 });
       ob.observe(el("parand-route"));

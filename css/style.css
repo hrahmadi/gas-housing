@@ -397,32 +397,30 @@ input[type="range"]::-webkit-slider-thumb {
 .parand-cycle { text-align: center; font-size: .92rem; color: var(--ink-dim); margin-top: .7rem; line-height: 2; min-height: 1.2em; }
 .parand-cycle b { color: var(--accent); font-weight: 800; }
 .parand-cycle .ph { color: var(--accent); font-weight: 800; }
-.parand-heart { text-align: center; font-size: 1.06rem; font-weight: 800; color: var(--ink); margin-top: .35rem; opacity: 0; transform: translateY(6px); transition: opacity .8s ease, transform .8s ease; }
-.parand-heart.show { opacity: 1; transform: none; }
+.parand-heart { text-align: center; font-size: 1.06rem; font-weight: 800; color: var(--ink); margin-top: .35rem; }
 .parand-heart b { color: var(--accent); }
 .parand-days { margin-top: 1rem; }
 .parand-q { text-align: center; font-size: .9rem; color: var(--ink-dim); margin-bottom: .5rem; }
 #parand-days-chips { justify-content: center; }
 #parand-out { display: flex; justify-content: center; margin-top: 1rem; }
-.po-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: .9rem 1.6rem; text-align: center; min-width: 240px; }
+.po-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: .9rem 1.6rem; text-align: center; min-width: 240px; transition: border-color .3s ease; }
 .po-card .po-v { font-size: 2.3rem; font-weight: 900; color: var(--ink); line-height: 1.2; }
+.po-card.hot { border-color: rgba(242,182,50,.55); }
 .po-card.hot .po-v { color: var(--accent); }
 .po-card .po-u { font-size: .92rem; color: var(--ink-dim); }
-.po-card .po-s { font-size: .72rem; color: var(--ink-faint); margin-top: .3rem; line-height: 1.8; }
-.parand-fuel { margin: .9rem auto 0; max-width: 560px; background: var(--accent-soft); border: 1px solid rgba(242,182,50,.45); border-radius: 14px; padding: .9rem 1.3rem; text-align: center; opacity: 0; transform: translateY(8px); }
-.parand-fuel.in { animation: fuelPop .8s ease forwards; }
+.po-card .po-s { font-size: .74rem; color: var(--ink-faint); margin-top: .3rem; line-height: 1.8; }
+.parand-fuel { margin: .9rem auto 0; max-width: 560px; background: var(--accent-soft); border: 1px solid rgba(242,182,50,.45); border-radius: 14px; padding: .9rem 1.3rem; text-align: center; }
+.parand-fuel.in { animation: fuelPop .8s ease; }
 @keyframes fuelPop { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
 .parand-fuel .pf-lab { font-size: .88rem; color: var(--ink-dim); }
-.parand-fuel .pf-v { font-size: 2.1rem; font-weight: 900; color: var(--accent); line-height: 1.3; margin-top: .15rem; }
-.parand-fuel .pf-v small { font-size: .95rem; font-weight: 700; color: var(--ink); }
+.parand-fuel .pf-v { font-size: 2rem; font-weight: 900; color: var(--ink); line-height: 1.3; margin-top: .15rem; }
+.parand-fuel.peak .pf-v { color: var(--accent); font-size: 2.4rem; }
+.parand-fuel .pf-v small { font-size: .9rem; font-weight: 700; color: var(--ink-dim); }
+.parand-fuel.peak .pf-v small { color: var(--ink); }
 .parand-fuel .pf-s { font-size: .74rem; color: var(--ink-faint); margin-top: .2rem; }
 .parand-next { display: inline-block; margin: 1.1rem auto 0; padding: .5rem 1.6rem; border-radius: 999px; background: var(--accent); color: #161006; font-weight: 800; font-size: .95rem; text-align: center; text-decoration: none; }
 .parand-next span { font-size: 1rem; margin-inline-start: .2rem; }
 .parand-next:hover { filter: brightness(1.08); }
-.trip-evidence { max-width: 860px; margin: 0 auto; padding: 1.2rem 22px; text-align: center; border-block: 1px dashed var(--line); }
-.trip-evidence .trip-big { display: block; color: var(--accent); font-weight: 900; font-size: 1.2rem; }
-.trip-evidence .trip-sub { display: block; color: var(--ink-dim); font-size: .95rem; margin-top: .3rem; line-height: 2; }
-.trip-evidence .trip-src { display: inline-block; margin-top: .4rem; font-size: .76rem; color: var(--ink-faint); text-decoration: underline; text-underline-offset: 3px; }
 
 /* figure emphasis */
 .fig-note { font-size: .76rem; color: var(--ink-faint); margin-top: .5rem; }
