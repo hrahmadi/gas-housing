@@ -108,6 +108,7 @@
   var PERI = {
     pos: {
       "Tehran": [535, 202],
+      "Karaj": [330, 128],
       "Pardis": [894, 150],
       "Pakdasht": [805, 372],
       "Pishva": [856, 512],
@@ -204,19 +205,21 @@
     });
 
     var W = 1000, H = 620;
-    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "peri-svg", role: "img", "aria-label": "نقشه شهرهای پیرامون تهران و راه‌های دسترسی" });
+    var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "peri-svg", role: "img", "aria-label": "نقشه منطقه کلان‌شهری تهران–کرج و شهرهای پیرامون و راه‌های دسترسی" });
     PERI.svg = svg;
     PERI.circles = {};
 
-    var T = PERI.pos.Tehran;
-    var halo = u.svgEl("circle", { cx: T[0], cy: T[1], r: 150, fill: "rgba(242,182,50,0.05)", stroke: "rgba(242,182,50,0.18)", "stroke-dasharray": "4 6", "stroke-width": 1 });
-    svg.appendChild(halo);
-
-    // Tehran reference node
-    svg.appendChild(u.svgEl("circle", { cx: T[0], cy: T[1], r: 16, fill: "#0c0f15", stroke: "#f2b632", "stroke-width": 2.5 }));
-    var tL = u.svgEl("text", { x: T[0], y: T[1] - 24, "class": "axis-txt", "font-size": "14", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
-    tL.textContent = "تهران";
-    svg.appendChild(tL);
+    // Major-city hubs (Tehran + its adjacent twin, Karaj) — same visual language.
+    // These are big urban centres, NOT measured growth dots of the periphery study.
+    function hub(name, P, haloR, nodeR) {
+      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: haloR, fill: "rgba(242,182,50,0.05)", stroke: "rgba(242,182,50,0.18)", "stroke-dasharray": "4 6", "stroke-width": 1 }));
+      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: nodeR, fill: "#0c0f15", stroke: "#f2b632", "stroke-width": 2.5 }));
+      var tL = u.svgEl("text", { x: P[0], y: P[1] - 24, "class": "axis-txt", "font-size": "14", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
+      tL.textContent = name;
+      svg.appendChild(tL);
+    }
+    hub("تهران", PERI.pos.Tehran, 150, 16);
+    hub("کرج", PERI.pos.Karaj, 72, 13);
 
     names.forEach(function (n) {
       var P = PERI.pos[n];
@@ -264,7 +267,7 @@
     });
 
     el("peri-note").textContent =
-      "اندازه دایره = رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ (پژوهش منطقه کلان‌شهری تهران). پرند، شهر جدیدی درون شهرستان رباط‌کریم است؛ رقم ۱۳۸.۵٪ رشدِ کل شهرستان است که ساخت‌وساز پرند را هم در بر می‌گیرد. دو الگوی دسترسی دیده می‌شود: شهرهای روی خط ریلی (پرند، پاکدشت، پیشوا، ری) در برابر شهرهای وابسته به اتوبوس و خودرو (پردیس، شهریار). منبع دسترسی: گزارش‌های خطوط حومه‌ای، ۱۴۰۴.";
+      "تهران و کرج دو مرکز اصلیِ منطقه‌اند (با حلقهٔ طلایی مشخص شده‌اند)؛ شهرهای اطراف، دایرهٔ رشدِ خود را دارند. اندازه دایره = رشد سطح ساخته‌شده ۲۰۱۰–۲۰۲۰ (پژوهش منطقه کلان‌شهری تهران). پرند، شهر جدیدی درون شهرستان رباط‌کریم است؛ رقم ۱۳۸.۵٪ رشدِ کل شهرستان است که ساخت‌وساز پرند را هم در بر می‌گیرد. دو الگوی دسترسی دیده می‌شود: شهرهای روی خط ریلی (پرند، پاکدشت، پیشوا، ری) در برابر شهرهای وابسته به اتوبوس و خودرو (پردیس، شهریار). منبع دسترسی: گزارش‌های خطوط حومه‌ای، ۱۴۰۴.";
     updatePeriDetail();
   }
 

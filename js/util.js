@@ -76,6 +76,7 @@
   // Persian labels for known names
   var FA_NAME = {
     "Tehran": "تهران",
+    "Karaj": "کرج",
     "Pardis": "پردیس",
     "Pakdasht": "پاکدشت",
     "Pishva": "پیشوا",
