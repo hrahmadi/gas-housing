@@ -189,7 +189,7 @@
       <div class="peri-detail" id="peri-detail">روی هر شهر بزن تا مسیر و راه‌های دسترسی‌اش به تهران را ببینی.</div>
       <div class="map-note" id="peri-note"></div>
     </div>
-    <div class="peri-transition">اما داشتن یک مسیر حمل‌ونقل به این معنی نیست که فاصله خانه و محل کار از بین رفته است؛ برای دیدن هزینه این فاصله، «پرند» را دقیق‌تر بررسی می‌کنیم.</div>
+    <div class="peri-transition">اما داشتن یک مسیر حمل‌ونقل به این معنی نیست که فاصله خانه و محل کار از بین رفته است؛ حالا این مسئله را در مقیاس کل کشور تصور کنیم.</div>
   </div>
 
   <div class="prose-body">
@@ -204,15 +204,87 @@
 </section>
 
 <!-- ============================================================
-     بخش ۴ — پرند (مسیر) و محاسبه فاصله
+     بخش ۴ — آزمایش ذهنی مقیاس ملی (رفتوآمد و سوخت)
+     ============================================================ -->
+<section class="prose-section" id="nat-sec">
+  <div class="section-head">
+    <div class="sn">بخش سوم · مقیاس ملی</div>
+    <h2>اندازه این مسئله را در مقیاس کشور تصور کنیم</h2>
+  </div>
+  <div class="prose-body">
+    <p>ما نمی‌دانیم دقیقا چه مقدار از مصرف بنزین کشور مربوط به رف‌توآمد شغلی است؛ اما می‌توانیم اندازه این مسئله را تصور کنیم.</p>
+    <p>ایران حدود <b class="num">۲۴.۸ میلیون نفر شاغل</b> دارد. اگر فاصله خانه تا محل کار برای بخشی از این افراد فقط چند کیلومتر بیشتر شود، این فاصله در مقیاس میلیون‌ها نفر به چه مقدار مصرف سوخت تبدیل می‌شود؟</p>
+  </div>
+
+  <div class="fig-scene">
+    <div class="fig-index">آزمایش ذهنی · مقیاس ملی</div>
+    <div class="panel" id="nat-panel">
+      <div class="panel-title"><span class="dot"></span>فاصله تا محل کار چقدر بنزین مصرف می‌کند؟</div>
+      <div class="panel-sub">یک آزمایش ذهنی با ۲۴.۸ میلیون شاغل ایران</div>
+      <div class="nat-qual">این یک سناریوی محاسباتی است، نه آمار واقعی رف‌توآمد شاغلان.</div>
+
+      <div class="nat-total"><b id="nat-total-n">۲۴.۸</b> <span id="nat-total-u">میلیون شاغل در ایران</span></div>
+      <div class="nat-crowd" id="nat-crowd" role="img" aria-label="جمعیت شاغلان ایران"></div>
+      <div class="nat-affected" id="nat-affected" aria-live="polite"></div>
+
+      <div class="controls">
+        <div class="ctrl-row">
+          <span class="ctrl-label">مسافت اضافه رف‌تبرگشت روزانه</span>
+          <input type="range" id="nat-km" min="0" max="60" step="10" value="30">
+          <span class="ctrl-value" id="nat-km-lbl">+۳۰ km</span>
+        </div>
+        <div class="nat-rule" aria-hidden="true">
+          <div class="nat-rule-track"><div class="nat-rule-fill" id="nat-rule-fill"></div><div class="nat-rule-knob" id="nat-rule-knob"></div></div>
+          <div class="nat-rule-scale"><span>+۰ km</span><span>+۶۰ km</span></div>
+        </div>
+        <div class="ctrl-row">
+          <span class="ctrl-label">این تغییر برای چند درصد شاغلان اتفاق بیفتد؟</span>
+          <div class="chips" id="nat-pct"></div>
+        </div>
+      </div>
+
+      <div class="nat-facts">۲۴.۸ میلیون شاغل · مصرف خودرو ۹ لیتر در ۱۰۰ کیلومتر · ۲۲ روز کاری در ماه
+        <button type="button" class="nat-fbtn" id="nat-fbtn" aria-expanded="false">چرا ۹ لیتر؟</button>
+      </div>
+      <div class="nat-fnote" id="nat-fnote" hidden>مصرف خودرو در این آزمایش ذهنی یک فرض ثابت است؛ شکل‌های بعدی بازه ۷ تا ۱۲ لیتر در ۱۰۰ کیلومتر را هم نشان می‌دهند.</div>
+
+      <div class="nat-out">
+        <div class="nat-out-lab">بنزین مورد نیاز برای این فاصله اضافه (میانگین سالانه)</div>
+        <div class="nat-out-v"><span id="nat-out-v">۴.۸</span> <small>میلیون لیتر در روز</small></div>
+      </div>
+
+      <div class="nat-compare">
+        <div class="nat-compare-track">
+          <div class="nat-base"></div>
+          <div class="nat-share" id="nat-share"></div>
+        </div>
+        <div class="nat-compare-cap">مصرف روزانه کشور ≈ ۱۲۹ میلیون لیتر</div>
+        <div class="nat-compare-call" id="nat-call"></div>
+      </div>
+
+      <div class="nat-sentence" id="nat-sentence"></div>
+      <div class="map-note">این عدد مصرف واقعی رف‌توآمد شغلی نیست؛ یک محاسبه سناریویی برای نشان دادن مقیاس مسئله است.</div>
+    </div>
+    <div class="fig-cap">
+      <b>چطور حساب می‌شود:</b> شاغلانِ درگیر (درصدِ انتخاب‌شده از ۲۴.۸ میلیون) × مسافت اضافه روزانه × ۹ لیتر در ۱۰۰ کیلومتر × (۲۲ روز کاری × ۱۲ ماه ÷ ۳۶۵ روز). به‌ازای هر شاغلِ درگیر، هر ۱ کیلومتر اضافه در روز ≈ ۰.۰۶۵ لیتر در روز. مقایسه با مصرف روزانه کشور (≈ ۱۲۹ میلیون لیتر، S11) فقط برای نشان دادن مقیاس است. جمعیت شاغل (S15) و مصرف روزانه (S11) هر دو داده‌های پروژه‌ساز هستند و باید پیش از انتشار تأیید شوند. — سناریو/محاسبه
+    </div>
+  </div>
+
+  <div class="prose-body">
+    <p>حتی اگر فقط بخشی از شاغلان این افزایش فاصله را تجربه کنند، چند ده کیلومتر اضافه در روز می‌تواند به میلیون‌ها لیتر مصرف اضافی در مقیاس کشور تبدیل شود. این هنوز به معنی آن نیست که این مقدار واقعا از محل رف‌توآمد شغلی مصرف می‌شود؛ فقط نشان می‌دهد که اندازه مسئله بالقوه چقدر است.</p>
+  </div>
+  <div class="pull">این فقط یک آزمایش ذهنی بود. برای دیدن اینکه این فاصله در زندگی واقعی چه شکلی پیدا می‌کند، برویم سراغ یک مورد مشخص: <span class="accent">پرند</span>.</div>
+</section>
+
+<!-- ============================================================
+     بخش ۵ — پرند (مسیر) و محاسبه فاصله
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش سوم · نمونه پرند</div>
+    <div class="sn">بخش چهارم · نمونه پرند</div>
     <h2>پرند: یک خانه ارزان‌تر، یک مسیر بسیار طولانی‌تر</h2>
   </div>
   <div class="prose-body">
-    <p>اما رشد شهرهای پیرامونی فقط به این معنی نیست که خانه‌ها از تهران دورتر شده‌اند. اگر شغل همان‌جا بماند، این فاصله باید <b>هر روز</b> طی شود.</p>
     <p>برای بعضی از ساکنان پرند، رفت و آمد به تهران بخشی از هزینه زندگی است. این شهرِ جدید حدود <b class="num">۳۵ کیلومتر</b> با تهران فاصله دارد و گزارش‌های مختلف از رفت و آمد روزانه حدود <b class="num">۳۰ تا ۴۰ هزار نفر</b> از آن به سمت تهران خبر داده‌اند.</p>
   </div>
 
@@ -245,11 +317,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۵ — فاصله انرژی مصرف می‌کند (ماشین‌حساب سوخت)
+     بخش ۶ — فاصله انرژی مصرف می‌کند (ماشین‌حساب سوخت)
      ============================================================ -->
 <section class="prose-section" id="fig5">
   <div class="section-head">
-    <div class="sn">بخش چهارم · انرژی</div>
+    <div class="sn">بخش پنجم · انرژی</div>
     <h2>فاصله انرژی مصرف می‌کند</h2>
   </div>
   <div class="prose-body">
@@ -311,11 +383,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۶ — ارزان بودن بنزین و فرض پنهان
+     بخش ۷ — ارزان بودن بنزین و فرض پنهان
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش پنجم · سیاست قیمت</div>
+    <div class="sn">بخش ششم · سیاست قیمت</div>
     <h2>ارزان بودن بنزین شاید فقط مردم را به رانندگی بیشتر تشویق نکند</h2>
   </div>
   <div class="prose-body">
@@ -343,11 +415,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۷ — شوک قیمت (تعامل اسلایدر)
+     بخش ۸ — شوک قیمت (تعامل اسلایدر)
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش ششم · شوک قیمت</div>
+    <div class="sn">بخش هفتم · شوک قیمت</div>
     <h2>حالا قیمت بنزین را بالا ببریم</h2>
   </div>
   <div class="prose-body">
@@ -407,11 +479,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۸ — آبان ۱۳۹۸
+     بخش ۹ — آبان ۱۳۹۸
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش هفتم · ۱۳۹۸</div>
+    <div class="sn">بخش هشتم · ۱۳۹۸</div>
     <h2>آبان ۱۳۹۸</h2>
   </div>
   <div class="prose-body">
@@ -433,11 +505,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۹ — راه حل
+     بخش ۱۰ — راه حل
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش هشتم · نتیجه</div>
+    <div class="sn">بخش نهم · نتیجه</div>
     <h2>شاید راه حل، فقط گران کردن بنزین نباشد</h2>
   </div>
   <div class="prose-body">
@@ -462,7 +534,7 @@
 </section>
 
 <!-- ============================================================
-     بخش ۱۰ — جمع‌بندی
+     بخش ۱۱ — جمع‌بندی
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
@@ -539,10 +611,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=21"></script>
-<script src="assets/geo/tehran_districts.js?v=21"></script>
-<script src="js/util.js?v=21"></script>
-<script src="js/views.js?v=21"></script>
-<script src="js/article.js?v=21"></script>
+<script src="data/data.js?v=22"></script>
+<script src="assets/geo/tehran_districts.js?v=22"></script>
+<script src="js/util.js?v=22"></script>
+<script src="js/views.js?v=22"></script>
+<script src="js/article.js?v=22"></script>
 </body>
 </html>

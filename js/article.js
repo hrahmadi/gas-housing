@@ -9,6 +9,7 @@
     V.drawPeriMap();
     V.drawParandRoute();
     V.drawRentWageIndex();
+    V.drawNational();
     V.buildMap();
     V.buildCalc();
     V.buildShock();

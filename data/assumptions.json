@@ -39,6 +39,20 @@
     "note": "1x = statutory minimum wage",
     "status": "OBSERVED"
   },
+  "nationalCommute": {
+    "employedMillion": 24.822,
+    "employedSourceId": "S15",
+    "fuelLitresPer100km": 9,
+    "workdaysPerMonth": 22,
+    "daysPerYear": 365,
+    "baseline": {
+      "nationalDailyMillionLitres": 129,
+      "note": "Latest verified annual-average national daily gasoline consumption (1404 ≈ 129; S11).",
+      "status": "OBSERVED"
+    },
+    "note": "Thought-experiment scenario, not observed national commuting data. Additional round-trip km × share of employed × 9 L/100km × 22×12 workdays ÷ 365 calendar days.",
+    "status": "SCENARIO"
+  },
   "covidDipNote": {
     "year": 1399,
     "note": "1399 decline is a COVID mobility shock, not housing evidence"

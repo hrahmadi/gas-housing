@@ -909,6 +909,169 @@
   }
 
   /* ============================================================
+     FIGURE — national-scale commute/fuel thought experiment
+     (آزمایش ذهنی · مقیاس ملی)
+     ============================================================ */
+  var NAT = { km: 30, pct: 10, done: false, raf: null };
+
+  function natParams() {
+    var a = (D.assumptions && D.assumptions.nationalCommute) || {};
+    return {
+      emp: a.employedMillion != null ? a.employedMillion : 24.822,
+      eff: a.fuelLitresPer100km != null ? a.fuelLitresPer100km : 9,
+      wd: a.workdaysPerMonth != null ? a.workdaysPerMonth : 22,
+      days: a.daysPerYear != null ? a.daysPerYear : 365,
+      base: (a.baseline && a.baseline.nationalDailyMillionLitres != null) ? a.baseline.nationalDailyMillionLitres : 129
+    };
+  }
+
+  function natCalc() {
+    var p = natParams();
+    var workers = p.emp * NAT.pct / 100;                       // million workers affected
+    var litres = workers * 1e6 * NAT.km * (p.eff / 100) * (p.wd * 12 / p.days); // L/day (annual avg)
+    var share = litres / (p.base * 1e6) * 100;
+    return { workers: workers, litres: litres, share: share, base: p.base, emp: p.emp };
+  }
+
+  function natFmtLitres(litres) {
+    // display "حدود ۴.۸" style; keep internal full precision
+    return u.fa(litres / 1e6, litres / 1e6 >= 10 ? 0 : 1);
+  }
+
+  function natPaint(f) {
+    var c = natCalc();
+    var workers = c.emp * NAT.pct / 100 * f;
+    var litres = c.litres * f;
+    var share = c.share * f;
+    var lit = Math.round(NAT.pct * f);
+
+    // crowd cells: 100 cells, each ≈ 1% of workforce
+    var cells = el("nat-crowd").children;
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].classList.toggle("on", i < lit);
+    }
+
+    var v = el("nat-out-v");
+    if (v) v.textContent = "حدود " + natFmtLitres(litres);
+
+    var call = el("nat-call");
+    if (call) call.textContent = u.faPct(share, share >= 10 ? 0 : 1) + " از مصرف روزانه کشور";
+
+    var shareBar = el("nat-share");
+    if (shareBar) shareBar.style.width = Math.min(share, 100) + "%";
+
+    var aff = el("nat-affected");
+    if (aff) aff.textContent = u.toFaDigits(NAT.pct) + "٪ = حدود " + u.fa(workers, 1) + " میلیون شاغل";
+
+    var kmLbl = el("nat-km-lbl");
+    if (kmLbl) kmLbl.textContent = "+" + u.toFaDigits(NAT.km) + " km";
+
+    var fill = el("nat-rule-fill"), knob = el("nat-rule-knob");
+    if (fill) fill.style.width = (NAT.km / 60 * 100) + "%";
+    if (knob) knob.style.left = (NAT.km / 60 * 100) + "%";
+
+    var sent = el("nat-sentence");
+    if (sent && f >= 1) {
+      sent.innerHTML =
+        "اگر <b>" + u.toFaDigits(NAT.pct) + "٪</b> از شاغلان (حدود " + u.fa(workers, 1) + " میلیون نفر) هر روز <b>+" +
+        u.toFaDigits(NAT.km) + " کیلومتر</b> مسافت اضافه در رفت‌وبرگشت داشته باشند، در مقیاس کشور حدود <b>" +
+        natFmtLitres(litres) + " میلیون لیتر بنزین در روز</b> لازم می‌شود (میانگین سالانه).";
+    }
+  }
+
+  function natStop() {
+    if (NAT.raf) { cancelAnimationFrame(NAT.raf); NAT.raf = null; }
+  }
+
+  function natEntrance() {
+    if (NAT.done) return;
+    NAT.done = true;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) { natPaint(1); return; }
+    var t0 = null, dur = 1900;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 3);
+      natPaint(e);
+      if (p < 1) NAT.raf = requestAnimationFrame(step);
+      else natPaint(1);
+    }
+    NAT.raf = requestAnimationFrame(step);
+  }
+
+  function natRenderNow() {
+    natStop();
+    NAT.done = true;   // manual interaction: show final state, no auto-entrance later
+    natPaint(1);
+  }
+
+  function drawNational() {
+    var host = el("nat-panel");
+    if (!host) return;
+
+    // workforce headline
+    var tn = el("nat-total-n");
+    if (tn) tn.textContent = u.fa(natParams().emp, 1);
+
+    // crowd cells (100 = 100%)
+    var crowd = el("nat-crowd");
+    crowd.innerHTML = "";
+    for (var i = 0; i < 100; i++) {
+      crowd.appendChild(u.h("span", { "class": "nat-cell" }, ""));
+    }
+
+    // percent chips (۱۰٪ → ۶۰٪)
+    var pctHost = el("nat-pct");
+    pctHost.innerHTML = "";
+    [10, 20, 30, 40, 50, 60].forEach(function (v) {
+      var b = u.h("button", { type: "button", "class": "chip" + (v === NAT.pct ? " active" : ""), "data-v": v }, u.toFaDigits(v) + "٪");
+      b.addEventListener("click", function () {
+        NAT.pct = v;
+        var cs = pctHost.children;
+        for (var k = 0; k < cs.length; k++) cs[k].classList.toggle("active", +cs[k].getAttribute("data-v") === NAT.pct);
+        natRenderNow();
+      });
+      pctHost.appendChild(b);
+    });
+
+    // distance slider (۰→۶۰, default ۳۰)
+    el("nat-km").addEventListener("input", function () { NAT.km = +el("nat-km").value; natRenderNow(); });
+
+    // ۹L note toggle
+    var fbtn = el("nat-fbtn");
+    if (fbtn) fbtn.addEventListener("click", function () {
+      var n = el("nat-fnote");
+      var open = n.hidden;
+      n.hidden = !open;
+      fbtn.setAttribute("aria-expanded", String(open));
+    });
+
+    // paint default final state first (correct even before any entrance)
+    natPaint(1);
+
+    // entrance animation on first viewport entry (same pattern as Figure 4)
+    var started = false;
+    function go() {
+      if (started) return;
+      started = true;
+      natEntrance();
+    }
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { io.disconnect(); go(); }
+        });
+      }, { threshold: 0.35 });
+      io.observe(host);
+    } else {
+      go();
+    }
+    // fallback: if never scrolled into view, still settle on final state
+    setTimeout(function () { if (!NAT.done) natPaint(1); }, 2500);
+  }
+
+  /* ============================================================
      Reveal, hero, sources
      ============================================================ */
   function initReveal() {
@@ -964,6 +1127,7 @@
     drawPeriMap: drawPeriMap,
     drawParandRoute: drawParandRoute,
     drawRentWageIndex: drawRentWageIndex,
+    drawNational: drawNational,
     buildMap: buildMap,
     buildCalc: buildCalc,
     buildShock: buildShock,
