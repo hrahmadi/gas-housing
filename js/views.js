@@ -912,7 +912,8 @@
      FIGURE — national-scale commute/fuel thought experiment
      (آزمایش ذهنی · مقیاس ملی)
      ============================================================ */
-  var NAT = { km: 30, pct: 10, done: false, raf: null };
+  var NAT = { km: 30, pct: 10, done: false, raf: null, seqs: [] };
+  var NAT_PCTS = [5, 10, 20, 30, 40, 50];
 
   function natParams() {
     var a = (D.assumptions && D.assumptions.nationalCommute) || {};
@@ -934,68 +935,101 @@
   }
 
   function natFmtLitres(litres) {
-    // display "حدود ۴.۸" style; keep internal full precision
+    // full precision kept internally; display in million L/day
     return u.fa(litres / 1e6, litres / 1e6 >= 10 ? 0 : 1);
   }
 
-  function natPaint(f) {
-    var c = natCalc();
-    var workers = c.emp * NAT.pct / 100 * f;
-    var litres = c.litres * f;
-    var share = c.share * f;
-    var lit = Math.round(NAT.pct * f);
+  function natFmtShare(s) {
+    if (s < 0.05) return "۰٪";
+    return u.faPct(s, s >= 10 ? 0 : 1);
+  }
 
-    // crowd cells: 100 cells, each ≈ 1% of workforce
+  function natClamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+  /* Render the whole causal chain at progress e ∈ [0,1].
+     e=1 → final state (all blocks shown, numbers complete).
+     Block order (index into NAT.seqs):
+       0 ctx(denominator) · 1 share · 2 distance · 3 multiply ·
+       4 scenario · 5 result · 6 compare · 7 final narrative */
+  function natRender(e) {
+    var c = natCalc();
+    var eCl = natClamp01(e);
+    var th = [0.02, 0.13, 0.24, 0.35, 0.47, 0.58, 0.72, 0.86];
+    NAT.seqs.forEach(function (s, i) {
+      s.classList.toggle("show", eCl >= th[i]);
+    });
+
+    // crowd lights up during the denominator step (reaches NAT.pct cells by e≈0.1)
+    var lit = Math.round(NAT.pct * natClamp01(eCl / 0.1));
     var cells = el("nat-crowd").children;
-    for (var i = 0; i < cells.length; i++) {
-      cells[i].classList.toggle("on", i < lit);
+    for (var i = 0; i < cells.length; i++) cells[i].classList.toggle("on", i < lit);
+
+    // affected population (block 1)
+    if (eCl >= th[1]) {
+      var aff = el("nat-affected");
+      if (aff) aff.textContent = "حدود " + u.fa(c.workers, 1) + " میلیون نفر";
     }
+    // distance labels (block 2)
+    if (eCl >= th[2]) {
+      var kmVal = el("nat-km-val");
+      if (kmVal) kmVal.textContent = "+" + u.toFaDigits(NAT.km) + " کیلومتر در روز";
+      var kmSub = el("nat-km-sub");
+      if (kmSub) kmSub.textContent = "یعنی هر فرد متاثر، روزانه " + u.toFaDigits(NAT.km) + " کیلومتر بیشتر از قبل سفر می‌کند.";
+    }
+    // one-line multiplication (block 3)
+    if (eCl >= th[3]) {
+      var mult = el("nat-mult");
+      if (mult) mult.innerHTML = "حدود <b>" + u.fa(c.workers, 1) + " میلیون نفر</b> × <b>" + u.toFaDigits(NAT.km) + " کیلومتر</b> اضافه در روز";
+    }
+    // scenario sentence (block 4) and final narrative (block 7)
+    if (eCl >= th[4]) {
+      var scen = el("nat-scenario");
+      if (scen) scen.textContent =
+        "فرض کنیم " + (NAT.pct <= 20 ? "فقط " : "") + u.toFaDigits(NAT.pct) + "٪ شاغلان، به دلیل دورتر شدن محل زندگی از محل کار، روزانه " +
+        u.toFaDigits(NAT.km) + " کیلومتر بیشتر رفت و آمد کنند.";
+    }
+    if (eCl >= th[7]) {
+      var fin = el("nat-final");
+      if (fin) fin.textContent =
+        "حتی اگر " + (NAT.pct <= 20 ? "فقط " : "") + u.toFaDigits(NAT.pct) + "٪ شاغلان چنین تغییری را تجربه کنند، این فاصله اضافه در مقیاس کشور می‌تواند به میلیون‌ها لیتر بنزین در روز تبدیل شود.";
+    }
+
+    // count-up of the result (block 5) only once its block is revealed
+    var cr = natClamp01((eCl - th[5]) / (1 - th[5]));
+    var litres = c.litres * cr;
+    var share = c.share * cr;
 
     var v = el("nat-out-v");
-    if (v) v.textContent = "حدود " + natFmtLitres(litres);
-
-    var call = el("nat-call");
-    if (call) call.textContent = u.faPct(share, share >= 10 ? 0 : 1) + " از مصرف روزانه کشور";
-
+    if (v) v.textContent = natFmtLitres(litres);
+    var cmpVal = el("nat-cmp-val");
+    if (cmpVal) cmpVal.textContent = natFmtLitres(litres) + " میلیون لیتر";
     var shareBar = el("nat-share");
     if (shareBar) shareBar.style.width = Math.min(share, 100) + "%";
-
-    var aff = el("nat-affected");
-    if (aff) aff.textContent = u.toFaDigits(NAT.pct) + "٪ = حدود " + u.fa(workers, 1) + " میلیون شاغل";
-
-    var kmLbl = el("nat-km-lbl");
-    if (kmLbl) kmLbl.textContent = "+" + u.toFaDigits(NAT.km) + " km";
-
-    var fill = el("nat-rule-fill"), knob = el("nat-rule-knob");
-    if (fill) fill.style.width = (NAT.km / 60 * 100) + "%";
-    if (knob) knob.style.left = (NAT.km / 60 * 100) + "%";
-
-    var sent = el("nat-sentence");
-    if (sent && f >= 1) {
-      sent.innerHTML =
-        "اگر <b>" + u.toFaDigits(NAT.pct) + "٪</b> از شاغلان (حدود " + u.fa(workers, 1) + " میلیون نفر) هر روز <b>+" +
-        u.toFaDigits(NAT.km) + " کیلومتر</b> مسافت اضافه در رفت‌وبرگشت داشته باشند، در مقیاس کشور حدود <b>" +
-        natFmtLitres(litres) + " میلیون لیتر بنزین در روز</b> لازم می‌شود (میانگین سالانه).";
-    }
+    var call = el("nat-call");
+    if (call) call.textContent = natFmtShare(share);
+    var callSub = el("nat-call-sub");
+    if (callSub) callSub.textContent = natFmtShare(share) + " از مصرف روزانه کشور";
   }
 
   function natStop() {
     if (NAT.raf) { cancelAnimationFrame(NAT.raf); NAT.raf = null; }
   }
 
+  function natReduced() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
   function natEntrance() {
     if (NAT.done) return;
     NAT.done = true;
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !("IntersectionObserver" in window)) { natPaint(1); return; }
-    var t0 = null, dur = 1900;
+    if (natReduced() || !("IntersectionObserver" in window)) { natRender(1); return; }
+    var t0 = null, dur = 2600;
     function step(ts) {
       if (!t0) t0 = ts;
       var p = Math.min((ts - t0) / dur, 1);
-      var e = 1 - Math.pow(1 - p, 3);
-      natPaint(e);
+      natRender(p);
       if (p < 1) NAT.raf = requestAnimationFrame(step);
-      else natPaint(1);
+      else natRender(1);
     }
     NAT.raf = requestAnimationFrame(step);
   }
@@ -1003,28 +1037,29 @@
   function natRenderNow() {
     natStop();
     NAT.done = true;   // manual interaction: show final state, no auto-entrance later
-    natPaint(1);
+    natRender(1);
   }
 
   function drawNational() {
     var host = el("nat-panel");
     if (!host) return;
 
-    // workforce headline
+    // collect causal-chain blocks in order
+    NAT.seqs = Array.prototype.slice.call(host.querySelectorAll(".nat-seq"));
+
+    // workforce headline (denominator)
     var tn = el("nat-total-n");
     if (tn) tn.textContent = u.fa(natParams().emp, 1);
 
-    // crowd cells (100 = 100%)
+    // crowd cells (100 = 100% of workforce)
     var crowd = el("nat-crowd");
     crowd.innerHTML = "";
-    for (var i = 0; i < 100; i++) {
-      crowd.appendChild(u.h("span", { "class": "nat-cell" }, ""));
-    }
+    for (var i = 0; i < 100; i++) crowd.appendChild(u.h("span", { "class": "nat-cell" }, ""));
 
-    // percent chips (۱۰٪ → ۶۰٪)
+    // percent chips (۵٪ → ۵۰٪, default ۱۰٪)
     var pctHost = el("nat-pct");
     pctHost.innerHTML = "";
-    [10, 20, 30, 40, 50, 60].forEach(function (v) {
+    NAT_PCTS.forEach(function (v) {
       var b = u.h("button", { type: "button", "class": "chip" + (v === NAT.pct ? " active" : ""), "data-v": v }, u.toFaDigits(v) + "٪");
       b.addEventListener("click", function () {
         NAT.pct = v;
@@ -1038,37 +1073,30 @@
     // distance slider (۰→۶۰, default ۳۰)
     el("nat-km").addEventListener("input", function () { NAT.km = +el("nat-km").value; natRenderNow(); });
 
-    // ۹L note toggle
-    var fbtn = el("nat-fbtn");
-    if (fbtn) fbtn.addEventListener("click", function () {
-      var n = el("nat-fnote");
-      var open = n.hidden;
-      n.hidden = !open;
-      fbtn.setAttribute("aria-expanded", String(open));
-    });
+    var reduce = natReduced();
+    if (reduce || !("IntersectionObserver" in window)) {
+      // no animation: paint final state immediately
+      natRender(1);
+      return;
+    }
 
-    // paint default final state first (correct even before any entrance)
-    natPaint(1);
-
-    // entrance animation on first viewport entry (same pattern as Figure 4)
+    // start hidden (pre-entrance), animate on first viewport entry
+    natRender(0);
     var started = false;
     function go() {
       if (started) return;
       started = true;
       natEntrance();
     }
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { io.disconnect(); go(); }
-        });
-      }, { threshold: 0.35 });
-      io.observe(host);
-    } else {
-      go();
-    }
-    // fallback: if never scrolled into view, still settle on final state
-    setTimeout(function () { if (!NAT.done) natPaint(1); }, 2500);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { io.disconnect(); go(); }
+      });
+    }, { threshold: 0.3 });
+    io.observe(host);
+
+    // fallback: if never scrolled into view (or element already visible), settle on final
+    setTimeout(function () { if (!NAT.done) { NAT.done = true; natRender(1); } }, 3000);
   }
 
   /* ============================================================

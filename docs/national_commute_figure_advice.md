@@ -191,3 +191,26 @@ S15 (24.822 M employed, 1404) and S11 (129 M baseline) are both **project-suppli
 | + | Distance control = **additional** round-trip km («مسافت اضافه رفتوبرگشت روزانه», ۰→۶۰, default +۳۰) | Yes |
 
 **Build status:** implemented (`index.html`, `js/views.js` `drawNational()`, `js/article.js` boot, `css/style.css`), README updated, cache-buster `v21 → v22`, committed & pushed.
+
+---
+
+## 8. Second-round redesign — layout feedback APPLIED (2026-09-04)
+
+Reviewer feedback on the first build (see chat): the figure had **three competing quantities** and felt like a calculator. Redesign rulings:
+
+| # | Feedback | Applied |
+|---|---|---|
+| 1 | Make the causal chain **visually explicit and vertical**: ۲۴.۸M → ۱۰٪ → ۲.۵M نفر → +۳۰ km/روز → +۴.۸M لیتر/روز | Yes — panel is now a vertical chain of `nat-seq` blocks |
+| 2 | **One distance control, one number, one meaning** — no detached value pill, no extra tiny ruler | Yes — slider with end labels (۰/۶۰ km) + single big readout «+۳۰ کیلومتر در روز» + sub-sentence; old `nat-rule` removed |
+| 3 | **Worker percentage second** as its own step, stacked (not beside distance) | Yes — chips in own step, answer «حدود ۲.۵ میلیون نفر» below |
+| 4 | **Shrink the crowd ~20–30%**; it is the denominator, not the focus; semantic label for affected group | Yes — `.nat-ctx` smaller; worker count shown as the step-1 answer |
+| 5 | **Result card:** explicit label «بنزین مورد نیاز برای این فاصله اضافی» + big number + % underneath; **no orange giant card** | Yes — plain number is the focal point, card removed |
+| 6 | Share-control wording → «چند درصد شاغلان این فاصله اضافه را تجربه کنند؟» | Yes |
+| 7 | Editorial scenario sentence above the result («فرض کنیم فقط ۱۰٪ شاغلان …») | Yes (`nat-scenario`) |
+| 8 | Comparison bar: numbers together («۴.۸ میلیون لیتر از ۱۲۹ میلیون لیتر مصرف روزانه کشور») with bar below and **۳.۸٪ on the highlighted segment** | Yes |
+| 9 | Animation: reveal the exact causal chain (denominator → % lights up → distance → multiply → result count-up → bar), not abstract events | Yes — staged `natRender(e)` reveals each block in order |
+| 10 | Typography: consistent «میلیون»/«لیتر در روز» (no ملیون / mixed glyphs) | Yes |
+| + | Percent chips now **۵٪ → ۵۰٪** (default ۱۰٪); ۶۰٪ dropped per reviewer choice | Yes — `NAT_PCTS = [5,10,20,30,40,50]` |
+| + | Post-figure prose merged into the panel as the closing narrative (no duplication) | Yes |
+
+**Second-round status:** redesigned & verified locally via DOM/interaction checks (no console errors); cache-buster `v22 → v23`. Entrance animation still only fully verifiable on live GitHub Pages (local preview cannot scroll).

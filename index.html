@@ -221,58 +221,63 @@
     <div class="panel" id="nat-panel">
       <div class="panel-title"><span class="dot"></span>فاصله تا محل کار چقدر بنزین مصرف می‌کند؟</div>
       <div class="panel-sub">یک آزمایش ذهنی با ۲۴.۸ میلیون شاغل ایران</div>
-      <div class="nat-qual">این یک سناریوی محاسباتی است، نه آمار واقعی رف‌توآمد شاغلان.</div>
+      <div class="nat-qual">این یک سناریوی محاسباتی است، نه آمار واقعی رفت‌وآمد شاغلان.</div>
 
-      <div class="nat-total"><b id="nat-total-n">۲۴.۸</b> <span id="nat-total-u">میلیون شاغل در ایران</span></div>
-      <div class="nat-crowd" id="nat-crowd" role="img" aria-label="جمعیت شاغلان ایران"></div>
-      <div class="nat-affected" id="nat-affected" aria-live="polite"></div>
+      <!-- مخرج: کل جمعیت شاغل (زمینه) -->
+      <div class="nat-ctx nat-seq">
+        <div class="nat-ctx-total"><b id="nat-total-n">۲۴.۸</b> <span>میلیون شاغل</span></div>
+        <div class="nat-crowd" id="nat-crowd" role="img" aria-label="جمعیت شاغلان ایران"></div>
+      </div>
 
-      <div class="controls">
-        <div class="ctrl-row">
-          <span class="ctrl-label">مسافت اضافه رف‌تبرگشت روزانه</span>
-          <input type="range" id="nat-km" min="0" max="60" step="10" value="30">
-          <span class="ctrl-value" id="nat-km-lbl">+۳۰ km</span>
+      <!-- گام ۱ — چند درصد؟ -->
+      <div class="nat-step nat-seq">
+        <div class="nat-q">چند درصد شاغلان این فاصله اضافه را تجربه کنند؟</div>
+        <div class="chips nat-chips" id="nat-pct"></div>
+        <div class="nat-answer" id="nat-affected" aria-live="polite">حدود ۲.۵ میلیون نفر</div>
+      </div>
+
+      <!-- گام ۲ — چقدر بیشتر؟ -->
+      <div class="nat-step nat-seq">
+        <div class="nat-q">مسافت اضافه رفت‌وبرگشت روزانه</div>
+        <div class="nat-sl">
+          <span class="nat-sl-lab">۰ km</span>
+          <input type="range" id="nat-km" min="0" max="60" step="10" value="30" aria-label="کیلومتر اضافه در روز">
+          <span class="nat-sl-lab">۶۰ km</span>
         </div>
-        <div class="nat-rule" aria-hidden="true">
-          <div class="nat-rule-track"><div class="nat-rule-fill" id="nat-rule-fill"></div><div class="nat-rule-knob" id="nat-rule-knob"></div></div>
-          <div class="nat-rule-scale"><span>+۰ km</span><span>+۶۰ km</span></div>
-        </div>
-        <div class="ctrl-row">
-          <span class="ctrl-label">این تغییر برای چند درصد شاغلان اتفاق بیفتد؟</span>
-          <div class="chips" id="nat-pct"></div>
+        <div class="nat-kmv" id="nat-km-val">+۳۰ کیلومتر در روز</div>
+        <div class="nat-sub" id="nat-km-sub">یعنی هر فرد متاثر، روزانه ۳۰ کیلومتر بیشتر از قبل سفر می‌کند.</div>
+      </div>
+
+      <!-- ضرب یک‌خطی -->
+      <div class="nat-mult nat-seq" id="nat-mult">حدود ۲.۵ میلیون نفر × ۳۰ کیلومتر اضافه در روز</div>
+
+      <!-- جمله سناریو (بالای نتیجه) -->
+      <div class="nat-scen nat-seq" id="nat-scenario">فرض کنیم فقط ۱۰٪ شاغلان، به دلیل دورتر شدن محل زندگی از محل کار، روزانه ۳۰ کیلومتر بیشتر رفت و آمد کنند.</div>
+
+      <!-- نتیجه -->
+      <div class="nat-result nat-seq">
+        <div class="nat-result-lab">بنزین مورد نیاز برای این فاصله اضافی</div>
+        <div class="nat-result-v">حدود <span id="nat-out-v">۴.۸</span> میلیون لیتر در روز</div>
+        <div class="nat-result-pct" id="nat-call-sub">۳.۸٪ از مصرف روزانه کشور</div>
+      </div>
+
+      <!-- مقایسه با مصرف ملی -->
+      <div class="nat-cmp nat-seq">
+        <div class="nat-cmp-line"><span id="nat-cmp-val">۴.۸ میلیون لیتر</span> از <span class="nat-cmp-base">۱۲۹ میلیون لیتر مصرف روزانه کشور</span></div>
+        <div class="nat-cmp-bar">
+          <div class="nat-cmp-basebar"></div>
+          <div class="nat-cmp-seg" id="nat-share"><span class="nat-cmp-pct" id="nat-call">۳.۸٪</span></div>
         </div>
       </div>
 
-      <div class="nat-facts">۲۴.۸ میلیون شاغل · مصرف خودرو ۹ لیتر در ۱۰۰ کیلومتر · ۲۲ روز کاری در ماه
-        <button type="button" class="nat-fbtn" id="nat-fbtn" aria-expanded="false">چرا ۹ لیتر؟</button>
-      </div>
-      <div class="nat-fnote" id="nat-fnote" hidden>مصرف خودرو در این آزمایش ذهنی یک فرض ثابت است؛ شکل‌های بعدی بازه ۷ تا ۱۲ لیتر در ۱۰۰ کیلومتر را هم نشان می‌دهند.</div>
-
-      <div class="nat-out">
-        <div class="nat-out-lab">بنزین مورد نیاز برای این فاصله اضافه (میانگین سالانه)</div>
-        <div class="nat-out-v"><span id="nat-out-v">۴.۸</span> <small>میلیون لیتر در روز</small></div>
-      </div>
-
-      <div class="nat-compare">
-        <div class="nat-compare-track">
-          <div class="nat-base"></div>
-          <div class="nat-share" id="nat-share"></div>
-        </div>
-        <div class="nat-compare-cap">مصرف روزانه کشور ≈ ۱۲۹ میلیون لیتر</div>
-        <div class="nat-compare-call" id="nat-call"></div>
-      </div>
-
-      <div class="nat-sentence" id="nat-sentence"></div>
-      <div class="map-note">این عدد مصرف واقعی رف‌توآمد شغلی نیست؛ یک محاسبه سناریویی برای نشان دادن مقیاس مسئله است.</div>
+      <div class="nat-final nat-seq" id="nat-final">حتی اگر فقط ۱۰٪ شاغلان چنین تغییری را تجربه کنند، این فاصله اضافه در مقیاس کشور می‌تواند به میلیون‌ها لیتر بنزین در روز تبدیل شود.</div>
+      <div class="map-note">این عدد مصرف واقعی رفت‌وآمد شغلی نیست؛ یک محاسبه سناریویی برای نشان دادن مقیاس مسئله است.</div>
     </div>
     <div class="fig-cap">
       <b>چطور حساب می‌شود:</b> شاغلانِ درگیر (درصدِ انتخاب‌شده از ۲۴.۸ میلیون) × مسافت اضافه روزانه × ۹ لیتر در ۱۰۰ کیلومتر × (۲۲ روز کاری × ۱۲ ماه ÷ ۳۶۵ روز). به‌ازای هر شاغلِ درگیر، هر ۱ کیلومتر اضافه در روز ≈ ۰.۰۶۵ لیتر در روز. مقایسه با مصرف روزانه کشور (≈ ۱۲۹ میلیون لیتر، S11) فقط برای نشان دادن مقیاس است. جمعیت شاغل (S15) و مصرف روزانه (S11) هر دو داده‌های پروژه‌ساز هستند و باید پیش از انتشار تأیید شوند. — سناریو/محاسبه
     </div>
   </div>
 
-  <div class="prose-body">
-    <p>حتی اگر فقط بخشی از شاغلان این افزایش فاصله را تجربه کنند، چند ده کیلومتر اضافه در روز می‌تواند به میلیون‌ها لیتر مصرف اضافی در مقیاس کشور تبدیل شود. این هنوز به معنی آن نیست که این مقدار واقعا از محل رف‌توآمد شغلی مصرف می‌شود؛ فقط نشان می‌دهد که اندازه مسئله بالقوه چقدر است.</p>
-  </div>
   <div class="pull">این فقط یک آزمایش ذهنی بود. برای دیدن اینکه این فاصله در زندگی واقعی چه شکلی پیدا می‌کند، برویم سراغ یک مورد مشخص: <span class="accent">پرند</span>.</div>
 </section>
 
@@ -611,10 +616,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=22"></script>
-<script src="assets/geo/tehran_districts.js?v=22"></script>
-<script src="js/util.js?v=22"></script>
-<script src="js/views.js?v=22"></script>
-<script src="js/article.js?v=22"></script>
+<script src="data/data.js?v=23"></script>
+<script src="assets/geo/tehran_districts.js?v=23"></script>
+<script src="js/util.js?v=23"></script>
+<script src="js/views.js?v=23"></script>
+<script src="js/article.js?v=23"></script>
 </body>
 </html>
