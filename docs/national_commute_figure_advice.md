@@ -214,3 +214,29 @@ Reviewer feedback on the first build (see chat): the figure had **three competin
 | + | Post-figure prose merged into the panel as the closing narrative (no duplication) | Yes |
 
 **Second-round status:** redesigned & verified locally via DOM/interaction checks (no console errors); cache-buster `v22 → v23`. Entrance animation still only fully verifiable on live GitHub Pages (local preview cannot scroll).
+
+---
+
+## 9. Third design — REPLACED v23 with a simple timeline chart (2026-09-05)
+
+**Decision:** The v23 vertical causal chain (crowd + percent chips + slider + comparison bar) was judged «too complicated and not intuitive» and was replaced per the new handoff `docs/national_commute_distance_interactive_handoff.md`. That handoff is the **authoritative spec** for the current figure.
+
+What changed (new figure = `drawNationalCommuteScale()`):
+
+| # | Old (v23) | New |
+|---|---|---|
+| 1 | Three quantities: ۲۴.۸M × درصد × +km | **One** user control: «فاصله اضافه در هر طرف، در هر سال» (چیپهای ۵/۱۰/۱۵/۲۰ km، پیشفرض ۱۰) |
+| 2 | Percent of workers affected (۱۰٪ …) | **۱۰۰٪ شاغلان** intentionally (upper-bound thought experiment, not a claim about behavior) |
+| 3 | Result = چند لیتر روزانه از پایه ۱۲۹ | **Timeline line chart**: پایه ۱۴۰۰ = ۸۸ → خط سناریو (سالبهسال ۱۴۰۰–۱۴۰۵) → خط مرجع واقعی ≈ ۱۲۹ |
+| 4 | Calculator vibe | Simple line chart: «هر سال دورتر → مصرف بیشتر» — year labels + values on points |
+| 5 | Crowd animation | No worker cells; animation = reveal scenario line **سالبهسال** on first viewport entry; chip change redraws line smoothly (tween) |
+| 6 | Data: base 129 (actual) | New assumption set: base ۱۴۰۰ = ۸۸ M L/day (S-series observed), reference ۱۲۹ = S11, `years` ۱۴۰۰–۱۴۰۵, opts [5,10,15,20]; daily basis (no 22-workday/264/365 factor) |
+| 7 | Headline = چند درصد از مصرف روزانه | Dynamic headline at ۱۴۰۵: «X میلیون لیتر در روز» + «Y میلیون لیتر بیشتر از نقطه شروع» |
+
+Math used (matches handoff §4–§5): `round-trip extra km = 2 × selected km × years since ۱۴۰۰`; `extra L/day = 24.822M × round-trip extra km × 0.09`. Default ۱۰ km → ۱۴۰۱: ۱۳۲.۷، ۱۴۰۲: ۱۷۷.۴، ۱۴۰۳: ۲۲۲.۰، ۱۴۰۴: ۲۶۶.۷، ۱۴۰۵: ۳۱۱.۴ (headline rounded: ۱۴۰۵ ≈ ۳۱۱؛ +۲۲۳ نسبت به ۸۸). Verified in-browser for ۵/۱۰/۱۵/۲۰ km.
+
+**Scope applied:** `index.html` (section + panel markup rewritten), `js/views.js` (`drawNational()` → `drawNationalCommuteScale()` + helpers), `js/article.js` (boot call), `css/style.css` (v23 `.nat-*` block replaced), `data/assumptions.json` (new `nationalCommute` block) + `data/data.js` regenerated, `README.md`, cache-buster `v24 → v25`.
+
+**Not removed (per instructions):** «شکل ۲» affordability figure still stands (its logic folded into narrative only if the user later asks; handoff §13 mentions it but no removal was requested).
+
+**Verification:** DOM + interaction checks passed locally for all four chips (no console errors). Scroll-triggered entrance reveal must be confirmed on live GitHub Pages (local preview cannot scroll).

@@ -434,147 +434,58 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ------------------------------------------------------------
    National-scale thought experiment (آزمایش ذهنی · مقیاس ملی)
-   — vertical causal chain: چه تعداد؟ × چه مسافتی؟ = چند لیتر؟
+   — simple one-control timeline chart (baseline ۸۸ → scenario)
    ------------------------------------------------------------ */
-.nat-qual { font-size: .82rem; color: var(--ink-faint); text-align: center; margin: -.2rem 0 1rem; line-height: 1.9; }
-
-/* مخرج: کل جمعیت شاغل (زمینه، کوچک‌تر از قبل) */
-.nat-ctx { text-align: center; margin: 0 auto .4rem; }
-.nat-ctx-total b { font-size: 1.6rem; font-weight: 900; color: var(--ink); line-height: 1.2; }
-.nat-ctx-total span { font-size: .9rem; color: var(--ink-dim); }
-.nat-crowd {
-  display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 3px;
-  max-width: 480px;
-  margin: .4rem auto 0;
-  direction: ltr;
-}
-.nat-cell {
-  aspect-ratio: 1;
-  border-radius: 2px;
-  background: #232b38;
-  transition: background .25s ease, box-shadow .25s ease;
-}
-.nat-cell.on { background: var(--accent); box-shadow: 0 0 4px rgba(242,182,50,.3); }
-
-/* هر گام از زنجیره: برچسب → کنترل → پاسخ پررنگ */
-.nat-step { margin: .7rem auto 0; max-width: 640px; }
-.nat-q { font-size: .92rem; color: var(--ink-dim); text-align: center; margin-bottom: .45rem; line-height: 1.9; }
-.nat-chips { justify-content: center; }
-.nat-answer {
+#nat-panel .panel-title { text-align: center; justify-content: center; }
+#nat-panel .panel-sub { text-align: center; }
+.nat-expl {
+  max-width: 660px;
+  margin: 0 auto .8rem;
   text-align: center;
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--ink);
-  margin-top: .5rem;
-  padding-top: .4rem;
-  border-top: 1px dashed var(--line);
-}
-.nat-sl { display: flex; align-items: center; gap: .7rem; max-width: 520px; margin: 0 auto; }
-.nat-sl-lab { font-size: .72rem; color: var(--ink-faint); flex: 0 0 auto; }
-.nat-sl input[type="range"] { flex: 1 1 auto; }
-.nat-kmv {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--accent);
-  margin-top: .55rem;
-  padding-top: .4rem;
-  border-top: 1px dashed var(--line);
-}
-.nat-sub { font-size: .78rem; color: var(--ink-faint); text-align: center; margin-top: .35rem; line-height: 1.9; }
-
-/* ضرب یک‌خطی */
-.nat-mult {
-  max-width: 620px;
-  margin: .8rem auto 0;
-  text-align: center;
-  font-size: .98rem;
+  font-size: .9rem;
   color: var(--ink-dim);
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: .55rem .9rem;
-}
-.nat-mult b { color: var(--accent); }
-
-/* جمله سناریو (بالای نتیجه) */
-.nat-scen {
-  max-width: 640px;
-  margin: .9rem auto 0;
-  text-align: center;
-  font-size: .95rem;
   line-height: 2.1;
-  color: var(--ink);
-  font-weight: 600;
 }
+.nat-ctrl { text-align: center; margin: .4rem auto .2rem; }
+.nat-q { font-size: .95rem; color: var(--ink-dim); text-align: center; margin-bottom: .5rem; line-height: 1.9; }
+.nat-chips { justify-content: center; }
+.nat-sub { font-size: .8rem; color: var(--ink-faint); text-align: center; margin-top: .5rem; line-height: 2; }
 
-/* نتیجه — عدد خودش نقطه کانونی است (بدون کارت نارنجی بزرگ) */
-.nat-result { text-align: center; margin: .7rem auto 0; }
-.nat-result-lab { font-size: .88rem; color: var(--ink-dim); }
-.nat-result-v {
-  font-size: clamp(1.9rem, 4.5vw, 2.7rem);
+#nat-chart { margin: .6rem auto 0; }
+#nat-chart svg { width: 100%; height: auto; display: block; }
+
+.nat-legend {
+  display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;
+  margin-top: .55rem; font-size: .74rem; color: var(--ink-faint);
+}
+.nat-legend .sw { width: 18px; height: 4px; border-radius: 2px; display: inline-block; margin-inline-end: .35rem; vertical-align: middle; }
+
+.nat-hl {
+  text-align: center;
+  margin: 1rem auto 0;
+  padding-top: .6rem;
+  border-top: 1px dashed var(--line);
+}
+.nat-hl-main {
+  font-size: clamp(1.55rem, 4.2vw, 2.25rem);
   font-weight: 900;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.nat-hl-main b { color: var(--accent); }
+.nat-hl-sub {
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--accent);
-  line-height: 1.25;
   margin-top: .1rem;
 }
-.nat-result-pct { font-size: .98rem; font-weight: 800; color: var(--ink); margin-top: .2rem; }
-
-/* مقایسه با مصرف روزانه کشور */
-.nat-cmp { max-width: 640px; margin: .7rem auto 0; }
-.nat-cmp-line { text-align: center; font-size: .92rem; color: var(--ink-dim); margin-bottom: .7rem; }
-.nat-cmp-line b { color: var(--accent); font-weight: 800; }
-.nat-cmp-base { color: var(--ink-faint); }
-.nat-cmp-bar {
-  position: relative;
-  height: 16px;
-  border-radius: 999px;
-  background: #2a3340;
-}
-.nat-cmp-basebar { position: absolute; inset: 0; border-radius: 999px; background: #2a3340; }
-.nat-cmp-seg {
-  position: absolute;
-  top: 0; bottom: 0; left: 0;
-  width: 0;
-  background: var(--accent);
-  border-radius: 999px;
-  transition: width .3s ease;
-  min-width: 2px;
-}
-.nat-cmp-pct {
-  position: absolute;
-  top: -1.35rem;
-  left: 0;
-  font-size: .74rem;
-  font-weight: 800;
-  color: var(--accent);
-  white-space: nowrap;
-  pointer-events: none;
-  line-height: 1;
-}
-
-/* جمله پایانی + سلب مسئولیت */
-.nat-final {
-  max-width: 660px;
-  margin: 1rem auto 0;
+.nat-real {
   text-align: center;
-  font-size: .98rem;
-  line-height: 2.1;
-  color: var(--ink);
-  font-weight: 600;
+  font-size: .84rem;
+  color: var(--ink-faint);
+  margin-top: .7rem;
+  line-height: 2;
 }
 
-/* reveal: causal-chain blocks appear one after another on scroll */
-#nat-panel .nat-seq {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-#nat-panel .nat-seq.show { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  #nat-panel .nat-seq { opacity: 1; transform: none; transition: none; }
-}
 
 

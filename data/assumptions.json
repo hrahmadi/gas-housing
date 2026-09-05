@@ -43,14 +43,13 @@
     "employedMillion": 24.822,
     "employedSourceId": "S15",
     "fuelLitresPer100km": 9,
-    "workdaysPerMonth": 22,
-    "daysPerYear": 365,
-    "baseline": {
-      "nationalDailyMillionLitres": 129,
-      "note": "Latest verified annual-average national daily gasoline consumption (1404 ≈ 129; S11).",
-      "status": "OBSERVED"
-    },
-    "note": "Thought-experiment scenario, not observed national commuting data. Additional round-trip km × share of employed × 9 L/100km × 22×12 workdays ÷ 365 calendar days.",
+    "baselineYear": 1400,
+    "baseline1400MillionLitresPerDay": 88,
+    "comparisonCurrentMillionLitresPerDay": 129,
+    "comparisonCurrentSourceId": "S11",
+    "years": [1400, 1401, 1402, 1403, 1404, 1405],
+    "distanceOptionsKmOneWayPerYear": [5, 10, 15, 20],
+    "note": "Thought-experiment scenario, not observed national commuting fuel. Each year the one-way home-to-work distance grows by the selected km (per side); round-trip daily extra = 2 × selected km × years since 1400; extra fuel/day = 24.822m workers × round-trip extra km × 9 L/100km, added to the 1400 baseline (88 M L/day).",
     "status": "SCENARIO"
   },
   "covidDipNote": {

@@ -910,179 +910,236 @@
   }
 
   /* ============================================================
-     FIGURE — national-scale commute/fuel thought experiment
+     FIGURE — national-scale commute-distance thought experiment
      (آزمایش ذهنی · مقیاس ملی)
+     A single control (extra km one-way per year) drives a
+     baseline-88 → scenario line chart across ۱۴۰۰–۱۴۰۵.
      ============================================================ */
-  var NAT = { km: 30, pct: 10, done: false, raf: null, seqs: [] };
-  var NAT_PCTS = [5, 10, 20, 30, 40, 50];
+  var NAT = { km: 10, done: false, raf: null };
+  var NAT_W = 760, NAT_H = 460;
+  var NAT_PL = 60, NAT_PR = 40, NAT_PT = 36, NAT_PB = 64;
+  var NAT_YMAX = 560;
 
   function natParams() {
     var a = (D.assumptions && D.assumptions.nationalCommute) || {};
     return {
       emp: a.employedMillion != null ? a.employedMillion : 24.822,
       eff: a.fuelLitresPer100km != null ? a.fuelLitresPer100km : 9,
-      wd: a.workdaysPerMonth != null ? a.workdaysPerMonth : 22,
-      days: a.daysPerYear != null ? a.daysPerYear : 365,
-      base: (a.baseline && a.baseline.nationalDailyMillionLitres != null) ? a.baseline.nationalDailyMillionLitres : 129
+      base: a.baseline1400MillionLitresPerDay != null ? a.baseline1400MillionLitresPerDay : 88,
+      ref: a.comparisonCurrentMillionLitresPerDay != null ? a.comparisonCurrentMillionLitresPerDay : 129,
+      years: (a.years && a.years.length) ? a.years : [1400, 1401, 1402, 1403, 1404, 1405],
+      opts: (a.distanceOptionsKmOneWayPerYear && a.distanceOptionsKmOneWayPerYear.length)
+        ? a.distanceOptionsKmOneWayPerYear : [5, 10, 15, 20]
     };
   }
 
-  function natCalc() {
+  /* scenario totals (million L/day) for each year, given the one-way
+     extra km per year. Round-trip daily extra = 2 × km × years since ۱۴۰۰;
+     extra fuel/day = employed × round-trip extra km × eff/100. */
+  function natSeries(km) {
     var p = natParams();
-    var workers = p.emp * NAT.pct / 100;                       // million workers affected
-    var litres = workers * 1e6 * NAT.km * (p.eff / 100) * (p.wd * 12 / p.days); // L/day (annual avg)
-    var share = litres / (p.base * 1e6) * 100;
-    return { workers: workers, litres: litres, share: share, base: p.base, emp: p.emp };
-  }
-
-  function natFmtLitres(litres) {
-    // full precision kept internally; display in million L/day
-    return u.fa(litres / 1e6, litres / 1e6 >= 10 ? 0 : 1);
-  }
-
-  function natFmtShare(s) {
-    if (s < 0.05) return "۰٪";
-    return u.faPct(s, s >= 10 ? 0 : 1);
-  }
-
-  function natClamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
-
-  /* Render the whole causal chain at progress e ∈ [0,1].
-     e=1 → final state (all blocks shown, numbers complete).
-     Block order (index into NAT.seqs):
-       0 ctx(denominator) · 1 share · 2 distance · 3 multiply ·
-       4 scenario · 5 result · 6 compare · 7 final narrative */
-  function natRender(e) {
-    var c = natCalc();
-    var eCl = natClamp01(e);
-    var th = [0.02, 0.13, 0.24, 0.35, 0.47, 0.58, 0.72, 0.86];
-    NAT.seqs.forEach(function (s, i) {
-      s.classList.toggle("show", eCl >= th[i]);
+    return p.years.map(function (_, i) {
+      return p.base + p.emp * (2 * km * i) * (p.eff / 100);
     });
-
-    // crowd lights up during the denominator step (reaches NAT.pct cells by e≈0.1)
-    var lit = Math.round(NAT.pct * natClamp01(eCl / 0.1));
-    var cells = el("nat-crowd").children;
-    for (var i = 0; i < cells.length; i++) cells[i].classList.toggle("on", i < lit);
-
-    // affected population (block 1)
-    if (eCl >= th[1]) {
-      var aff = el("nat-affected");
-      if (aff) aff.textContent = "حدود " + u.fa(c.workers, 1) + " میلیون نفر";
-    }
-    // distance labels (block 2)
-    if (eCl >= th[2]) {
-      var kmVal = el("nat-km-val");
-      if (kmVal) kmVal.textContent = "+" + u.toFaDigits(NAT.km) + " کیلومتر در روز";
-      var kmSub = el("nat-km-sub");
-      if (kmSub) kmSub.textContent = "یعنی هر فرد متاثر، روزانه " + u.toFaDigits(NAT.km) + " کیلومتر بیشتر از قبل سفر می‌کند.";
-    }
-    // one-line multiplication (block 3)
-    if (eCl >= th[3]) {
-      var mult = el("nat-mult");
-      if (mult) mult.innerHTML = "حدود <b>" + u.fa(c.workers, 1) + " میلیون نفر</b> × <b>" + u.toFaDigits(NAT.km) + " کیلومتر</b> اضافه در روز";
-    }
-    // scenario sentence (block 4) and final narrative (block 7)
-    if (eCl >= th[4]) {
-      var scen = el("nat-scenario");
-      if (scen) scen.textContent =
-        "فرض کنیم " + (NAT.pct <= 20 ? "فقط " : "") + u.toFaDigits(NAT.pct) + "٪ شاغلان، به دلیل دورتر شدن محل زندگی از محل کار، روزانه " +
-        u.toFaDigits(NAT.km) + " کیلومتر بیشتر رفت و آمد کنند.";
-    }
-    if (eCl >= th[7]) {
-      var fin = el("nat-final");
-      if (fin) fin.textContent =
-        "حتی اگر " + (NAT.pct <= 20 ? "فقط " : "") + u.toFaDigits(NAT.pct) + "٪ شاغلان چنین تغییری را تجربه کنند، این فاصله اضافه در مقیاس کشور می‌تواند به میلیون‌ها لیتر بنزین در روز تبدیل شود.";
-    }
-
-    // count-up of the result (block 5) only once its block is revealed
-    var cr = natClamp01((eCl - th[5]) / (1 - th[5]));
-    var litres = c.litres * cr;
-    var share = c.share * cr;
-
-    var v = el("nat-out-v");
-    if (v) v.textContent = natFmtLitres(litres);
-    var cmpVal = el("nat-cmp-val");
-    if (cmpVal) cmpVal.textContent = natFmtLitres(litres) + " میلیون لیتر";
-    var shareBar = el("nat-share");
-    if (shareBar) shareBar.style.width = Math.min(share, 100) + "%";
-    var call = el("nat-call");
-    if (call) call.textContent = natFmtShare(share);
-    var callSub = el("nat-call-sub");
-    if (callSub) callSub.textContent = natFmtShare(share) + " از مصرف روزانه کشور";
-  }
-
-  function natStop() {
-    if (NAT.raf) { cancelAnimationFrame(NAT.raf); NAT.raf = null; }
   }
 
   function natReduced() {
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
+  function natStop() {
+    if (NAT.raf) { cancelAnimationFrame(NAT.raf); NAT.raf = null; }
+  }
+
+  function natEaseOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function natX(i, n) { return NAT_PL + i / (n - 1) * (NAT_W - NAT_PL - NAT_PR); }
+  function natY(v) { return NAT_PT + (1 - v / NAT_YMAX) * (NAT_H - NAT_PT - NAT_PB); }
+
+  function natPaint(series, reveal) {
+    var p = natParams();
+    var n = p.years.length;
+    var c = el("nat-chart");
+    if (!c) return;
+    c.innerHTML = "";
+    var svg = u.svgEl("svg", { viewBox: "0 0 " + NAT_W + " " + NAT_H, "class": "g-chart", role: "img", "aria-label": "نمودار خطی مصرف سناریویی بنزین از ۱۴۰۰ تا ۱۴۰۵" });
+    c.appendChild(svg);
+    var X = function (i) { return natX(i, n); };
+    var Y = natY;
+
+    // y gridlines ۰→۵۰۰
+    for (var g = 0; g <= 500; g += 100) {
+      var gy = Y(g);
+      svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: gy, y2: gy, "class": "grid-line" }));
+      var gt = u.svgEl("text", { x: NAT_PL - 8, y: gy + 4, "class": "axis-txt", "text-anchor": "end" });
+      gt.textContent = u.toFaDigits(g);
+      svg.appendChild(gt);
+    }
+    // y-axis title
+    var yt = u.svgEl("text", { x: 15, y: NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2, "class": "axis-txt", "font-size": "11", transform: "rotate(-90 15 " + (NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2) + ")", "text-anchor": "middle", fill: "#6c7788" });
+    yt.textContent = "میلیون لیتر در روز";
+    svg.appendChild(yt);
+
+    // x year labels
+    p.years.forEach(function (yr, i) {
+      var t = u.svgEl("text", { x: X(i), y: NAT_H - 20, "class": "axis-txt", "text-anchor": "middle" });
+      t.textContent = u.toFaDigits(yr);
+      svg.appendChild(t);
+    });
+
+    // baseline flat at 88 (muted grey)
+    var yb = Y(p.base);
+    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yb, y2: yb, stroke: "#8a94a3", "stroke-dasharray": "1 7", "stroke-width": 1.4, opacity: 0.9 }));
+
+    // reference flat at 129 = actual national (muted blue, dashed)
+    var yre = Y(p.ref);
+    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yre, y2: yre, stroke: "#7fb7ff", "stroke-dasharray": "6 5", "stroke-width": 1.6, opacity: 0.95 }));
+
+    // scenario partial reveal (continuous year index 0..n-1)
+    var seg = Math.max(0, Math.min(1, reveal)) * (n - 1);
+    var full = Math.floor(seg);
+    var frac = seg - full;
+    var pts = [];
+    for (var i = 0; i <= full; i++) pts.push({ x: X(i), y: Y(series[i]), v: series[i] });
+    if (full < n - 1 && frac > 0.001) {
+      var a = full, b = full + 1;
+      pts.push({
+        x: X(a) + (X(b) - X(a)) * frac,
+        y: Y(series[a]) + (Y(series[b]) - Y(series[a])) * frac,
+        v: series[a] + (series[b] - series[a]) * frac
+      });
+    }
+
+    if (pts.length > 1) {
+      var pd = "";
+      pts.forEach(function (pt, k) { pd += (k ? "L" : "M") + pt.x.toFixed(1) + " " + pt.y.toFixed(1); });
+      svg.appendChild(u.svgEl("path", { d: pd, fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    }
+
+    // start dot (۱۴۰۰, on the baseline)
+    svg.appendChild(u.svgEl("circle", { cx: X(0), cy: Y(series[0]), r: 4.5, fill: "#8a94a3", stroke: "#0c0f15", "stroke-width": 1.5 }));
+
+    // moving head dot while revealing
+    if (reveal < 1 - 1e-3) {
+      var hp = pts[pts.length - 1];
+      svg.appendChild(u.svgEl("circle", { cx: hp.x, cy: hp.y, r: 5.5, fill: "#f2b632", stroke: "#0c0f15", "stroke-width": 2 }));
+    }
+
+    // dots + value labels for fully reached years (۱ → full)
+    var isEnd = full >= n - 1;
+    for (var j = 1; j <= full; j++) {
+      var dx = X(j), dy = Y(series[j]);
+      var endDot = isEnd && j === full;
+      svg.appendChild(u.svgEl("circle", {
+        cx: dx, cy: dy, r: endDot ? 6.5 : 4.5,
+        fill: endDot ? "#f2b632" : "#0c0f15", stroke: "#f2b632", "stroke-width": 2
+      }));
+      var lb = u.svgEl("text", {
+        x: dx, y: dy + (endDot ? -18 : -11),
+        "class": "axis-txt", "font-size": endDot ? "15" : "12",
+        "text-anchor": "middle", fill: "#f2b632", "font-weight": "800"
+      });
+      lb.textContent = u.toFaDigits(Math.round(series[j]));
+      svg.appendChild(lb);
+    }
+  }
+
+  function natHeadline(km) {
+    var p = natParams();
+    var s = natSeries(km);
+    var last = s[s.length - 1];
+    var elY = el("nat-hl-year");
+    if (elY) elY.textContent = u.toFaDigits(p.years[p.years.length - 1]);
+    var elT = el("nat-hl-total");
+    if (elT) elT.textContent = u.toFaDigits(Math.round(last));
+    var elM = el("nat-hl-more");
+    if (elM) elM.textContent = u.toFaDigits(Math.round(last - p.base)) + " میلیون لیتر بیشتر از نقطه شروع";
+  }
+
+  function natKmSub() {
+    var s = el("nat-km-sub");
+    if (s) s.textContent = "یعنی در هر سال، خانه به طور متوسط " + u.toFaDigits(NAT.km) +
+      " کیلومتر از محل کار دورتر می‌شود؛ " + u.toFaDigits(NAT.km * 2) + " کیلومتر رفت‌وبرگشت در روز.";
+  }
+
   function natEntrance() {
     if (NAT.done) return;
     NAT.done = true;
-    if (natReduced() || !("IntersectionObserver" in window)) { natRender(1); return; }
-    var t0 = null, dur = 2600;
+    if (natReduced() || !("requestAnimationFrame" in window)) {
+      natPaint(natSeries(NAT.km), 1);
+      natHeadline(NAT.km);
+      return;
+    }
+    var t0 = null, dur = 3400;
     function step(ts) {
       if (!t0) t0 = ts;
-      var p = Math.min((ts - t0) / dur, 1);
-      natRender(p);
-      if (p < 1) NAT.raf = requestAnimationFrame(step);
-      else natRender(1);
+      var t = natEaseOut(Math.min((ts - t0) / dur, 1));
+      natPaint(natSeries(NAT.km), t);
+      if (t < 1) NAT.raf = requestAnimationFrame(step);
+      else natHeadline(NAT.km);
     }
     NAT.raf = requestAnimationFrame(step);
   }
 
-  function natRenderNow() {
+  function natMorph(newKm) {
     natStop();
-    NAT.done = true;   // manual interaction: show final state, no auto-entrance later
-    natRender(1);
+    var from = natSeries(NAT.km);
+    var to = natSeries(newKm);
+    NAT.km = newKm;
+    natKmSub();
+    if (natReduced() || !("requestAnimationFrame" in window)) {
+      natPaint(to, 1);
+      natHeadline(NAT.km);
+      return;
+    }
+    var t0 = null, dur = 700;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = natEaseOut(Math.min((ts - t0) / dur, 1));
+      var cur = from.map(function (v, i) { return v + (to[i] - v) * t; });
+      natPaint(cur, 1);
+      if (t < 1) NAT.raf = requestAnimationFrame(step);
+      else natHeadline(NAT.km);
+    }
+    NAT.raf = requestAnimationFrame(step);
   }
 
-  function drawNational() {
+  function drawNationalCommuteScale() {
     var host = el("nat-panel");
     if (!host) return;
+    var p = natParams();
+    NAT.km = p.opts.indexOf(10) >= 0 ? 10 : p.opts[0];
 
-    // collect causal-chain blocks in order
-    NAT.seqs = Array.prototype.slice.call(host.querySelectorAll(".nat-seq"));
-
-    // workforce headline (denominator)
-    var tn = el("nat-total-n");
-    if (tn) tn.textContent = u.fa(natParams().emp, 1);
-
-    // crowd cells (100 = 100% of workforce)
-    var crowd = el("nat-crowd");
-    crowd.innerHTML = "";
-    for (var i = 0; i < 100; i++) crowd.appendChild(u.h("span", { "class": "nat-cell" }, ""));
-
-    // percent chips (۵٪ → ۵۰٪, default ۱۰٪)
-    var pctHost = el("nat-pct");
-    pctHost.innerHTML = "";
-    NAT_PCTS.forEach(function (v) {
-      var b = u.h("button", { type: "button", "class": "chip" + (v === NAT.pct ? " active" : ""), "data-v": v }, u.toFaDigits(v) + "٪");
+    // single control: chips (km per year, one-way)
+    var kmHost = el("nat-km");
+    kmHost.innerHTML = "";
+    p.opts.forEach(function (v) {
+      var b = u.h("button", { type: "button", "class": "chip" + (v === NAT.km ? " active" : ""), "data-v": v }, u.toFaDigits(v) + " km");
       b.addEventListener("click", function () {
-        NAT.pct = v;
-        var cs = pctHost.children;
-        for (var k = 0; k < cs.length; k++) cs[k].classList.toggle("active", +cs[k].getAttribute("data-v") === NAT.pct);
-        natRenderNow();
+        if (v === NAT.km) return;
+        var cs = kmHost.children;
+        for (var k = 0; k < cs.length; k++) cs[k].classList.toggle("active", +cs[k].getAttribute("data-v") === v);
+        natMorph(v);
       });
-      pctHost.appendChild(b);
+      kmHost.appendChild(b);
     });
 
-    // distance slider (۰→۶۰, default ۳۰)
-    el("nat-km").addEventListener("input", function () { NAT.km = +el("nat-km").value; natRenderNow(); });
+    // legend
+    var lg = el("nat-legend");
+    if (lg) lg.innerHTML =
+      '<span><i class="sw" style="background:#f2b632;border-radius:2px;height:4px"></i>مصرف سناریویی</span>' +
+      '<span><i class="sw" style="background:#8a94a3;border-radius:2px;height:4px"></i>پایه ۱۴۰۰ (' + u.toFaDigits(Math.round(p.base)) + ')</span>' +
+      '<span><i class="sw" style="background:#7fb7ff;border-radius:2px;height:4px"></i>مصرف واقعی ≈ ' + u.toFaDigits(Math.round(p.ref)) + '</span>';
+
+    natKmSub();
+    natHeadline(NAT.km);
 
     var reduce = natReduced();
     if (reduce || !("IntersectionObserver" in window)) {
-      // no animation: paint final state immediately
-      natRender(1);
+      natPaint(natSeries(NAT.km), 1);
       return;
     }
-
-    // start hidden (pre-entrance), animate on first viewport entry
-    natRender(0);
+    natPaint(natSeries(NAT.km), 0);
     var started = false;
     function go() {
       if (started) return;
@@ -1095,9 +1152,8 @@
       });
     }, { threshold: 0.3 });
     io.observe(host);
-
-    // fallback: if never scrolled into view (or element already visible), settle on final
-    setTimeout(function () { if (!NAT.done) { NAT.done = true; natRender(1); } }, 3000);
+    // fallback: if never scrolled into view, settle on final
+    setTimeout(function () { if (!NAT.done) { NAT.done = true; natPaint(natSeries(NAT.km), 1); natHeadline(NAT.km); } }, 3000);
   }
 
   /* ============================================================
@@ -1156,7 +1212,7 @@
     drawPeriMap: drawPeriMap,
     drawParandRoute: drawParandRoute,
     drawRentWageIndex: drawRentWageIndex,
-    drawNational: drawNational,
+    drawNationalCommuteScale: drawNationalCommuteScale,
     buildMap: buildMap,
     buildCalc: buildCalc,
     buildShock: buildShock,

@@ -9,7 +9,7 @@
     V.drawPeriMap();
     V.drawParandRoute();
     V.drawRentWageIndex();
-    V.drawNational();
+    V.drawNationalCommuteScale();
     V.buildMap();
     V.buildCalc();
     V.buildShock();
