@@ -806,13 +806,24 @@
   /* ============================================================
      FIGURE 6 — price-shock interaction (price × eff × income)
      ============================================================ */
-  var SHOCK = { prices: [3000, 6000, 9000, 15000, 30000], idx: 0, eff: 9, wage: 6, svg: null };
+  var SHOCK = {
+    prices: [3000, 5000, 10000, 25000, 50000, 100000],
+    idx: 0,          // قیمت انتخاب‌شده (میلهٔ برجسته)
+    eff: 9,          // مصرف خودرو ثابت (لیتر/۱۰۰km)
+    minWage: 22,     // حداقل دستمزد ماهانه (میلیون تومان)
+    mult: 1,         // درآمد خانوار = چند برابر حداقل دستمزد (۱ تا ۴)
+    svg: null
+  };
+
+  function shockWageM() { return SHOCK.minWage * SHOCK.mult; }
+
+  function shockPriceShort(p) { return u.toFaDigits(p / 1000) + " هزار"; }
 
   function shockCalc(p) {
-    var kmM = 100 * 22;
+    var kmM = 100 * 22;                 // ۱۰۰ km در روز × ۲۲ روز کاری
     var LM = kmM * SHOCK.eff / 100;
     var cost = LM * p;
-    var share = cost / (SHOCK.wage * 1e6) * 100;
+    var share = cost / (shockWageM() * 1e6) * 100;
     return { cost: cost, share: share, L: LM };
   }
 
@@ -861,11 +872,8 @@
       tv.textContent = pctStr;
       svg.appendChild(tv);
       var tl = u.svgEl("text", { x: x + barW / 2, y: H - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "11" });
-      tl.textContent = i === 0 ? "پایه" : "×" + u.toFaDigits(p / SHOCK.prices[0]);
+      tl.textContent = shockPriceShort(p);
       svg.appendChild(tl);
-      var tp = u.svgEl("text", { x: x + barW / 2, y: H - 26, "text-anchor": "middle", "class": "axis-txt", "font-size": "10", fill: "#6c7788" });
-      tp.textContent = u.fa(p) + " تومان";
-      svg.appendChild(tp);
     });
 
     // y-axis title
@@ -879,35 +887,48 @@
   function updateShockNote() {
     var p = SHOCK.prices[SHOCK.idx];
     var o = shockCalc(p);
-    el("shock-price").value = SHOCK.idx;
-    el("shock-price-lbl").textContent = (SHOCK.idx === 0 ? "پایه · " : "×" + u.toFaDigits(p / SHOCK.prices[0]) + " · ") + u.fa(p) + " تومان/لیتر";
-    el("shock-wage-lbl").textContent = u.fa(SHOCK.wage) + " میلیون";
     el("shock-note").textContent =
-      "مسافت ثابت: ۱۰۰ km/day · مصرف " + u.toFaDigits(SHOCK.eff) + " لیتر/۱۰۰km · درآمد " + u.toFaDigits(SHOCK.wage) +
-      " میلیون تومان/ماه. هزینه ماهانه سوخت: " + u.faCompact(o.cost, "تومان") +
-      " · معادل " + u.faPct(o.share, 1) + " از درآمد — محاسبه/سناریو.";
+      "درآمد خانوار: " + u.toFaDigits(SHOCK.mult) + " برابر حداقل دستمزد (" + u.fa(shockWageM()) + " میلیون تومان/ماه) · " +
+      "مسافت ثابت ۱۰۰ km/day و مصرف " + u.toFaDigits(SHOCK.eff) + " لیتر/۱۰۰km. " +
+      "با قیمت " + u.fa(p) + " تومان/لیتر، هزینه ماهانه سوخت " + u.faCompact(o.cost, "تومان") +
+      " است؛ معادل " + u.faPct(o.share, 1) + " از درآمد — محاسبه/سناریو.";
+  }
+
+  function syncShockChips() {
+    var pHost = el("shock-price-chips");
+    if (pHost) for (var i = 0; i < pHost.children.length; i++)
+      pHost.children[i].classList.toggle("active", +pHost.children[i].getAttribute("data-p") === SHOCK.idx);
+    var wHost = el("shock-wage-chips");
+    if (wHost) for (var j = 0; j < wHost.children.length; j++)
+      wHost.children[j].classList.toggle("active", +wHost.children[j].getAttribute("data-w") === SHOCK.mult);
   }
 
   function buildShock() {
-    // efficiency chips
-    var effHost = el("shock-eff");
-    effHost.innerHTML = "";
-    [7, 9, 12].forEach(function (e) {
-      var b = u.h("button", { type: "button", "class": "chip" + (e === SHOCK.eff ? " active" : ""), "data-eff": e }, u.toFaDigits(e) + " لیتر");
-      b.addEventListener("click", function () {
-        SHOCK.eff = e;
-        var cs = effHost.children;
-        for (var i = 0; i < cs.length; i++) cs[i].classList.toggle("active", +cs[i].getAttribute("data-eff") === SHOCK.eff);
-        drawShock();
+    // قیمت بنزین — قرص‌ها
+    var pHost = el("shock-price-chips");
+    if (pHost) {
+      pHost.innerHTML = "";
+      SHOCK.prices.forEach(function (p, i) {
+        var b = u.h("button", { type: "button", "class": "chip" + (i === SHOCK.idx ? " active" : ""), "data-p": i }, shockPriceShort(p));
+        b.addEventListener("click", function () { SHOCK.idx = +this.getAttribute("data-p"); syncShockChips(); drawShock(); });
+        pHost.appendChild(b);
       });
-      effHost.appendChild(b);
-    });
-    el("shock-price").addEventListener("input", function () { SHOCK.idx = +el("shock-price").value; drawShock(); });
-    el("shock-wage").addEventListener("input", function () { SHOCK.wage = +el("shock-wage").value; drawShock(); });
+    }
+    // درآمد خانوار (چند برابر حداقل دستمزد) — قرص‌ها
+    var wHost = el("shock-wage-chips");
+    if (wHost) {
+      wHost.innerHTML = "";
+      [1, 2, 3, 4].forEach(function (m) {
+        var b = u.h("button", { type: "button", "class": "chip" + (m === SHOCK.mult ? " active" : ""), "data-w": m }, u.toFaDigits(m) + "× حداقل");
+        b.addEventListener("click", function () { SHOCK.mult = +this.getAttribute("data-w"); syncShockChips(); drawShock(); });
+        wHost.appendChild(b);
+      });
+    }
     el("shock-chart").addEventListener("click", function (e) {
       var r = e.target.closest ? e.target.closest("rect[data-i]") : null;
-      if (r) { SHOCK.idx = +r.getAttribute("data-i"); drawShock(); }
+      if (r) { SHOCK.idx = +r.getAttribute("data-i"); syncShockChips(); drawShock(); }
     });
+    syncShockChips();
     drawShock();
   }
 

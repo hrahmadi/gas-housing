@@ -7,7 +7,7 @@
 <meta name="description" content="آیا بخشی از مصرف بالای بنزین ایران در واقع هزینه رفت و آمد طولانی ناشی از گرانی مسکن است؟ گزارش تعاملی با داده مسکن تهران، رشد پیرامون و نمونه پرند.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-<link rel="stylesheet" href="css/style.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=27">
 </head>
 <body>
 
@@ -341,24 +341,17 @@
       <div class="controls">
         <div class="ctrl-row">
           <span class="ctrl-label">قیمت بنزین</span>
-          <input type="range" id="shock-price" min="0" max="4" step="1" value="0">
-          <span class="ctrl-value" id="shock-price-lbl"></span>
+          <div class="chips" id="shock-price-chips"></div>
         </div>
         <div class="ctrl-row">
-          <span class="ctrl-label">مصرف خودرو</span>
-          <div class="chips" id="shock-eff"></div>
-        </div>
-        <div class="ctrl-row">
-          <span class="ctrl-label">درآمد ماهانه</span>
-          <input type="range" id="shock-wage" min="2" max="40" step="1" value="6">
-          <span class="ctrl-value" id="shock-wage-lbl">۶ میلیون</span>
+          <span class="ctrl-label">درآمد خانوار</span>
+          <div class="chips" id="shock-wage-chips"></div>
         </div>
       </div>
       <div class="map-note" id="shock-note"></div>
     </div>
     <div class="fig-cap">
-      <b>تعامل:</b> قیمت بنزین را چند برابر کن (مسافت ثابت می‌ماند) و مصرف خودرو و درآمد را تغییر بده تا ببینی هزینه ماهانه
-      رفت‌وآمد و سهم آن از درآمد چقدر می‌شود. — محاسبه‌شده/سناریو.
+      <b>تعامل:</b> قیمت بنزین را از ۳ هزار تا ۱۰۰ هزار تومان در لیتر بالا ببر و درآمد خانوار را نسبت به حداقل دستمزد (۲۲ میلیون تومان در ماه) تغییر بده. مصرف خودرو ثابت در نظر گرفته شده است (۹ لیتر در ۱۰۰ کیلومتر). — محاسبه‌شده/سناریو.
     </div>
   </div>
 
@@ -512,10 +505,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=26"></script>
-<script src="assets/geo/tehran_districts.js?v=26"></script>
-<script src="js/util.js?v=26"></script>
-<script src="js/views.js?v=26"></script>
-<script src="js/article.js?v=26"></script>
+<script src="data/data.js?v=27"></script>
+<script src="assets/geo/tehran_districts.js?v=27"></script>
+<script src="js/util.js?v=27"></script>
+<script src="js/views.js?v=27"></script>
+<script src="js/article.js?v=27"></script>
 </body>
 </html>
