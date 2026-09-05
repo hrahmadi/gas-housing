@@ -61,13 +61,12 @@ figure { margin: 0; }
    Hero
    ------------------------------------------------------------ */
 .hero {
-  min-height: 92vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 900px;
   margin: 0 auto;
-  padding: 6vh 22px;
+  padding: 3vh 22px 1vh;
 }
 .kicker {
   font-size: 0.86rem;

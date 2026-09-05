@@ -694,6 +694,7 @@
   }
 
   function buildMap() {
+    if (!el("map-svg")) return;
     var geo = window.TEHRAN_GEO;
     var svg = el("map-svg");
     svg.setAttribute("viewBox", "0 0 1000 " + geo.height);
@@ -759,6 +760,7 @@
 
   function buildCalc() {
     var effHost = el("calc-eff");
+    if (!effHost) return;
     effHost.innerHTML = "";
     [7, 9, 12].forEach(function (e) {
       var b = u.h("button", { type: "button", "class": "chip" + (e === CALC.eff ? " active" : ""), "data-eff": e }, u.toFaDigits(e) + " لیتر/۱۰۰km");
@@ -1059,7 +1061,7 @@
   function natKmSub() {
     var s = el("nat-km-sub");
     if (s) s.textContent = "یعنی در هر سال، خانه به طور متوسط " + u.toFaDigits(NAT.km) +
-      " کیلومتر از محل کار دورتر می‌شود؛ " + u.toFaDigits(NAT.km * 2) + " کیلومتر رفت‌وبرگشت در روز.";
+      " کیلومتر از محل کار دورتر می‌شود؛ " + u.toFaDigits(NAT.km * 2) + " کیلومتر رفت‌وبرگشت در روز اضافه می‌شود.";
   }
 
   function natEntrance() {
