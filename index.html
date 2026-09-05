@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html dir="rtl" lang="fa" data-theme="dark">
 <head>
 <meta charset="utf-8">
+<script>
+/* Apply saved theme before first paint to avoid a light/dark flash. */
+(function () {
+  try { if (localStorage.getItem("gh-theme") === "light") document.documentElement.setAttribute("data-theme", "light"); }
+  catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ارتباط بین مصرف بنزین و هزینه بالای مسکن</title>
 <meta name="description" content="آیا بخشی از مصرف بالای بنزین ایران در واقع هزینه رفت و آمد طولانی ناشی از گرانی مسکن است؟ گزارش تعاملی با داده مسکن تهران، رشد پیرامون و نمونه پرند.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-<link rel="stylesheet" href="css/style.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=35">
 </head>
 <body>
+
+<button type="button" class="theme-toggle" id="theme-toggle" aria-label="تغییر تم روشن/تیره" title="تغییر تم روشن/تیره">
+  <span class="ico" id="theme-ico" aria-hidden="true">☾</span>
+  <span class="lbl" id="theme-lbl">تم روشن</span>
+</button>
 
 <!-- ======================= HERO ======================= -->
 <header class="hero">
@@ -22,7 +34,7 @@
 </header>
 
 <!-- ============================================================
-     بخش ۱ — مقدمه و نمودار مصرف
+     مقدمه — نمودار مصرف
      ============================================================ -->
 <section class="prose-section">
   <div class="fig-scene">
@@ -44,7 +56,7 @@
 </section>
 
 <!-- ============================================================
-     بخش ۲ — مسکن و جغرافیا (اجاره/دستمزد + نقشه رشد پیرامون)
+     بخش اول — مسکن و جغرافیا (اجاره/دستمزد + نقشه رشد پیرامون)
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
@@ -87,14 +99,15 @@
       <div class="map-footnote">سبز = داخل توان · خاکستری = خارج از توان · راه‌راه = فاقد داده. محاسبه تقریبی (اجاره منطقه‌ای، حداقل دستمزد، سهم فرضی از درآمد)؛ داده مناطق تا تابستان ۱۴۰۰؛ محل سکونت واقعی خانوارها را پیش‌بینی نمی‌کند.</div>
     </div>
     -->
+    <div class="fig-index">شکل ۲</div>
     <div class="panel" style="margin-top:1rem">
       <div class="panel-title"><span class="dot"></span>رشد اجاره در برابر حداقل دستمزد</div>
       <div class="panel-sub">شاخص تجمعی، پایه ۱۳۸۸ = ۱۰۰</div>
       <div class="fig-note context">رشد اجاره و حداقل دستمزد همیشه با یک سرعت حرکت نکرده‌اند؛ برای همین فشار بر استطاعت، سال‌به‌سال یکنواخت نبوده است.</div>
       <div id="rent-wage-chart"></div>
       <div class="legend" id="rw-legend">
-        <span><span class="sw" style="background:#f2b632"></span>اجاره تهران</span>
-        <span><span class="sw" style="background:#7fb7ff"></span>حداقل دستمزد</span>
+        <span><span class="sw" style="background:var(--accent)"></span>اجاره تهران</span>
+        <span><span class="sw" style="background:var(--blue)"></span>حداقل دستمزد</span>
       </div>
       <div class="fig-note">مقایسه روندهاست، نه اندازه‌گیری مستقیم استطاعت. اجاره: میانگین ۲۲ منطقه تهران (مرکز آمار) تا تابستان ۱۴۰۰؛ دستمزد: حداقل دستمزد قانونی سالانه. تازه‌ترین شاخص رسمی اجاره تهران (بانک مرکزی، ماهانه از ۱۳۹۶) هنوز اضافه نشده است.</div>
     </div>
@@ -124,11 +137,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۳ — آزمایش ذهنی مقیاس ملی (فاصله تا محل کار، سال به سال)
+     بخش دوم — آزمایش ذهنی مقیاس ملی (فاصله تا محل کار، سال به سال)
      ============================================================ -->
 <section class="prose-section" id="nat-sec">
   <div class="section-head head-tight">
-    <div class="sn">بخش سوم · مقیاس ملی</div>
+    <div class="sn">بخش دوم · مقیاس ملی</div>
     <h2>اندازه این مسئله را در مقیاس کشور تصور کنیم</h2>
   </div>
   <div class="prose-body">
@@ -137,7 +150,7 @@
   </div>
 
   <div class="fig-scene">
-    <div class="fig-index">آزمایش ذهنی · مقیاس ملی</div>
+    <div class="fig-index">شکل ۴ · تعامل</div>
     <div class="panel" id="nat-panel">
       <div class="panel-title"><span class="dot"></span>اگر مردم هر سال کمی دورتر از محل کارشان زندگی کنند، مصرف بنزین چه می‌شود؟</div>
       <div class="panel-sub">یک آزمایش ذهنی با ۲۴.۸ میلیون شاغل · نقطه شروع: ۸۸ میلیون لیتر در روز (۱۴۰۰)</div>
@@ -169,11 +182,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۵ — پرند (مسیر) و محاسبه فاصله
+     بخش سوم — پرند (مسیر) و محاسبه فاصله
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش چهارم · نمونه پرند</div>
+    <div class="sn">بخش سوم · نمونه پرند</div>
     <h2>پرند: یک خانه ارزان‌تر، یک مسیر بسیار طولانی‌تر</h2>
   </div>
   <div class="prose-body">
@@ -181,7 +194,7 @@
   </div>
 
   <div class="fig-scene">
-    <div class="fig-index">شکل ۴ · تعامل</div>
+    <div class="fig-index">شکل ۵ · تعامل</div>
     <div class="panel">
       <div class="panel-title"><span class="dot"></span>یک خانه در پرند، یک کار در تهران</div>
       <div class="panel-sub">خانه ارزان‌تر است؛ اما برای رسیدن به محل کار باید هر روز این فاصله را طی کرد.</div>
@@ -316,11 +329,11 @@
 -->
 
 <!-- ============================================================
-     بخش ۸ — شوک قیمت (تعامل اسلایدر)
+     بخش چهارم — شوک قیمت (تعامل)
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش هفتم · شوک قیمت</div>
+    <div class="sn">بخش چهارم · شوک قیمت</div>
     <h2>حالا قیمت بنزین را بالا ببریم</h2>
   </div>
   <div class="prose-body">
@@ -356,11 +369,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۹ — آبان ۱۳۹۸
+     بخش پنجم — آبان ۱۳۹۸
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش هشتم · ۱۳۹۸</div>
+    <div class="sn">بخش پنجم · ۱۳۹۸</div>
     <h2>آبان ۱۳۹۸؛ شوک را می‌توان کم کرد، هزینه را نه</h2>
   </div>
   <div class="prose-body">
@@ -378,11 +391,11 @@
 </section>
 
 <!-- ============================================================
-     بخش ۱۰ — راه حل
+     بخش ششم — راه حل / نتیجه
      ============================================================ -->
 <section class="prose-section">
   <div class="section-head">
-    <div class="sn">بخش نهم · نتیجه</div>
+    <div class="sn">بخش ششم · نتیجه</div>
     <h2>شاید راه حل، فقط گران کردن بنزین نباشد</h2>
   </div>
   <div class="prose-body">
@@ -418,7 +431,7 @@
       <div class="status-row">
         <span class="status-pill"><span class="sw" style="background:var(--pos)"></span> مشاهده‌شده (OBSERVED) — رقمِ منبع‌دارِ رسمی/پژوهشی</span>
         <span class="status-pill"><span class="sw" style="background:var(--accent)"></span> محاسبه‌شده (CALCULATED) — حاصلِ حساب از ورودی‌های مشاهده‌شده</span>
-        <span class="status-pill"><span class="sw" style="background:#7fb7ff"></span> برآوردی (ESTIMATED) — فرضِ الگوسازی (مثلاً مصرف خودرو)</span>
+        <span class="status-pill"><span class="sw" style="background:var(--blue)"></span> برآوردی (ESTIMATED) — فرضِ الگوسازی (مثلاً مصرف خودرو)</span>
       </div>
       <p style="margin-bottom:0;font-size:.85rem">
         همه فرض‌های الگو (مصرف خودرو ۷/۹/۱۲ لیتر، ۲۲ روز کاری، متراژ، سهم اجاره و سناریوهای قیمت بنزین) در پرونده
@@ -440,10 +453,10 @@
 </footer>
 
 <!-- ======================= SCRIPTS ======================= -->
-<script src="data/data.js?v=34"></script>
-<script src="assets/geo/tehran_districts.js?v=34"></script>
-<script src="js/util.js?v=34"></script>
-<script src="js/views.js?v=34"></script>
-<script src="js/article.js?v=34"></script>
+<script src="data/data.js?v=35"></script>
+<script src="assets/geo/tehran_districts.js?v=35"></script>
+<script src="js/util.js?v=35"></script>
+<script src="js/views.js?v=35"></script>
+<script src="js/article.js?v=35"></script>
 </body>
 </html>

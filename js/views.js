@@ -7,6 +7,31 @@
 
   function el(id) { return document.getElementById(id); }
 
+  /* ---------- theme palette (reads CSS custom props at draw time) ---------- */
+  function css(name, fb) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name);
+    return (v && v.trim()) ? v.trim() : fb;
+  }
+  function pal() {
+    return {
+      bg: css("--bg", "#0c0f15"),
+      panel2: css("--panel-2", "#1b2230"),
+      ink: css("--ink", "#edf0f5"),
+      inkDim: css("--ink-dim", "#a4aeba"),
+      inkFaint: css("--ink-faint", "#6c7788"),
+      accent: css("--accent", "#f2b632"),
+      blue: css("--blue", "#7fb7ff"),
+      unaff: css("--unaff", "#39414f"),
+      slate: css("--slate", "#3b4353"),
+      muted: css("--muted", "#8a94a3"),
+      nodata: css("--nodata", "#5c6677")
+    };
+  }
+  function alpha(hex, a) {
+    var c = hex2rgb(hex);
+    return "rgba(" + c.join(",") + "," + a + ")";
+  }
+
   /* ---------- color helpers ---------- */
   function hex2rgb(h) {
     var n = parseInt(h.slice(1), 16);
@@ -42,6 +67,7 @@
     var areaPath = linePath + " L" + X(y1).toFixed(1) + " " + (pt + ih) +
       " L" + X(y0).toFixed(1) + " " + (pt + ih) + " Z";
 
+    var p = pal();
     if (!GAS_SVG) {
       GAS_SVG = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "g-chart", role: "img", "aria-label": "نمودار مصرف روزانه بنزین ایران از ۱۳۸۲ تا ۱۴۰۴" });
       el("gas-chart").appendChild(GAS_SVG);
@@ -50,8 +76,8 @@
 
     var defs = u.svgEl("defs");
     defs.innerHTML = '<linearGradient id="ggrad" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#f2b632" stop-opacity="0.32"/>' +
-      '<stop offset="1" stop-color="#f2b632" stop-opacity="0.02"/></linearGradient>';
+      '<stop offset="0" stop-color="' + p.accent + '" stop-opacity="0.32"/>' +
+      '<stop offset="1" stop-color="' + p.accent + '" stop-opacity="0.02"/></linearGradient>';
     GAS_SVG.appendChild(defs);
 
     [40, 80, 120].forEach(function (v) {
@@ -68,31 +94,31 @@
     });
 
     GAS_SVG.appendChild(u.svgEl("path", { d: areaPath, fill: "url(#ggrad)" }));
-    GAS_SVG.appendChild(u.svgEl("path", { d: linePath, fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    GAS_SVG.appendChild(u.svgEl("path", { d: linePath, fill: "none", stroke: p.accent, "stroke-width": 3, "stroke-linejoin": "round", "stroke-linecap": "round" }));
 
     // 1399 covid dip marker
     var cy = 1399;
-    GAS_SVG.appendChild(u.svgEl("line", { x1: X(cy), x2: X(cy), y1: Y(data[cy]) + 14, y2: Y(120), stroke: "#7fb7ff", "stroke-dasharray": "3 5", "stroke-width": 1, opacity: 0.7 }));
+    GAS_SVG.appendChild(u.svgEl("line", { x1: X(cy), x2: X(cy), y1: Y(data[cy]) + 14, y2: Y(120), stroke: p.blue, "stroke-dasharray": "3 5", "stroke-width": 1, opacity: 0.7 }));
 
     // point dots with hover tooltips
-    pts.forEach(function (p) {
-      var c = u.svgEl("circle", { cx: p[0], cy: p[1], r: p[3] >= 100 ? 6 : 4, fill: p[3] >= 100 ? "#f2b632" : "#0c0f15", stroke: "#f2b632", "stroke-width": p[3] >= 100 ? 3 : 2, style: "cursor:pointer" });
+    pts.forEach(function (pt) {
+      var c = u.svgEl("circle", { cx: pt[0], cy: pt[1], r: pt[3] >= 100 ? 6 : 4, fill: pt[3] >= 100 ? p.accent : p.bg, stroke: p.accent, "stroke-width": pt[3] >= 100 ? 3 : 2, style: "cursor:pointer" });
       var t = u.svgEl("title");
-      t.textContent = "سال " + u.toFaDigits(p[2]) + " — " + u.toFaDigits(p[3]) + " میلیون لیتر در روز";
+      t.textContent = "سال " + u.toFaDigits(pt[2]) + " — " + u.toFaDigits(pt[3]) + " میلیون لیتر در روز";
       c.appendChild(t);
       GAS_SVG.appendChild(c);
     });
 
     // endpoint labels
     function endLabel(y, label, dy) {
-      var t = u.svgEl("text", { x: X(y), y: Y(data[y]) + (dy || -14), "text-anchor": X(y) < W / 2 ? "start" : "end", "class": "axis-txt", "font-size": "13", fill: "#f2b632", "font-weight": "800" });
+      var t = u.svgEl("text", { x: X(y), y: Y(data[y]) + (dy || -14), "text-anchor": X(y) < W / 2 ? "start" : "end", "class": "axis-txt", "font-size": "13", fill: p.accent, "font-weight": "800" });
       t.textContent = label;
       GAS_SVG.appendChild(t);
     }
     endLabel(y0, u.toFaDigits(data[y0]) + " · " + u.toFaDigits(y0));
     endLabel(y1, u.toFaDigits(data[y1]) + " · " + u.toFaDigits(y1));
     // covid label
-    var tl = u.svgEl("text", { x: X(cy) + 8, y: Y(data[cy]) - 10, "class": "axis-txt", "font-size": "11", fill: "#7fb7ff" });
+    var tl = u.svgEl("text", { x: X(cy) + 8, y: Y(data[cy]) - 10, "class": "axis-txt", "font-size": "11", fill: p.blue });
     tl.textContent = "۱۳۹۹ · کرونا";
     GAS_SVG.appendChild(tl);
 
@@ -197,6 +223,7 @@
   }
 
   function drawPeriMap() {
+    var p = pal();
     var names = PERI_ORDER;
     var maxG = 1;
     names.forEach(function (n) {
@@ -213,9 +240,9 @@
     // Major-city hubs (Tehran + its adjacent twin, Karaj) — same visual language.
     // These are big urban centres, NOT measured growth dots of the periphery study.
     function hub(name, P, haloR, nodeR) {
-      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: haloR, fill: "rgba(242,182,50,0.05)", stroke: "rgba(242,182,50,0.18)", "stroke-dasharray": "4 6", "stroke-width": 1 }));
-      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: nodeR, fill: "#0c0f15", stroke: "#f2b632", "stroke-width": 2.5 }));
-      var tL = u.svgEl("text", { x: P[0], y: P[1] - 24, "class": "axis-txt", "font-size": "14", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
+      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: haloR, fill: alpha(p.accent, 0.05), stroke: alpha(p.accent, 0.18), "stroke-dasharray": "4 6", "stroke-width": 1 }));
+      svg.appendChild(u.svgEl("circle", { cx: P[0], cy: P[1], r: nodeR, fill: p.bg, stroke: p.accent, "stroke-width": 2.5 }));
+      var tL = u.svgEl("text", { x: P[0], y: P[1] - 24, "class": "axis-txt", "font-size": "14", "text-anchor": "middle", style: "fill:" + p.accent, "font-weight": "800" });
       tL.textContent = name;
       svg.appendChild(tL);
     }
@@ -227,8 +254,8 @@
       var g = PERI.growth[n];
       var isParand = n === "Parand";
       var r = g == null ? 9 : Math.max(7, Math.sqrt(g / maxG) * PERI_RMAX);
-      var fill = g == null ? "#5c6677" : mix("#3b4353", "#f2b632", Math.pow(g / maxG, 0.6));
-      var c = u.svgEl("circle", { cx: P[0], cy: P[1], r: r, fill: fill, "class": "county", "data-name": n, "stroke": "#0c0f15", "stroke-width": 1.2 });
+      var fill = g == null ? p.nodata : mix(p.slate, p.accent, Math.pow(g / maxG, 0.6));
+      var c = u.svgEl("circle", { cx: P[0], cy: P[1], r: r, fill: fill, "class": "county", "data-name": n, "stroke": p.bg, "stroke-width": 1.2 });
       var t = u.svgEl("title");
       t.textContent = isParand
         ? "پرند — شهر جدید درون شهرستان رباط‌کریم؛ رقم ۱۳۸.۵٪ رشدِ کل شهرستان است که ساخت‌وساز پرند را هم در بر می‌گیرد"
@@ -237,17 +264,17 @@
       svg.appendChild(c);
       PERI.circles[n] = c;
 
-      var nl = u.svgEl("text", { x: P[0], y: P[1] + r + 20, "class": "axis-txt", "font-size": "13", "text-anchor": "middle", style: "fill:#edf0f5", "font-weight": "700" });
+      var nl = u.svgEl("text", { x: P[0], y: P[1] + r + 20, "class": "axis-txt", "font-size": "13", "text-anchor": "middle", style: "fill:" + p.ink, "font-weight": "700" });
       nl.textContent = isParand ? "پرند (رباط‌کریم)" : u.faName(n);
       svg.appendChild(nl);
       if (g != null) {
-        var vl = u.svgEl("text", { x: P[0], y: P[1] - r - 8, "class": "axis-txt", "font-size": "12", "text-anchor": "middle", style: "fill:#f2b632", "font-weight": "800" });
+        var vl = u.svgEl("text", { x: P[0], y: P[1] - r - 8, "class": "axis-txt", "font-size": "12", "text-anchor": "middle", style: "fill:" + p.accent, "font-weight": "800" });
         vl.textContent = u.toFaDigits(u.group(g, 1)) + "٪";
         svg.appendChild(vl);
       }
     });
 
-    var comp = u.svgEl("text", { x: 20, y: 28, "class": "axis-txt", "font-size": "11", style: "fill:#6c7788" });
+    var comp = u.svgEl("text", { x: 20, y: 28, "class": "axis-txt", "font-size": "11", style: "fill:" + p.inkFaint });
     comp.textContent = "شماتیک — موقعیت‌ها تقریبی‌اند؛ اندازه دایره = رشد ۱۳۸۹–۱۳۹۹";
     svg.appendChild(comp);
 
@@ -278,7 +305,7 @@
      a route that doubles every day and accumulates into a monthly
      burden (and, at 22 workdays, into litres of fuel).
      ============================================================ */
-  var PARAND = { days: 22, autoRan: false, reduce: false, raf: 0, stepTimers: [] };
+  var PARAND = { days: 22, autoRan: false, reduce: false, raf: 0, stepTimers: [], sceneBound: false };
   var P4 = { svg: null, dot: null, pill: null, homeX: 325, workX: 675, y: 150 };
 
   function p4txt(id, html) { var e = el(id); if (e) e.innerHTML = html; }
@@ -286,41 +313,42 @@
   function setParandCycle(html) { p4txt("parand-cycle", html); }
 
   function buildParandScene() {
+    var p = pal();
     var W = 1000, H = 300;
     var svg = u.svgEl("svg", { viewBox: "0 0 " + W + " " + H, id: "parand-svg", role: "img", "aria-label": "مسیر رفت و آمد روزانه پرند تا تهران" });
     P4.svg = svg;
 
     function card(cx, emoji, name, sub, accent) {
       var g = u.svgEl("g");
-      g.appendChild(u.svgEl("rect", { x: cx - 130, y: 84, width: 260, height: 132, rx: 18, fill: "#1b2230", stroke: accent || "rgba(242,182,50,0.35)", "stroke-width": 1.4 }));
+      g.appendChild(u.svgEl("rect", { x: cx - 130, y: 84, width: 260, height: 132, rx: 18, fill: p.panel2, stroke: accent || alpha(p.accent, 0.35), "stroke-width": 1.4 }));
       function txt(x, y, str, size, weight, fill) {
         var t = u.svgEl("text", { x: x, y: y, "text-anchor": "middle", "font-size": size, "font-weight": weight, fill: fill });
         t.textContent = str;
         g.appendChild(t);
       }
-      txt(cx, 114, emoji, 22, 400, "#fff");
-      txt(cx, 158, name, 23, 800, "#edf0f5");
-      txt(cx, 190, sub, 12.5, 600, "#8a94a6");
+      txt(cx, 114, emoji, 22, 400, p.ink);
+      txt(cx, 158, name, 23, 800, p.ink);
+      txt(cx, 190, sub, 12.5, 600, p.muted);
       svg.appendChild(g);
     }
-    card(150, "🏠", "پرند", "خانه", "rgba(242,182,50,0.5)");
-    card(850, "💼", "تهران", "محل کار", "rgba(127,183,255,0.45)");
+    card(150, "🏠", "پرند", "خانه", alpha(p.accent, 0.5));
+    card(850, "💼", "تهران", "محل کار", alpha(p.blue, 0.45));
 
     // road
-    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: "#39414f", "stroke-width": 4 }));
-    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: "#f2b632", "stroke-width": 1.6, "stroke-dasharray": "10 8", opacity: 0.6 }));
+    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: p.unaff, "stroke-width": 4 }));
+    svg.appendChild(u.svgEl("line", { x1: 300, y1: P4.y, x2: 700, y2: P4.y, stroke: p.accent, "stroke-width": 1.6, "stroke-dasharray": "10 8", opacity: 0.6 }));
 
     // distance pill directly on the route (one-way, later round trip)
     var pill = u.svgEl("g");
-    pill.appendChild(u.svgEl("rect", { x: 452, y: P4.y - 15, width: 96, height: 30, rx: 15, fill: "#0c0f15", stroke: "rgba(242,182,50,0.65)", "stroke-width": 1.2 }));
-    var pillT = u.svgEl("text", { x: 500, y: P4.y + 6, "text-anchor": "middle", "font-size": "16", "font-weight": "900", fill: "#f2b632" });
+    pill.appendChild(u.svgEl("rect", { x: 452, y: P4.y - 15, width: 96, height: 30, rx: 15, fill: p.bg, stroke: alpha(p.accent, 0.65), "stroke-width": 1.2 }));
+    var pillT = u.svgEl("text", { x: 500, y: P4.y + 6, "text-anchor": "middle", "font-size": "16", "font-weight": "900", fill: p.accent });
     pillT.textContent = "۳۵–۵۰ km";
     pill.appendChild(pillT);
     svg.appendChild(pill);
     P4.pill = pillT;
 
     // commuter dot (moved along the road by JS)
-    var dot = u.svgEl("circle", { cx: P4.homeX, cy: P4.y, r: 9, fill: "#f2b632", stroke: "#0c0f15", "stroke-width": 2 });
+    var dot = u.svgEl("circle", { cx: P4.homeX, cy: P4.y, r: 9, fill: p.accent, stroke: p.bg, "stroke-width": 2 });
     svg.appendChild(dot);
     P4.dot = dot;
 
@@ -329,7 +357,10 @@
     host.appendChild(svg);
     host.style.cursor = "pointer";
     host.title = "برای دیدن دوبارهٔ یک روز کاری، مسیر را لمس کن";
-    host.addEventListener("click", function () { runParandCycle(true); });
+    if (!PARAND.sceneBound) {
+      PARAND.sceneBound = true;
+      host.addEventListener("click", function () { runParandCycle(true); });
+    }
   }
 
   function p4moveTo(x, dur, cb) {
@@ -474,6 +505,7 @@
     // District-derived rent index (citywide avg of 22 district rents, S1/S4) vs
     // statutory minimum-wage index (S3), base 1388 = 100, 1388–1400. Same rent
     // series as the map in Figure 2, so the two stay comparable through 1400.
+    var p = pal();
     var rent = citywideRent();
     var mw = u.numKeys(D.annual.min_wage);
     var baseR = rent[1388], baseW = mw[1388] / 10;
@@ -516,8 +548,8 @@
         return (i ? "L" : "M") + X(y).toFixed(1) + " " + Y(map[y]).toFixed(1);
       }).join(" ");
     }
-    svg.appendChild(u.svgEl("path", { d: linePath(idxR), fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round" }));
-    svg.appendChild(u.svgEl("path", { d: linePath(idxW), fill: "none", stroke: "#7fb7ff", "stroke-width": 2.4, "stroke-linejoin": "round" }));
+    svg.appendChild(u.svgEl("path", { d: linePath(idxR), fill: "none", stroke: p.accent, "stroke-width": 3, "stroke-linejoin": "round" }));
+    svg.appendChild(u.svgEl("path", { d: linePath(idxW), fill: "none", stroke: p.blue, "stroke-width": 2.4, "stroke-linejoin": "round" }));
 
     // end labels (anchor right; inline style keeps colour over the .axis-txt class)
     function endLbl(map, txt, fill, dy) {
@@ -525,8 +557,8 @@
       t.textContent = txt;
       svg.appendChild(t);
     }
-    endLbl(idxR, "اجاره تهران", "#f2b632", -10);
-    endLbl(idxW, "حداقل دستمزد", "#7fb7ff", 18);
+    endLbl(idxR, "اجاره تهران", p.accent, -10);
+    endLbl(idxW, "حداقل دستمزد", p.blue, 18);
 
     // Extension plan: to go beyond Summer 1400, add the Central Bank series
     // «شاخص اجاره مسکن در تهران» (monthly 1396/01–1403/05; CBI) into an
@@ -832,6 +864,7 @@
   }
 
   function drawShock() {
+    var P = pal();
     var W = 720, H = 380, pl = 40, pr = 16, pt = 34, pb = 48;
     var iw = W - pl - pr, ih = H - pt - pb;
     var vmax = 120;                    // fixed scale; taller bars overflow past the top
@@ -862,7 +895,7 @@
       var share = o.share;
       var x = pl + i * slot + (slot - barW) / 2;
       var sel = i === SHOCK.idx;
-      var fill = sel ? "#f2b632" : "#3b4353";
+      var fill = sel ? P.accent : P.slate;
       var opacity = sel ? 1 : 0.65;
       var overflow = share > vmax;
 
@@ -870,16 +903,16 @@
         // bar fills the whole plot (reaches the fixed 120% top)
         svg.appendChild(u.svgEl("rect", { x: x, y: pt, width: barW, height: ih, rx: 4, fill: fill, opacity: opacity, style: "cursor:pointer", "data-i": i }));
         // a small cap notch at the top edge signals the bar continues past the scale
-        svg.appendChild(u.svgEl("path", { d: "M" + (x - 3) + " " + (pt - 4) + " L" + (x + barW / 2) + " " + (pt + 5) + " L" + (x + barW + 3) + " " + (pt - 4), fill: "none", stroke: sel ? "#f2b632" : "#a4aeba", "stroke-width": 1.4 }));
+        svg.appendChild(u.svgEl("path", { d: "M" + (x - 3) + " " + (pt - 4) + " L" + (x + barW / 2) + " " + (pt + 5) + " L" + (x + barW + 3) + " " + (pt - 4), fill: "none", stroke: sel ? P.accent : P.inkDim, "stroke-width": 1.4 }));
         // true value above the plot (in the headroom)
-        var tv = u.svgEl("text", { x: x + barW / 2, y: pt - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "800" });
+        var tv = u.svgEl("text", { x: x + barW / 2, y: pt - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? P.accent : P.inkDim, "font-weight": "800" });
         tv.textContent = (share > 99 ? u.toFaDigits(Math.round(share)) : u.faPct(share, 1)) + "٪";
         svg.appendChild(tv);
       } else {
         var h = share / vmax * ih;
         var y = pt + ih - h;
         svg.appendChild(u.svgEl("rect", { x: x, y: y, width: barW, height: h, rx: 4, fill: fill, opacity: opacity, style: "cursor:pointer", "data-i": i }));
-        var tv = u.svgEl("text", { x: x + barW / 2, y: Math.max(y - 6, pt + 10), "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "700" });
+        var tv = u.svgEl("text", { x: x + barW / 2, y: Math.max(y - 6, pt + 10), "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? P.accent : P.inkDim, "font-weight": "700" });
         var pctStr = share > 99 ? u.toFaDigits(Math.round(share)) + "٪" : u.faPct(share, 1);
         tv.textContent = pctStr;
         svg.appendChild(tv);
@@ -890,7 +923,7 @@
     });
 
     // y-axis title
-    var yt = u.svgEl("text", { x: 12, y: pt + ih / 2, "class": "axis-txt", "font-size": "11", transform: "rotate(-90 12 " + (pt + ih / 2) + ")", "text-anchor": "middle", fill: "#6c7788" });
+    var yt = u.svgEl("text", { x: 12, y: pt + ih / 2, "class": "axis-txt", "font-size": "11", transform: "rotate(-90 12 " + (pt + ih / 2) + ")", "text-anchor": "middle", fill: P.inkFaint });
     yt.textContent = "سهم سوخت از حقوق ماهانه";
     svg.appendChild(yt);
 
@@ -993,6 +1026,7 @@
   function natY(v) { return NAT_PT + (1 - v / NAT_YMAX) * (NAT_H - NAT_PT - NAT_PB); }
 
   function natPaint(series, reveal) {
+    var P = pal();
     var p = natParams();
     var n = p.years.length;
     var c = el("nat-chart");
@@ -1012,7 +1046,7 @@
       svg.appendChild(gt);
     }
     // y-axis title
-    var yt = u.svgEl("text", { x: 15, y: NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2, "class": "axis-txt", "font-size": "11", transform: "rotate(-90 15 " + (NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2) + ")", "text-anchor": "middle", fill: "#6c7788" });
+    var yt = u.svgEl("text", { x: 15, y: NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2, "class": "axis-txt", "font-size": "11", transform: "rotate(-90 15 " + (NAT_PT + (NAT_H - NAT_PT - NAT_PB) / 2) + ")", "text-anchor": "middle", fill: P.inkFaint });
     yt.textContent = "میلیون لیتر در روز";
     svg.appendChild(yt);
 
@@ -1025,11 +1059,11 @@
 
     // baseline flat at 88 (muted grey)
     var yb = Y(p.base);
-    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yb, y2: yb, stroke: "#8a94a3", "stroke-dasharray": "1 7", "stroke-width": 1.4, opacity: 0.9 }));
+    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yb, y2: yb, stroke: P.muted, "stroke-dasharray": "1 7", "stroke-width": 1.4, opacity: 0.9 }));
 
     // reference flat at 129 = actual national (muted blue, dashed)
     var yre = Y(p.ref);
-    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yre, y2: yre, stroke: "#7fb7ff", "stroke-dasharray": "6 5", "stroke-width": 1.6, opacity: 0.95 }));
+    svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yre, y2: yre, stroke: P.blue, "stroke-dasharray": "6 5", "stroke-width": 1.6, opacity: 0.95 }));
 
     // scenario partial reveal (continuous year index 0..n-1)
     var seg = Math.max(0, Math.min(1, reveal)) * (n - 1);
@@ -1049,16 +1083,16 @@
     if (pts.length > 1) {
       var pd = "";
       pts.forEach(function (pt, k) { pd += (k ? "L" : "M") + pt.x.toFixed(1) + " " + pt.y.toFixed(1); });
-      svg.appendChild(u.svgEl("path", { d: pd, fill: "none", stroke: "#f2b632", "stroke-width": 3, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      svg.appendChild(u.svgEl("path", { d: pd, fill: "none", stroke: P.accent, "stroke-width": 3, "stroke-linejoin": "round", "stroke-linecap": "round" }));
     }
 
     // start dot (۱۴۰۰, on the baseline)
-    svg.appendChild(u.svgEl("circle", { cx: X(0), cy: Y(series[0]), r: 4.5, fill: "#8a94a3", stroke: "#0c0f15", "stroke-width": 1.5 }));
+    svg.appendChild(u.svgEl("circle", { cx: X(0), cy: Y(series[0]), r: 4.5, fill: P.muted, stroke: P.bg, "stroke-width": 1.5 }));
 
     // moving head dot while revealing
     if (reveal < 1 - 1e-3) {
       var hp = pts[pts.length - 1];
-      svg.appendChild(u.svgEl("circle", { cx: hp.x, cy: hp.y, r: 5.5, fill: "#f2b632", stroke: "#0c0f15", "stroke-width": 2 }));
+      svg.appendChild(u.svgEl("circle", { cx: hp.x, cy: hp.y, r: 5.5, fill: P.accent, stroke: P.bg, "stroke-width": 2 }));
     }
 
     // dots + value labels for fully reached years (۱ → full)
@@ -1068,12 +1102,12 @@
       var endDot = isEnd && j === full;
       svg.appendChild(u.svgEl("circle", {
         cx: dx, cy: dy, r: endDot ? 6.5 : 4.5,
-        fill: endDot ? "#f2b632" : "#0c0f15", stroke: "#f2b632", "stroke-width": 2
+        fill: endDot ? P.accent : P.bg, stroke: P.accent, "stroke-width": 2
       }));
       var lb = u.svgEl("text", {
         x: dx, y: dy + (endDot ? -18 : -11),
         "class": "axis-txt", "font-size": endDot ? "15" : "12",
-        "text-anchor": "middle", fill: "#f2b632", "font-weight": "800"
+        "text-anchor": "middle", fill: P.accent, "font-weight": "800"
       });
       lb.textContent = u.toFaDigits(Math.round(series[j]));
       svg.appendChild(lb);
@@ -1160,12 +1194,12 @@
       kmHost.appendChild(b);
     });
 
-    // legend
+    // legend (swatch colours are CSS variables so they follow the theme)
     var lg = el("nat-legend");
     if (lg) lg.innerHTML =
-      '<span><i class="sw" style="background:#f2b632;border-radius:2px;height:4px"></i>مصرف سناریویی</span>' +
-      '<span><i class="sw" style="background:#8a94a3;border-radius:2px;height:4px"></i>پایه ۱۴۰۰ (' + u.toFaDigits(Math.round(p.base)) + ')</span>' +
-      '<span><i class="sw" style="background:#7fb7ff;border-radius:2px;height:4px"></i>مصرف واقعی ≈ ' + u.toFaDigits(Math.round(p.ref)) + '</span>';
+      '<span><i class="sw" style="background:var(--accent);border-radius:2px;height:4px"></i>مصرف سناریویی</span>' +
+      '<span><i class="sw" style="background:var(--muted);border-radius:2px;height:4px"></i>پایه ۱۴۰۰ (' + u.toFaDigits(Math.round(p.base)) + ')</span>' +
+      '<span><i class="sw" style="background:var(--blue);border-radius:2px;height:4px"></i>مصرف واقعی ≈ ' + u.toFaDigits(Math.round(p.ref)) + '</span>';
 
     natKmSub();
     natHeadline(NAT.km);
@@ -1193,8 +1227,27 @@
   }
 
   /* ============================================================
-     Reveal, hero, sources
+     Reveal, hero, sources, theme re-render
      ============================================================ */
+  // Re-render the figures after a light/dark theme switch. Each painter reads
+  // the CSS custom properties again, so calling them re-colours the SVG.
+  function retheme() {
+    // stop any running Parand animation, then rebuild the scene
+    if (P4.raf) cancelAnimationFrame(P4.raf);
+    P4.raf = 0;
+    for (var k = 0; k < PARAND.stepTimers.length; k++) clearTimeout(PARAND.stepTimers[k]);
+    PARAND.stepTimers = [];
+    buildParandScene();
+
+    drawGas();
+    drawPeriMap();
+    drawRentWageIndex();
+    drawShock();
+
+    // national chart: if its reveal already completed, repaint the final state
+    if (NAT.done) natPaint(natSeries(NAT.km), 1);
+  }
+
   function initReveal() {
     var els = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
@@ -1254,6 +1307,7 @@
     buildShock: buildShock,
     initReveal: initReveal,
     renderHeroStats: renderHeroStats,
-    renderSources: renderSources
+    renderSources: renderSources,
+    retheme: retheme
   };
 })(window.GH = window.GH || {});
