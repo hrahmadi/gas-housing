@@ -429,6 +429,11 @@ input[type="range"]::-webkit-slider-thumb {
 .pull { text-align:center; font-size: clamp(1.15rem,2.2vw,1.6rem); font-weight: 800; color: var(--ink); line-height: 2; max-width: 900px; margin: 8vh auto; padding: 0 22px; }
 .pull .accent { color: var(--accent); }
 
+/* compact clusters — keep the pull, tighten vertical rhythm */
+.pb-tight { padding-top: .5vh; padding-bottom: 1.2vh; }
+.pull-tight { margin: 1.6vh auto; }
+.head-tight { padding-top: 4vh; }
+
 .parand-sep { max-width: 940px; margin: 0 auto; padding: 0 22px; }
 
 /* ------------------------------------------------------------
