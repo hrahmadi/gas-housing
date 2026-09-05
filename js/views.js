@@ -844,7 +844,7 @@
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.innerHTML = "";
 
-    // reference line 30%
+    // reference gridlines (30/60/90%)
     [30, 60, 90].forEach(function (vv) {
       var y = pt + (1 - vv / vmax) * ih;
       svg.appendChild(u.svgEl("line", { x1: pl, x2: W - pr, y1: y, y2: y, "class": "grid-line" }));
@@ -852,11 +852,6 @@
       t.textContent = u.toFaDigits(vv) + "٪";
       svg.appendChild(t);
     });
-    var y30 = pt + (1 - 30 / vmax) * ih;
-    svg.appendChild(u.svgEl("line", { x1: pl, x2: W - pr, y1: y30, y2: y30, stroke: "#7fb7ff", "stroke-dasharray": "3 5", "stroke-width": 1 }));
-    var t30 = u.svgEl("text", { x: W - pr - 4, y: y30 - 6, "class": "axis-txt", "text-anchor": "end", fill: "#7fb7ff", "font-size": "11" });
-    t30.textContent = "آستانه ۳۰٪ (خط مرجع)";
-    svg.appendChild(t30);
 
     SHOCK.prices.forEach(function (p, i) {
       var o = shockCalc(p);
