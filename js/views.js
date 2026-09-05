@@ -807,7 +807,7 @@
      FIGURE 6 — price-shock interaction (price × eff × income)
      ============================================================ */
   var SHOCK = {
-    prices: [3000, 5000, 10000, 25000, 50000, 100000],
+    prices: [3000, 5000, 10000, 25000, 50000, 100000, 300000],
     idx: 0,          // قیمت انتخاب‌شده (میلهٔ برجسته)
     eff: 9,          // مصرف خودرو ثابت (لیتر/۱۰۰km)
     minWage: 22,     // حداقل دستمزد ماهانه (میلیون تومان)
@@ -817,7 +817,11 @@
 
   function shockWageM() { return SHOCK.minWage * SHOCK.mult; }
 
-  function shockPriceShort(p) { return u.toFaDigits(p / 1000) + " هزار"; }
+  function shockPriceShort(p) { return u.toFaDigits(p / 1000) + " هزار ت"; }
+
+  function shockPriceChipLabel(p) {
+    return p === 300000 ? "آزادسازی کامل (۳۰۰ هزار تومان)" : shockPriceShort(p);
+  }
 
   function shockCalc(p) {
     var kmM = 100 * 22;                 // ۱۰۰ km در روز × ۲۲ روز کاری
@@ -830,7 +834,7 @@
   function drawShock() {
     var W = 720, H = 380, pl = 40, pr = 16, pt = 34, pb = 48;
     var iw = W - pl - pr, ih = H - pt - pb;
-    var vmax = 120;
+    var vmax = 120;                    // fixed scale; taller bars overflow past the top
     var n = SHOCK.prices.length;
     var slot = iw / n;
     var barW = slot * 0.56;
@@ -857,15 +861,29 @@
       var o = shockCalc(p);
       var share = o.share;
       var x = pl + i * slot + (slot - barW) / 2;
-      var h = Math.min(share, vmax) / vmax * ih;
-      var y = pt + ih - h;
       var sel = i === SHOCK.idx;
-      var rect = u.svgEl("rect", { x: x, y: y, width: barW, height: h, rx: 4, fill: sel ? "#f2b632" : "#3b4353", opacity: sel ? 1 : 0.65, style: "cursor:pointer", "data-i": i });
-      svg.appendChild(rect);
-      var tv = u.svgEl("text", { x: x + barW / 2, y: Math.max(y - 6, pt + 10), "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "700" });
-      var pctStr = share > 99 ? u.toFaDigits(Math.round(share)) + "٪" : u.faPct(share, 1);
-      tv.textContent = pctStr;
-      svg.appendChild(tv);
+      var fill = sel ? "#f2b632" : "#3b4353";
+      var opacity = sel ? 1 : 0.65;
+      var overflow = share > vmax;
+
+      if (overflow) {
+        // bar fills the whole plot (reaches the fixed 120% top)
+        svg.appendChild(u.svgEl("rect", { x: x, y: pt, width: barW, height: ih, rx: 4, fill: fill, opacity: opacity, style: "cursor:pointer", "data-i": i }));
+        // a small cap notch at the top edge signals the bar continues past the scale
+        svg.appendChild(u.svgEl("path", { d: "M" + (x - 3) + " " + (pt - 4) + " L" + (x + barW / 2) + " " + (pt + 5) + " L" + (x + barW + 3) + " " + (pt - 4), fill: "none", stroke: sel ? "#f2b632" : "#a4aeba", "stroke-width": 1.4 }));
+        // true value above the plot (in the headroom)
+        var tv = u.svgEl("text", { x: x + barW / 2, y: pt - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "800" });
+        tv.textContent = (share > 99 ? u.toFaDigits(Math.round(share)) : u.faPct(share, 1)) + "٪";
+        svg.appendChild(tv);
+      } else {
+        var h = share / vmax * ih;
+        var y = pt + ih - h;
+        svg.appendChild(u.svgEl("rect", { x: x, y: y, width: barW, height: h, rx: 4, fill: fill, opacity: opacity, style: "cursor:pointer", "data-i": i }));
+        var tv = u.svgEl("text", { x: x + barW / 2, y: Math.max(y - 6, pt + 10), "text-anchor": "middle", "class": "axis-txt", "font-size": "12", fill: sel ? "#f2b632" : "#a4aeba", "font-weight": "700" });
+        var pctStr = share > 99 ? u.toFaDigits(Math.round(share)) + "٪" : u.faPct(share, 1);
+        tv.textContent = pctStr;
+        svg.appendChild(tv);
+      }
       var tl = u.svgEl("text", { x: x + barW / 2, y: H - 10, "text-anchor": "middle", "class": "axis-txt", "font-size": "11" });
       tl.textContent = shockPriceShort(p);
       svg.appendChild(tl);
@@ -904,7 +922,7 @@
     if (pHost) {
       pHost.innerHTML = "";
       SHOCK.prices.forEach(function (p, i) {
-        var b = u.h("button", { type: "button", "class": "chip" + (i === SHOCK.idx ? " active" : ""), "data-p": i }, shockPriceShort(p));
+        var b = u.h("button", { type: "button", "class": "chip" + (i === SHOCK.idx ? " active" : ""), "data-p": i }, shockPriceChipLabel(p));
         b.addEventListener("click", function () { SHOCK.idx = +this.getAttribute("data-p"); syncShockChips(); drawShock(); });
         pHost.appendChild(b);
       });
