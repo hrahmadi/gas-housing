@@ -406,13 +406,14 @@ input[type="range"]::-webkit-slider-thumb {
 .caveat p { margin-bottom: 1.1em; }
 .caveat p:last-child { margin-bottom: 0; }
 .caveat-img {
-  display: block;
-  width: 96px;
+  float: left;
+  width: 170px;
   height: auto;
   border-radius: 12px;
   border: 1px solid rgba(242,182,50,.35);
-  margin: 0 auto .9rem;
+  margin: .15rem 1.1rem .6rem 0;
 }
+.caveat::after { content: ""; display: block; clear: both; }
 .method {
   background: var(--panel); border:1px solid var(--line); border-radius: 14px;
   padding: 1.2rem 1.5rem; margin: 1.6rem 0; font-size: .9rem;
