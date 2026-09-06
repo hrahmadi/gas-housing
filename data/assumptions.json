@@ -45,11 +45,12 @@
     "fuelLitresPer100km": 9,
     "baselineYear": 1400,
     "baseline1400MillionLitresPerDay": 88,
-    "comparisonCurrentMillionLitresPerDay": 129,
-    "comparisonCurrentSourceId": "S11",
+    "dailyProductionMillionLitresPerDay": 120,
+    "dailyProductionNote": "Daily domestic gasoline production ≈ 120 M L/day (estimate; ≈121 in the سقاب critique text) — verify against refinery/SHANA data before publication.",
+    "dailyProductionSourceId": "EST",
     "years": [1400, 1401, 1402, 1403, 1404, 1405],
     "distanceOptionsKmOneWayPerYear": [5, 10, 15, 20],
-    "note": "Thought-experiment scenario, not observed national commuting fuel. Each year the one-way home-to-work distance grows by the selected km (per side); round-trip daily extra = 2 × selected km × years since 1400; extra fuel/day = 24.822m workers × round-trip extra km × 9 L/100km, added to the 1400 baseline (88 M L/day).",
+    "note": "Thought-experiment scenario, not observed national commuting fuel. Each year the one-way home-to-work distance grows by the selected km (per side); round-trip daily extra = 2 × selected km × years since 1400; extra fuel/day = 24.822m workers × round-trip extra km × 9 L/100km, added to the 1400 baseline (88 M L/day). The blue dashed line marks the daily domestic production ceiling (≈ 120 M L/day), not actual consumption.",
     "status": "SCENARIO"
   },
   "covidDipNote": {

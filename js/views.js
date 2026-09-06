@@ -995,7 +995,7 @@
       emp: a.employedMillion != null ? a.employedMillion : 24.822,
       eff: a.fuelLitresPer100km != null ? a.fuelLitresPer100km : 9,
       base: a.baseline1400MillionLitresPerDay != null ? a.baseline1400MillionLitresPerDay : 88,
-      ref: a.comparisonCurrentMillionLitresPerDay != null ? a.comparisonCurrentMillionLitresPerDay : 129,
+      prod: a.dailyProductionMillionLitresPerDay != null ? a.dailyProductionMillionLitresPerDay : 120,
       years: (a.years && a.years.length) ? a.years : [1400, 1401, 1402, 1403, 1404, 1405],
       opts: (a.distanceOptionsKmOneWayPerYear && a.distanceOptionsKmOneWayPerYear.length)
         ? a.distanceOptionsKmOneWayPerYear : [5, 10, 15, 20]
@@ -1061,8 +1061,8 @@
     var yb = Y(p.base);
     svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yb, y2: yb, stroke: P.muted, "stroke-dasharray": "1 7", "stroke-width": 1.4, opacity: 0.9 }));
 
-    // reference flat at 129 = actual national (muted blue, dashed)
-    var yre = Y(p.ref);
+    // daily production ceiling flat at 120 (blue, dashed)
+    var yre = Y(p.prod);
     svg.appendChild(u.svgEl("line", { x1: NAT_PL, x2: NAT_W - NAT_PR, y1: yre, y2: yre, stroke: P.blue, "stroke-dasharray": "6 5", "stroke-width": 1.6, opacity: 0.95 }));
 
     // scenario partial reveal (continuous year index 0..n-1)
@@ -1199,7 +1199,7 @@
     if (lg) lg.innerHTML =
       '<span><i class="sw" style="background:var(--accent);border-radius:2px;height:4px"></i>مصرف سناریویی</span>' +
       '<span><i class="sw" style="background:var(--muted);border-radius:2px;height:4px"></i>پایه ۱۴۰۰ (' + u.toFaDigits(Math.round(p.base)) + ')</span>' +
-      '<span><i class="sw" style="background:var(--blue);border-radius:2px;height:4px"></i>مصرف واقعی ≈ ' + u.toFaDigits(Math.round(p.ref)) + '</span>';
+      '<span><i class="sw" style="background:var(--blue);border-radius:2px;height:4px"></i>تولید روزانه ≈ ' + u.toFaDigits(Math.round(p.prod)) + '</span>';
 
     natKmSub();
     natHeadline(NAT.km);
