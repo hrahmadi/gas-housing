@@ -3,7 +3,8 @@
     "path": "data/raw/rent-data-donyaeghtesad.rtf",
     "bytes": 59504,
     "sha256": "4569c6eed6b8428b32f2a94e53cd9cc9a776da13b1d2c7395ffd8fdf5fc073a5",
-    "extracted_lines": 419
+    "extracted_lines": 419,
+    "file_name_warning": "The file is named 'rent-data-donyaeghtesad' but no Donya-e-Eqtesad table exists inside it. The only outlet named is Fardayeeghtesad, in the simulated block, so the outputs are named by measurement kind + date instead of by outlet."
   },
   "what_this_is": "An LLM-conversation transcript ('all the raw data extracted and transcribed from every image and text prompt'), not a single newspaper dataset. Its own header warns against combining timeframes, so each source table is kept separate here.",
   "datasets": [
@@ -253,6 +254,160 @@
       }
     }
   ],
+  "publication_files": {
+    "sale_price_kilid_images_undated_tehran_neighbourhoods": {
+      "file": "datasets/sale_price_kilid_images_undated_tehran_neighbourhoods.csv",
+      "rows": 42,
+      "kind": "sale_observations",
+      "dataset_id": 1,
+      "title": "Kilid - Housing Price Stats (Estimated vs. Newly Built)",
+      "date_jalali_ym": null,
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "rent_asking_undated_tehran_districts_8_13_14": {
+      "file": "datasets/rent_asking_undated_tehran_districts_8_13_14.csv",
+      "rows": 53,
+      "kind": "rent_observations",
+      "dataset_id": 2,
+      "title": "Rental Prices in Districts 8, 13, 14 (Medium Size, 10-25 Years Old)",
+      "date_jalali_ym": null,
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "rent_asking_1404-08_tehran_22_districts": {
+      "file": "datasets/rent_asking_1404-08_tehran_22_districts.csv",
+      "rows": 108,
+      "kind": "rent_observations",
+      "dataset_id": 3,
+      "title": "Aban 1404 Rental Prices (22 Districts of Tehran)",
+      "date_jalali_ym": "1404-08",
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "sale_price_1403-04_tehran_apartments": {
+      "file": "datasets/sale_price_1403-04_tehran_apartments.csv",
+      "rows": 40,
+      "kind": "sale_observations",
+      "dataset_id": 4,
+      "title": "Tir 1403 Sales Prices (Residential Apartments)",
+      "date_jalali_ym": "1403-04",
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "rent_asking_1400-05_tehran_up_to_60sqm": {
+      "file": "datasets/rent_asking_1400-05_tehran_up_to_60sqm.csv",
+      "rows": 39,
+      "kind": "rent_observations",
+      "dataset_id": 5,
+      "title": "Mordad 1400 Rentals (Apartments up to 60 sqm)",
+      "date_jalali_ym": "1400-05",
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "sale_price_district_avg_1402-08_origin_unverified": {
+      "file": "datasets/sale_price_district_avg_1402-08_origin_unverified.csv",
+      "rows": 23,
+      "kind": "district_sale_stats",
+      "dataset_id": 6,
+      "title": "Aban 1402 Sales Prices (Average Price per sqm)",
+      "date_jalali_ym": "1402-08",
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    },
+    "rent_asking_isna_1402-04_tehran": {
+      "file": "datasets/rent_asking_isna_1402-04_tehran.csv",
+      "rows": 10,
+      "kind": "rent_observations",
+      "dataset_id": 8,
+      "title": "ISNA Rentals (Tir 1402)",
+      "date_jalali_ym": "1402-04",
+      "evidence_tier": "C",
+      "verification": "unverified_transcription"
+    }
+  },
+  "excluded_files": {
+    "7": {
+      "dataset_id": 7,
+      "file": "excluded/dataset_7_simulated.csv",
+      "rows": 29,
+      "reason": "simulated / unreliable provenance (the transcript labels it 'Simulated web research from fardayeeghtesad.com')"
+    }
+  },
+  "reconciliation": {
+    "question": "Is dataset 4 (Tir 1403) a rent table or a sale table? Reviewer recall was a rent table for 70-100 m2 apartments.",
+    "verdict": "sale price per square metre (not rent)",
+    "evidence": [
+      "column header is «قیمت هر مترمربع (تومان)» = price per square metre",
+      "transcript title: 'Suggested sales prices for residential apartments in Tehran.'",
+      "transcript note: '*Note: This is Sales data, not Rent data.*'",
+      "values run in the tens-to-hundreds of millions of toman per m2, while every rent row in this archive is 700,000-85,000,000 toman per month plus a separate deposit",
+      "it is not restricted to 70-100 m2: floor areas span 36-315 m2"
+    ],
+    "possible_confusion": "The archive does hold a rent table for larger apartments, but that is dataset 3 (Aban 1404, ~70-140 m2). No Tir 1403 rent table exists in this file, so the 40 records stay in the sale observations and nothing was moved."
+  },
+  "flag_classes": {
+    "unparsed_amount": "data_error",
+    "unparsed_number": "data_error",
+    "two_values_in_one_cell": "source_ambiguity",
+    "missing_unit_in_chunk": "source_ambiguity",
+    "zero_rent_as_written": "source_ambiguity",
+    "persian_decimal_slash": "source_ambiguity",
+    "range_not_two_sides": "source_ambiguity",
+    "implausible_building_age": "source_anomaly",
+    "age_new_build": "notation",
+    "free_of_charge_as_written": "notation",
+    "unit_assumed_toman_from_values": "notation",
+    "city_total_row": "notation"
+  },
+  "flag_class_counts": {
+    "source_anomaly": 1,
+    "source_ambiguity": 10,
+    "notation": 20
+  },
+  "issue_class_counts": {
+    "notation": 13,
+    "source_ambiguity": 9,
+    "source_anomaly": 1
+  },
+  "parser_fixes": [
+    {
+      "id": "persian_digits_in_control_words",
+      "symptom": "Python's \\d also matches Persian digits, so '\\uc0\\u1777' was consumed whole and every bolded district cell rendered as '****'",
+      "fix": "ASCII-only [0-9] character classes in all RTF-level regexes"
+    },
+    {
+      "id": "surrogate_pairs",
+      "symptom": "non-BMP characters (📊) arrive as two negative \\uN escapes and crashed the decoder",
+      "fix": "recombine UTF-16 surrogate pairs before writing text"
+    },
+    {
+      "id": "multi_unit_sums",
+      "symptom": "'62 میلیون و 500 هزار' was summed as 562,000,000",
+      "fix": "split on «و» and apply each chunk's own unit word"
+    },
+    {
+      "id": "range_lost_unit",
+      "symptom": "'12 الی 32 میلیون' produced 12 toman .. 32,000,000",
+      "fix": "a range side without its own unit inherits the unit written in the same cell"
+    },
+    {
+      "id": "persian_decimal_slash",
+      "symptom": "'1/2 میلیارد' was read as the range 1..2",
+      "fix": "slash without surrounding spaces is a decimal separator (1.2 billion); flagged for review"
+    },
+    {
+      "id": "word_numbers",
+      "symptom": "'یک میلیون' produced no value at all",
+      "fix": "Persian number words are converted to digits before parsing"
+    }
+  ],
+  "policies": {
+    "no_sale_to_rent_conversion": "rent_* columns are observed asking rents only; sale_* columns are observed asking sale prices only. No value in this output is derived from the other.",
+    "publication_naming": "Files are named measurement-kind + date (+ outlet only where the transcript names one). A file is never named after an outlet we cannot verify.",
+    "external_outlets_absent": "No Donya-e-Eqtesad table exists in this archive. The expected 'rent_asking_donyaye_eghtesad_*' and 'sale_price_official_1402' files cannot be produced from this source; dataset 6 is a district average of unverified origin.",
+    "excluded_material": "Dataset 7 is removed from all production files and published separately under excluded/ with excluded_reason on every row."
+  },
   "unit_rules": {
     "money_output": "toman",
     "million_toman": "x 1,000,000",
@@ -261,9 +416,11 @@
     "persian_decimal_slash": "'1/2 میلیارد' read as 1.2 billion; flagged for review"
   },
   "row_counts": {
-    "rent_observations": 239,
+    "rent_observations": 210,
     "sale_observations": 82,
-    "district_sale_stats": 23
+    "district_sale_stats": 23,
+    "excluded": 29,
+    "publication_files": 7
   },
   "flag_counts": {
     "age_new_build": 8,
@@ -280,199 +437,231 @@
     "persian_decimal_slash:1/4": 1
   },
   "warnings": [
-    "Dataset 7 is labelled 'Simulated web research from fardayeeghtesad.com' — it is NOT a real scrape and must not be cited as Fardayeeghtesad/Donya-e-Eqtesad reporting (tier D).",
-    "Every other dataset is a transcription of images; values need checking against the original screenshots/newspaper before publication (tier C).",
-    "The file name says 'donyaeghtesad' but the only named outlet inside is Fardayeeghtesad; no Donya-e-Eqtesad table is present in this file.",
+    "EXCLUDED: dataset 7 ('Simulated web research from fardayeeghtesad.com') is out of every production file; it lives in excluded/ with excluded_reason per row.",
+    "No Donya-e-Eqtesad table exists in this archive; the only outlet named is Fardayeeghtesad, and that block is the simulated one.",
+    "Every remaining dataset is a transcription of images (evidence_tier=C, verification=unverified_transcription): values need checking against the original screenshots before publication.",
     "Datasets 1 and 2 carry no date; dataset 1 is also neighbourhood-level with no floor area.",
-    "Deposit/rent column order differs between datasets (2 uses deposit-first, 3 rent-first); columns were mapped by header name, never by position.",
-    "Kilid's own scraped series (kilid/kilid_data) supersedes dataset 1 for any Tehrans price-per-m2 claim, because it is dated and reproducible."
+    "Deposit/rent column order differs between datasets (2 deposit-first, 3 rent-first); columns were mapped by header name, never by position.",
+    "Kilid's own scraped series (kilid/kilid_data) supersedes dataset 1 for any Tehran price-per-m2 claim: it is dated, reproducible and covers 10 cities.",
+    "Sale and rent are never interconverted: no column here is derived from the other."
   ],
   "anomalies": [
     {
       "dataset_id": 2,
       "sub_table": "",
       "source_row": 46,
-      "flag": "implausible_building_age:90"
+      "flag": "implausible_building_age:90",
+      "flag_class": "source_anomaly"
     },
     {
       "dataset_id": 3,
       "sub_table": "",
       "source_row": 144,
-      "flag": "two_values_in_one_cell"
+      "flag": "two_values_in_one_cell",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 3,
       "sub_table": "",
       "source_row": 148,
-      "flag": "two_values_in_one_cell"
+      "flag": "two_values_in_one_cell",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 3,
       "sub_table": "",
       "source_row": 152,
-      "flag": "two_values_in_one_cell"
+      "flag": "two_values_in_one_cell",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 3,
       "sub_table": "",
       "source_row": 153,
-      "flag": "zero_rent_as_written"
+      "flag": "zero_rent_as_written",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 3,
       "sub_table": "",
       "source_row": 186,
-      "flag": "zero_rent_as_written"
+      "flag": "zero_rent_as_written",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 227,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 233,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 243,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 245,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 252,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 254,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 256,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 4,
       "sub_table": "",
       "source_row": 257,
-      "flag": "age_new_build"
+      "flag": "age_new_build",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 5,
       "sub_table": "",
       "source_row": 297,
-      "flag": "missing_unit_in_chunk:800"
+      "flag": "missing_unit_in_chunk:800",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 5,
       "sub_table": "",
       "source_row": 308,
-      "flag": "missing_unit_in_chunk:500"
+      "flag": "missing_unit_in_chunk:500",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 6,
       "sub_table": "",
       "source_row": 343,
-      "flag": "city_total_row"
+      "flag": "city_total_row",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 353,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 354,
-      "flag": "missing_unit_in_chunk:700"
+      "flag": "missing_unit_in_chunk:700",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 354,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 355,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 356,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 357,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 358,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 7,
       "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
       "source_row": 359,
-      "flag": "unit_assumed_toman_from_values"
+      "flag": "unit_assumed_toman_from_values",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 409,
-      "flag": "free_of_charge_as_written"
+      "flag": "free_of_charge_as_written",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 410,
-      "flag": "free_of_charge_as_written"
+      "flag": "free_of_charge_as_written",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 411,
-      "flag": "free_of_charge_as_written"
+      "flag": "free_of_charge_as_written",
+      "flag_class": "notation"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 413,
-      "flag": "persian_decimal_slash:1/2"
+      "flag": "persian_decimal_slash:1/2",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 415,
-      "flag": "persian_decimal_slash:1/4"
+      "flag": "persian_decimal_slash:1/4",
+      "flag_class": "source_ambiguity"
     },
     {
       "dataset_id": 8,
       "sub_table": "",
       "source_row": 415,
-      "flag": "free_of_charge_as_written"
+      "flag": "free_of_charge_as_written",
+      "flag_class": "notation"
     }
   ]
 }

@@ -30,6 +30,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import collections
 import csv
 import hashlib
 import json
@@ -40,8 +41,12 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+#: The input keeps its original (misleading) file name on purpose: it is the artefact we received.
 DEFAULT_INPUT = REPO_ROOT / "data" / "raw" / "rent-data-donyaeghtesad.rtf"
-DEFAULT_OUTDIR = REPO_ROOT / "data" / "raw" / "rent-data-donyaeghtesad"
+
+#: Neutral working folder: this archive is not one Donya-e-Eqtesad dataset.
+DEFAULT_OUTDIR = REPO_ROOT / "data" / "raw" / "tehran_housing_market_data"
 
 # --------------------------------------------------------------------------------------
 # Vocabulary
@@ -142,6 +147,7 @@ RENT_FIELDS: Tuple[str, ...] = (
     "rent_is_free",
     "amenities",
     "flag_amount_ambiguous",
+    "issue_classes",
     "notes",
     "source_row",
 )
@@ -169,6 +175,7 @@ SALE_FIELDS: Tuple[str, ...] = (
     "price_psm_raw",
     "price_psm_unit_source",
     "flag_amount_ambiguous",
+    "issue_classes",
     "notes",
     "source_row",
 )
@@ -190,9 +197,88 @@ DISTRICT_STATS_FIELDS: Tuple[str, ...] = (
     "price_psm_unit_source",
     "transactions_n",
     "is_total_row",
+    "issue_classes",
     "notes",
     "source_row",
 )
+
+#: Datasets that must never enter a production file. The reason travels with the rows.
+EXCLUDED_DATASETS: Dict[int, str] = {
+    7: "simulated / unreliable provenance (the transcript labels it 'Simulated web research from fardayeeghtesad.com')",
+}
+
+#: Publication file per source table. Provenance is part of the file name: what we can
+#: defend is the *measurement kind* plus its date, and the outlet only where the transcript
+#: names one. (Kilid's dated, reproducible series lives in kilid/kilid_data/ instead.)
+PUBLICATION_FILES: Dict[int, str] = {
+    1: "sale_price_kilid_images_undated_tehran_neighbourhoods",
+    2: "rent_asking_undated_tehran_districts_8_13_14",
+    3: "rent_asking_1404-08_tehran_22_districts",
+    4: "sale_price_1403-04_tehran_apartments",
+    5: "rent_asking_1400-05_tehran_up_to_60sqm",
+    6: "sale_price_district_avg_1402-08_origin_unverified",
+    7: "dataset_7_simulated",
+    8: "rent_asking_isna_1402-04_tehran",
+}
+
+#: How a downstream analyst should read each flag.
+#:   data_error       - the pipeline can prove and fix it; must not survive into the output
+#:   source_ambiguity - the source itself does not say clearly; value stays empty, flag stays
+#:   source_anomaly   - looks strange but may be real; keep it, flag it, never remove it
+#:   notation         - a recorded assumption or a notation, not a defect
+FLAG_CLASSES: Dict[str, str] = {
+    "unparsed_amount": "data_error",
+    "unparsed_number": "data_error",
+    "two_values_in_one_cell": "source_ambiguity",
+    "missing_unit_in_chunk": "source_ambiguity",
+    "zero_rent_as_written": "source_ambiguity",
+    "persian_decimal_slash": "source_ambiguity",
+    "range_not_two_sides": "source_ambiguity",
+    "implausible_building_age": "source_anomaly",
+    "age_new_build": "notation",
+    "free_of_charge_as_written": "notation",
+    "unit_assumed_toman_from_values": "notation",
+    "city_total_row": "notation",
+}
+
+#: Parser defects found and corrected while cleaning this file. Kept in the report so the
+#: history of every value stays auditable (these are ``data_error``, not source problems).
+PARSER_FIXES: Tuple[Dict[str, str], ...] = (
+    {
+        "id": "persian_digits_in_control_words",
+        "symptom": "Python's \\d also matches Persian digits, so '\\uc0\\u1777' was consumed whole and every bolded district cell rendered as '****'",
+        "fix": "ASCII-only [0-9] character classes in all RTF-level regexes",
+    },
+    {
+        "id": "surrogate_pairs",
+        "symptom": "non-BMP characters (📊) arrive as two negative \\uN escapes and crashed the decoder",
+        "fix": "recombine UTF-16 surrogate pairs before writing text",
+    },
+    {
+        "id": "multi_unit_sums",
+        "symptom": "'62 میلیون و 500 هزار' was summed as 562,000,000",
+        "fix": "split on «و» and apply each chunk's own unit word",
+    },
+    {
+        "id": "range_lost_unit",
+        "symptom": "'12 الی 32 میلیون' produced 12 toman .. 32,000,000",
+        "fix": "a range side without its own unit inherits the unit written in the same cell",
+    },
+    {
+        "id": "persian_decimal_slash",
+        "symptom": "'1/2 میلیارد' was read as the range 1..2",
+        "fix": "slash without surrounding spaces is a decimal separator (1.2 billion); flagged for review",
+    },
+    {
+        "id": "word_numbers",
+        "symptom": "'یک میلیون' produced no value at all",
+        "fix": "Persian number words are converted to digits before parsing",
+    },
+)
+
+
+def flag_class(flag: str) -> str:
+    return FLAG_CLASSES.get(flag.split(":")[0], "unclassified")
 
 
 # --------------------------------------------------------------------------------------
@@ -878,17 +964,104 @@ def main(argv: Optional[List[str]] = None) -> int:
                         "sub_table": block.sub_table,
                         "source_row": row.get("source_row"),
                         "flag": flag,
+                        "flag_class": flag_class(flag),
                     }
                 )
 
+    # ----------------------------------------------------------------------------------
+    # Excluded material leaves the production files entirely (not merely tagged)
+    # ----------------------------------------------------------------------------------
+    excluded_ids = set(EXCLUDED_DATASETS)
+
+    def is_excluded(row: Dict[str, Any]) -> bool:
+        return int(row.get("dataset_id") or 0) in excluded_ids
+
+    excluded_rows = [row for row in rent_rows + sale_rows + stat_rows if is_excluded(row)]
+    rent_rows = [row for row in rent_rows if not is_excluded(row)]
+    sale_rows = [row for row in sale_rows if not is_excluded(row)]
+    stat_rows = [row for row in stat_rows if not is_excluded(row)]
+
+    # ----------------------------------------------------------------------------------
+    # Per-row flag taxonomy: the class is what tells an analyst how to treat the value
+    # ----------------------------------------------------------------------------------
+    for row in rent_rows + sale_rows + stat_rows + excluded_rows:
+        flags = [flag for flag in str(row.get("notes", "")).split("; ") if flag]
+        classes = sorted({flag_class(flag) for flag in flags})
+        row["issue_classes"] = ";".join(classes)
+        if any(flag_class(flag) in ("data_error", "source_ambiguity") for flag in flags):
+            row["flag_amount_ambiguous"] = True
+
     out_dir = Path(args.out)
-    write_csv(out_dir / "rent_observations.csv", RENT_FIELDS, rent_rows)
-    write_csv(out_dir / "sale_observations.csv", SALE_FIELDS, sale_rows)
-    write_csv(out_dir / "district_sale_stats.csv", DISTRICT_STATS_FIELDS, stat_rows)
+    observations_dir = out_dir / "observations"
+    publications_dir = out_dir / "datasets"
+    excluded_dir = out_dir / "excluded"
+
+    write_csv(observations_dir / "rent_observations.csv", RENT_FIELDS, rent_rows)
+    write_csv(observations_dir / "sale_observations.csv", SALE_FIELDS, sale_rows)
+    write_csv(observations_dir / "district_sale_stats.csv", DISTRICT_STATS_FIELDS, stat_rows)
+
+    excluded_files: Dict[str, Dict[str, Any]] = {}
+    for dataset_id in sorted({int(row["dataset_id"]) for row in excluded_rows}):
+        subset = [row for row in excluded_rows if int(row["dataset_id"]) == dataset_id]
+        stem = PUBLICATION_FILES.get(dataset_id, f"dataset_{dataset_id}")
+        file_name = f"{stem}.csv"
+        write_csv(
+            excluded_dir / file_name,
+            ("excluded_reason",) + RENT_FIELDS,
+            [{"excluded_reason": EXCLUDED_DATASETS[dataset_id], **row} for row in subset],
+        )
+        excluded_files[str(dataset_id)] = {
+            "dataset_id": dataset_id,
+            "file": f"excluded/{file_name}",
+            "rows": len(subset),
+            "reason": EXCLUDED_DATASETS[dataset_id],
+        }
+
+    # ----------------------------------------------------------------------------------
+    # Publication datasets: one file per source table, provenance in the file name
+    # ----------------------------------------------------------------------------------
+    publication_files: Dict[str, Dict[str, Any]] = {}
+    for dataset_id, stem in sorted(PUBLICATION_FILES.items()):
+        if dataset_id in excluded_ids:
+            continue
+        rent_subset = [row for row in rent_rows if int(row["dataset_id"]) == dataset_id]
+        sale_subset = [row for row in sale_rows if int(row["dataset_id"]) == dataset_id]
+        stat_subset = [row for row in stat_rows if int(row["dataset_id"]) == dataset_id]
+        if rent_subset:
+            fields, rows, kind = RENT_FIELDS, rent_subset, "rent_observations"
+        elif sale_subset:
+            fields, rows, kind = SALE_FIELDS, sale_subset, "sale_observations"
+        elif stat_subset:
+            fields, rows, kind = DISTRICT_STATS_FIELDS, stat_subset, "district_sale_stats"
+        else:
+            continue
+        write_csv(publications_dir / f"{stem}.csv", fields, rows)
+        publication_files[stem] = {
+            "file": f"datasets/{stem}.csv",
+            "rows": len(rows),
+            "kind": kind,
+            "dataset_id": dataset_id,
+            "title": rows[0]["dataset_title"],
+            "date_jalali_ym": rows[0]["date_jalali_ym"] or None,
+            "evidence_tier": rows[0]["evidence_tier"],
+            "verification": rows[0]["verification"],
+        }
 
     flag_counts: Dict[str, int] = {}
     for anomaly in anomalies:
         flag_counts[anomaly["flag"]] = flag_counts.get(anomaly["flag"], 0) + 1
+
+    class_counts: Dict[str, int] = {}
+    for anomaly in anomalies:
+        class_counts[anomaly["flag_class"]] = class_counts.get(anomaly["flag_class"], 0) + 1
+
+    # evidence for the dataset 4 reconciliation question, read from this file
+    d4_areas = sorted(
+        int(row["floor_area_sqm"])
+        for row in sale_rows
+        if int(row["dataset_id"]) == 4 and str(row.get("floor_area_sqm") or "").isdigit()
+    )
+    rent_values = [float(row["rent_toman"]) for row in rent_rows if row.get("rent_toman")]
 
     report = {
         "input": {
@@ -896,6 +1069,11 @@ def main(argv: Optional[List[str]] = None) -> int:
             "bytes": len(raw),
             "sha256": hashlib.sha256(raw).hexdigest(),
             "extracted_lines": len(text.split("\n")),
+            "file_name_warning": (
+                "The file is named 'rent-data-donyaeghtesad' but no Donya-e-Eqtesad table exists "
+                "inside it. The only outlet named is Fardayeeghtesad, in the simulated block, so the "
+                "outputs are named by measurement kind + date instead of by outlet."
+            ),
         },
         "what_this_is": (
             "An LLM-conversation transcript ('all the raw data extracted and transcribed from every "
@@ -903,6 +1081,63 @@ def main(argv: Optional[List[str]] = None) -> int:
             "combining timeframes, so each source table is kept separate here."
         ),
         "datasets": dataset_report,
+        "publication_files": publication_files,
+        "excluded_files": excluded_files,
+        "reconciliation": {
+            "question": (
+                "Is dataset 4 (Tir 1403) a rent table or a sale table? Reviewer recall was a rent "
+                "table for 70-100 m2 apartments."
+            ),
+            "verdict": "sale price per square metre (not rent)",
+            "evidence": [
+                "column header is «قیمت هر مترمربع (تومان)» = price per square metre",
+                "transcript title: 'Suggested sales prices for residential apartments in Tehran.'",
+                "transcript note: '*Note: This is Sales data, not Rent data.*'",
+                "values run in the tens-to-hundreds of millions of toman per m2, while every rent row "
+                "in this archive is "
+                + (f"{min(rent_values):,.0f}-{max(rent_values):,.0f} toman per month" if rent_values else "1-70 million toman per month")
+                + " plus a separate deposit",
+                "it is not restricted to 70-100 m2: floor areas span "
+                + (f"{min(d4_areas)}-{max(d4_areas)} m2" if d4_areas else "a wide range"),
+            ],
+            "possible_confusion": (
+                "The archive does hold a rent table for larger apartments, but that is dataset 3 "
+                "(Aban 1404, ~70-140 m2). No Tir 1403 rent table exists in this file, so the 40 "
+                "records stay in the sale observations and nothing was moved."
+            ),
+        },
+        "flag_classes": FLAG_CLASSES,
+        "flag_class_counts": class_counts,
+        "issue_class_counts": dict(
+            sorted(
+                collections.Counter(
+                    cls
+                    for row in rent_rows + sale_rows + stat_rows
+                    for cls in str(row["issue_classes"]).split(";")
+                    if cls
+                ).items()
+            )
+        ),
+        "parser_fixes": list(PARSER_FIXES),
+        "policies": {
+            "no_sale_to_rent_conversion": (
+                "rent_* columns are observed asking rents only; sale_* columns are observed asking "
+                "sale prices only. No value in this output is derived from the other."
+            ),
+            "publication_naming": (
+                "Files are named measurement-kind + date (+ outlet only where the transcript names "
+                "one). A file is never named after an outlet we cannot verify."
+            ),
+            "external_outlets_absent": (
+                "No Donya-e-Eqtesad table exists in this archive. The expected "
+                "'rent_asking_donyaye_eghtesad_*' and 'sale_price_official_1402' files cannot be "
+                "produced from this source; dataset 6 is a district average of unverified origin."
+            ),
+            "excluded_material": (
+                "Dataset 7 is removed from all production files and published separately under "
+                "excluded/ with excluded_reason on every row."
+            ),
+        },
         "unit_rules": {
             "money_output": "toman",
             "million_toman": "x 1,000,000",
@@ -914,20 +1149,24 @@ def main(argv: Optional[List[str]] = None) -> int:
             "rent_observations": len(rent_rows),
             "sale_observations": len(sale_rows),
             "district_sale_stats": len(stat_rows),
+            "excluded": len(excluded_rows),
+            "publication_files": len(publication_files),
         },
         "flag_counts": dict(sorted(flag_counts.items(), key=lambda item: -item[1])),
         "warnings": [
-            "Dataset 7 is labelled 'Simulated web research from fardayeeghtesad.com' — it is NOT a "
-            "real scrape and must not be cited as Fardayeeghtesad/Donya-e-Eqtesad reporting (tier D).",
-            "Every other dataset is a transcription of images; values need checking against the "
-            "original screenshots/newspaper before publication (tier C).",
-            "The file name says 'donyaeghtesad' but the only named outlet inside is Fardayeeghtesad; "
-            "no Donya-e-Eqtesad table is present in this file.",
+            "EXCLUDED: dataset 7 ('Simulated web research from fardayeeghtesad.com') is out of every "
+            "production file; it lives in excluded/ with excluded_reason per row.",
+            "No Donya-e-Eqtesad table exists in this archive; the only outlet named is "
+            "Fardayeeghtesad, and that block is the simulated one.",
+            "Every remaining dataset is a transcription of images (evidence_tier=C, "
+            "verification=unverified_transcription): values need checking against the original "
+            "screenshots before publication.",
             "Datasets 1 and 2 carry no date; dataset 1 is also neighbourhood-level with no floor area.",
-            "Deposit/rent column order differs between datasets (2 uses deposit-first, 3 rent-first); "
+            "Deposit/rent column order differs between datasets (2 deposit-first, 3 rent-first); "
             "columns were mapped by header name, never by position.",
-            "Kilid's own scraped series (kilid/kilid_data) supersedes dataset 1 for any Tehrans "
-            "price-per-m2 claim, because it is dated and reproducible.",
+            "Kilid's own scraped series (kilid/kilid_data) supersedes dataset 1 for any Tehran "
+            "price-per-m2 claim: it is dated, reproducible and covers 10 cities.",
+            "Sale and rent are never interconverted: no column here is derived from the other.",
         ],
         "anomalies": anomalies,
     }
@@ -937,13 +1176,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         json.dump(report, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
 
-    print(f"input       : {input_path} ({len(raw):,} bytes, sha256 {report['input']['sha256'][:12]}…)")
-    print(f"blocks      : {len(blocks)} table(s) across {len({b.dataset_id for b in blocks})} dataset(s)")
-    print(f"rent rows   : {len(rent_rows)}")
-    print(f"sale rows   : {len(sale_rows)}")
-    print(f"district rows: {len(stat_rows)}")
-    print("flags       :", json.dumps(report["flag_counts"], ensure_ascii=False))
-    print(f"output      : {out_dir}")
+    print(f"input        : {input_path} ({len(raw):,} bytes, sha256 {report['input']['sha256'][:12]}…)")
+    print(f"blocks       : {len(blocks)} table(s) across {len({b.dataset_id for b in blocks})} dataset(s)")
+    print(f"production   : {len(rent_rows)} rent + {len(sale_rows)} sale + {len(stat_rows)} district-stat rows")
+    print(f"excluded     : {len(excluded_rows)} row(s) -> {', '.join(sorted(f['file'] for f in excluded_files.values())) or 'none'}")
+    print(f"publication  : {len(publication_files)} file(s) in datasets/")
+    print("flags        :", json.dumps(report["flag_counts"], ensure_ascii=False))
+    print("flag classes :", json.dumps(class_counts, ensure_ascii=False))
+    print(f"output       : {out_dir}")
     return 0
 
 
