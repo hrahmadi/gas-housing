@@ -8,3 +8,9 @@ Thumbs.db
 
 # If you ever install a static-server dependency locally
 node_modules/
+
+# Local screenshots (used for review/feedback, not part of the published site)
+/Screenshot*.png
+/Screenshot*.jpg
+/Screen Shot*.png
+/Screen Shot*.jpg
