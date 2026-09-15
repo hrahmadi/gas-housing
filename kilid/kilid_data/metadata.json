@@ -8,7 +8,7 @@
   "city_native_key": "272905",
   "province_id": 242305,
   "child_level": "MUNICIPAL_AREA",
-  "retrieved_at": "2026-09-15T12:35:32Z",
+  "retrieved_at": "2026-09-15T12:44:21Z",
   "months_requested": 60,
   "endpoints": [
     "/regions",
@@ -24,7 +24,7 @@
   ],
   "scraper_version": "1.0.0",
   "scraper_file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_scraper.py",
-  "git_commit": "d282edb",
+  "git_commit": "8df8d91",
   "invocation": {
     "argv": [
       "kilid_scraper.py",
@@ -40,6 +40,7 @@
   "raw_files_are_verbatim": true,
   "districts_found": 22,
   "districts_expected": 22,
+  "selection": null,
   "notes": [
     "/comparison?childLevel=MUNICIPAL_AREA&cityId=<id> is what exposes the 22 Tehran district areaIds; /regions?cityId=<id> returns 373 neighbourhood records and no areaIds.",
     "areaId values are geo UUIDs, not the numeric Kilid ids (cityId / nativeKey are numeric).",

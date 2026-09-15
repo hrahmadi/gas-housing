@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 8,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "56c0c3e6-791f-8658-c563-699e6b91e806",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "242483:1",
+      "district_number": 1,
+      "slug": "qom-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "9dfd62b8-8116-1d58-dad3-18f2d8e9beee",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "242483:2",
+      "district_number": 2,
+      "slug": "qom-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "bce95e67-9511-8c0a-901d-1c84ca4cd212",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "242483:3",
+      "district_number": 3,
+      "slug": "qom-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "c5d27b2e-a003-cc97-cc1b-4f66afe591b7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "242483:4",
+      "district_number": 4,
+      "slug": "qom-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "a18abb94-46a8-0c70-b0bc-9242de0751e5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "242483:5",
+      "district_number": 5,
+      "slug": "qom-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "19d9c9f6-bb6b-7880-3fa8-c3cba93e6eda",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "242483:6",
+      "district_number": 6,
+      "slug": "qom-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "3f940033-dbb1-d4b3-6758-dacba211daab",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "242483:7",
+      "district_number": 7,
+      "slug": "qom-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "c15c1aef-ec77-629f-4079-5187d751a191",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "242483:8",
+      "district_number": 8,
+      "slug": "qom-region8"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

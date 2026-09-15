@@ -1,0 +1,248 @@
+{
+  "mode": "top-cities",
+  "rank_by": "census1395",
+  "requested": 10,
+  "verified_availability": true,
+  "candidates_examined": 11,
+  "skipped_no_data": [
+    {
+      "city_id": 242666,
+      "name_fa": "کرمانشاه",
+      "census_rank_1395": 9,
+      "reason": "no MUNICIPAL_AREA children returned"
+    }
+  ],
+  "excluded_have_region_false_count": 352,
+  "excluded_have_region_false_sample": [
+    {
+      "rank": 10,
+      "city_id": 242382,
+      "name_fa": "ارومیه"
+    },
+    {
+      "rank": 14,
+      "city_id": 242665,
+      "name_fa": "کرمان"
+    },
+    {
+      "rank": 16,
+      "city_id": 242361,
+      "name_fa": "اردبیل"
+    },
+    {
+      "rank": 32,
+      "city_id": 242767,
+      "name_fa": "گرگان"
+    },
+    {
+      "rank": 41,
+      "city_id": 242354,
+      "name_fa": "آبادان"
+    },
+    {
+      "rank": 42,
+      "city_id": 242603,
+      "name_fa": "سنندج"
+    },
+    {
+      "rank": 43,
+      "city_id": 242696,
+      "name_fa": "ملایر"
+    },
+    {
+      "rank": 46,
+      "city_id": 242418,
+      "name_fa": "بجنورد"
+    },
+    {
+      "rank": 48,
+      "city_id": 242772,
+      "name_fa": "گنبد کاووس"
+    },
+    {
+      "rank": 50,
+      "city_id": 242387,
+      "name_fa": "اسکو"
+    },
+    {
+      "rank": 51,
+      "city_id": 242441,
+      "name_fa": "بهشهر"
+    },
+    {
+      "rank": 52,
+      "city_id": 242694,
+      "name_fa": "مراغه"
+    },
+    {
+      "rank": 54,
+      "city_id": 242402,
+      "name_fa": "ایلام"
+    },
+    {
+      "rank": 55,
+      "city_id": 242573,
+      "name_fa": "ری"
+    },
+    {
+      "rank": 57,
+      "city_id": 242356,
+      "name_fa": "آبیک"
+    },
+    {
+      "rank": 58,
+      "city_id": 242352,
+      "name_fa": "سقز"
+    },
+    {
+      "rank": 61,
+      "city_id": 242520,
+      "name_fa": "دزفول"
+    },
+    {
+      "rank": 62,
+      "city_id": 242732,
+      "name_fa": "نیشابور"
+    },
+    {
+      "rank": 65,
+      "city_id": 242628,
+      "name_fa": "شهرکرد"
+    },
+    {
+      "rank": 66,
+      "city_id": 242517,
+      "name_fa": "دامغان"
+    }
+  ],
+  "unknown_city_ids": [],
+  "enumeration_file": "discovery/national_cities.json",
+  "census_1395_source": {
+    "name": "Statistical Center of Iran — 1395 (2016) national census, urban population of the city proper",
+    "entered_by_hand": true,
+    "needs_verification": true,
+    "purpose": "choosing which cities to scrape (Kilid exposes no population field)"
+  },
+  "selected": [
+    {
+      "rank": 1,
+      "city_id": 272905,
+      "name_fa": "تهران",
+      "slug": "tehran",
+      "have_region": true,
+      "census_rank_1395": 1,
+      "population_1395": 8693706,
+      "stockN": 4264326,
+      "discovered_children": 22,
+      "province_name_fa": "تهران"
+    },
+    {
+      "rank": 2,
+      "city_id": 272895,
+      "name_fa": "مشهد",
+      "slug": "mashhad",
+      "have_region": true,
+      "census_rank_1395": 2,
+      "population_1395": 3001184,
+      "stockN": 6737,
+      "discovered_children": 13,
+      "province_name_fa": "خراسان رضوی"
+    },
+    {
+      "rank": 3,
+      "city_id": 272903,
+      "name_fa": "اصفهان",
+      "slug": "isfahan",
+      "have_region": true,
+      "census_rank_1395": 3,
+      "population_1395": 1961260,
+      "stockN": 1147429,
+      "discovered_children": 15,
+      "province_name_fa": "اصفهان"
+    },
+    {
+      "rank": 4,
+      "city_id": 273014,
+      "name_fa": "کرج",
+      "slug": "karaj",
+      "have_region": true,
+      "census_rank_1395": 4,
+      "population_1395": 1592492,
+      "stockN": 453833,
+      "discovered_children": 12,
+      "province_name_fa": "البرز"
+    },
+    {
+      "rank": 5,
+      "city_id": 272896,
+      "name_fa": "شیراز",
+      "slug": "shiraz",
+      "have_region": true,
+      "census_rank_1395": 5,
+      "population_1395": 1565572,
+      "stockN": 872326,
+      "discovered_children": 11,
+      "province_name_fa": "فارس"
+    },
+    {
+      "rank": 6,
+      "city_id": 242459,
+      "name_fa": "تبریز",
+      "slug": "tabriz",
+      "have_region": true,
+      "census_rank_1395": 6,
+      "population_1395": 1558693,
+      "stockN": 965322,
+      "discovered_children": 10,
+      "province_name_fa": "آذربایجان شرقی"
+    },
+    {
+      "rank": 7,
+      "city_id": 242483,
+      "name_fa": "قم",
+      "slug": "qom",
+      "have_region": true,
+      "census_rank_1395": 7,
+      "population_1395": 1201955,
+      "stockN": 32901,
+      "discovered_children": 8,
+      "province_name_fa": "قم"
+    },
+    {
+      "rank": 8,
+      "city_id": 242398,
+      "name_fa": "اهواز",
+      "slug": "ahvaz",
+      "have_region": true,
+      "census_rank_1395": 8,
+      "population_1395": 1184788,
+      "stockN": 341499,
+      "discovered_children": 8,
+      "province_name_fa": "خوزستان"
+    },
+    {
+      "rank": 10,
+      "city_id": 242382,
+      "name_fa": "ارومیه",
+      "slug": "urumia",
+      "have_region": false,
+      "census_rank_1395": 10,
+      "population_1395": 736224,
+      "stockN": null,
+      "discovered_children": 13,
+      "province_name_fa": "آذربایجان غربی"
+    },
+    {
+      "rank": 11,
+      "city_id": 242556,
+      "name_fa": "رشت",
+      "slug": "rasht",
+      "have_region": true,
+      "census_rank_1395": 11,
+      "population_1395": 679995,
+      "stockN": 412186,
+      "discovered_children": 5,
+      "province_name_fa": "گیلان"
+    }
+  ]
+}

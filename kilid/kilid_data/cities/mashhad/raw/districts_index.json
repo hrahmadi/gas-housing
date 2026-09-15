@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 13,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "272895:1",
+      "district_number": 1,
+      "slug": "mashhad-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "ea068aac-1108-c5e2-0af9-70041a711c96",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "272895:2",
+      "district_number": 2,
+      "slug": "mashhad-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "445675b3-efeb-ea5f-419c-2163f867b44e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "272895:3",
+      "district_number": 3,
+      "slug": "mashhad-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "272895:4",
+      "district_number": 4,
+      "slug": "mashhad-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "272895:5",
+      "district_number": 5,
+      "slug": "mashhad-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "f63168ea-9f0c-e853-e800-688831354dff",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "272895:6",
+      "district_number": 6,
+      "slug": "mashhad-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "272895:7",
+      "district_number": 7,
+      "slug": "mashhad-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "272895:8",
+      "district_number": 8,
+      "slug": "mashhad-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "272895:9",
+      "district_number": 9,
+      "slug": "mashhad-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "272895:10",
+      "district_number": 10,
+      "slug": "mashhad-region10"
+    },
+    {
+      "index": 11,
+      "dir": "region-11",
+      "area_id": "06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "272895:11",
+      "district_number": 11,
+      "slug": "mashhad-region11"
+    },
+    {
+      "index": 12,
+      "dir": "region-12",
+      "area_id": "3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 12",
+      "native_key": "272895:12",
+      "district_number": 12,
+      "slug": "mashhad-region12"
+    },
+    {
+      "index": 13,
+      "dir": "region-13",
+      "area_id": "09aef6ae-fe73-d123-0450-1047173a32dd",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 13",
+      "native_key": "272895:13",
+      "district_number": 13,
+      "slug": "mashhad-region13"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

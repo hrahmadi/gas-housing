@@ -1,0 +1,2648 @@
+{
+  "run": {
+    "started_at": "2026-09-15T13:04:18Z",
+    "finished_at": "2026-09-15T13:04:18Z",
+    "duration_seconds": 0.04,
+    "scraper_version": "1.0.0",
+    "label": "mashhad",
+    "city_id": 272895,
+    "child_level": "MUNICIPAL_AREA"
+  },
+  "requests": {
+    "endpoint_requests": 0,
+    "http_attempts": 0,
+    "retries": 0,
+    "fetched": 0,
+    "cached": 192,
+    "failed": 0,
+    "bytes_fetched": 0
+  },
+  "districts": {
+    "found": 13,
+    "expected": null,
+    "duplicate_district_numbers": []
+  },
+  "discovery": {
+    "comparison_file": "discovery/mashhad_municipal_area_children.json",
+    "regions_file": "discovery/mashhad_regions.json",
+    "regions_error": null,
+    "comparison_source": "listing",
+    "comparison_period_code": "1405-05",
+    "city_area": {
+      "areaId": "e3e34856-2bd6-f03c-e964-529fe28b59b0",
+      "level": "CITY",
+      "nameFa": "مشهد",
+      "nativeKey": "272895",
+      "parentAreaId": "233e6ac3-fbbc-3aeb-ac2e-60a6f590436f",
+      "cityId": 272895,
+      "provinceId": 242302,
+      "point": {
+        "lat": 36.245731821847386,
+        "lon": 59.80057570960406
+      },
+      "stockN": 6737
+    },
+    "district_index_file": "raw/districts_index.json"
+  },
+  "per_district": [
+    {
+      "dir": "region-01",
+      "district_number": 1,
+      "name_fa": "منطقه 1",
+      "native_key": "272895:1",
+      "area_id": "de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5681,
+          "sha256": "85098250db87cc54d736e2b22baec68339138e6af10f0c1214ebf83b0f7e59b2",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14238,
+          "sha256": "86ce3ce83bdf4b42f1f87f2127d23ee48c2a852a2e5228705cdcf68f5f09740e",
+          "note": "53 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2322,
+          "sha256": "c2367c7bdfb5309e44ee0614a886e8ef2337a285ceede17668bd96d171fcbd0b",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1430,
+          "sha256": "9505ae81c00ab6bf5431943763fec96e367bf27e56e9575808d997e2e9fd6d41",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1811,
+          "sha256": "23f1b751e0cab936f7ea7aa6d4ec0af255aec6bf3e75ae2b27a46032ddb6201b",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-02",
+      "district_number": 2,
+      "name_fa": "منطقه 2",
+      "native_key": "272895:2",
+      "area_id": "ea068aac-1108-c5e2-0af9-70041a711c96",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5674,
+          "sha256": "da2adfbf715c3915b8ef5a6c275f0f4271f0ab9806f16992cdc317c96a2687bc",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14233,
+          "sha256": "22b9c7dee54a7620814659b2db14590ed5c5ffc5da74c71bed95a49b50f61b00",
+          "note": "53 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2322,
+          "sha256": "51679c210c1a620612bc4825bf57b525dda38e0786726c2f4ac92d1ce7c545f1",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1436,
+          "sha256": "50f8e4b21f7e2eb3dfcaa22b5943eaf41ef339ca77fcbe1fa64cac9b8f55848b",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1814,
+          "sha256": "ffe8dd5925b52f36013ea2fbc602dc7f0d9accc800884c661b565cc4285285d7",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-03",
+      "district_number": 3,
+      "name_fa": "منطقه 3",
+      "native_key": "272895:3",
+      "area_id": "445675b3-efeb-ea5f-419c-2163f867b44e",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5661,
+          "sha256": "ec4ca80532fc9c7f297a31567da47d66d207c6fc8d586d67e3dc98c7913bb7c0",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 13456,
+          "sha256": "4d49e227567bf0f9e5c0db8ed2edf58c943171086128c4726edd241b9ce2ed3d",
+          "note": "50 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2316,
+          "sha256": "9011124a834a94dfb3aa60670697e42100695520fa92f565be17d7a8c1ef0769",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1434,
+          "sha256": "fc5f2d6e3806f2feef8e044d58b293bb3c40f52152fbba09e6344448f204db16",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1812,
+          "sha256": "9b26e67d6622f12ffed0dececb7686d5eeb314efcfad0980927c8f2da1fb545f",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-04",
+      "district_number": 4,
+      "name_fa": "منطقه 4",
+      "native_key": "272895:4",
+      "area_id": "82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5664,
+          "sha256": "33fc04ed54dab92150d5843317d7bc3d778949d308035041445bf815e65ddbd5",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 13678,
+          "sha256": "18d3a0b81f3f44e15eeb92639e4df8112c9a6c5cca24825b6a653619d8700479",
+          "note": "51 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2319,
+          "sha256": "77cd6c28bd12c596a9d76a92dc16b564d19e1772ce1095c6698962f3c7e38cb1",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1428,
+          "sha256": "1c73f6b975aeb65f4def938de1063c76c45dbb4bb7e4e6e113e77d7314fad1c3",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1812,
+          "sha256": "779b3fce4f0a6fb49b1e35410231e83936ee4424eee7752af44d298444543e95",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-05",
+      "district_number": 5,
+      "name_fa": "منطقه 5",
+      "native_key": "272895:5",
+      "area_id": "15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5651,
+          "sha256": "7338a589ac8d27465874beeac70f4d9a9bed752459023742356e0415a85fd4c7",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14234,
+          "sha256": "46b8c497ab10f231f74cd76db07562c15c634638182cbe1f7f7d45c524fc1320",
+          "note": "53 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2307,
+          "sha256": "45a752db09c161ce79d684e68b5fbc1d51da173267df03dafb731458bc0b5357",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1428,
+          "sha256": "280fc4c17c9dd829d00da315bfbd6538c65df107979befc06a5fb64161132f05",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1820,
+          "sha256": "058ecbffc6ada61b61e5f145d1be6c46ad3364fd26fed4683d621116154e953f",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-06",
+      "district_number": 6,
+      "name_fa": "منطقه 6",
+      "native_key": "272895:6",
+      "area_id": "f63168ea-9f0c-e853-e800-688831354dff",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5663,
+          "sha256": "9afa3cfb2e0bd922de761254c988a62755f8bd5a59a6abecc9c3faa92af79683",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14206,
+          "sha256": "98cc5b0a0ea9169c4cebac182ac124a9b40bb17063ec6059f59b33261997e3a2",
+          "note": "53 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2321,
+          "sha256": "eae685568863e3afdd8e2b95d83949a0388e0baeb87b2f17172d1954f2555757",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1431,
+          "sha256": "92dfab06cb0d3e330c2fa508c151ca9778dfeb6206f66dd90c4b78ec6280e104",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1801,
+          "sha256": "1ce8f341d5648ca075358cd5ca3b437d212edf1fe74b278f177a1c5b967cc0c4",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-07",
+      "district_number": 7,
+      "name_fa": "منطقه 7",
+      "native_key": "272895:7",
+      "area_id": "4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5679,
+          "sha256": "32635389df6c7f2f82ebaaffd99a2b2c4e1256824cf1b671f95ba8be26b0441e",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14758,
+          "sha256": "981f95df827cccfca3076a48571e65540de1d76a89be5ee163b8d12dc4f21162",
+          "note": "55 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2324,
+          "sha256": "9529ea32b1b35c5e4897d3d697f0726267a1054919f7ce9af6c0c445a8e42acc",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1433,
+          "sha256": "f9a3bdfc9012a0e1e8c87d28da3a70104f57facdadd4b1f2c2282a1054669fa4",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1821,
+          "sha256": "c52765d44db80ffd25ba3f240e8c2fac7c8d8110593dc72883c8ba941a124a6c",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-08",
+      "district_number": 8,
+      "name_fa": "منطقه 8",
+      "native_key": "272895:8",
+      "area_id": "cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5669,
+          "sha256": "112fba9c1d835f915f287a78269a527f314994b2734b1bd9e8b1dd3134510157",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 13741,
+          "sha256": "7146c50d64cf390c9dca72ade4206f6f3873cf51d76ac129be1a544300c14878",
+          "note": "51 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2321,
+          "sha256": "6a9537ccbfa3db1d487e7ecf0adcfb817b9d819f2b414da6bc4e10c1c7e4efee",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1436,
+          "sha256": "e0ef6598da550c8e3f3c7b6908c2d47eac975235f95a96fdc258727e852940ca",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1819,
+          "sha256": "f2cc4e5d131fce55bbf162fcf0bb5a8cec3c5bdfa2af522cfa957e6932631b65",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-09",
+      "district_number": 9,
+      "name_fa": "منطقه 9",
+      "native_key": "272895:9",
+      "area_id": "3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5694,
+          "sha256": "0edb59247e9f6750905a24c5573f7d368c683474dfb6318def6375b8d6ae7db5",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 15866,
+          "sha256": "b58f00d6b0ca275f1f2b7d9de8c617695736493ce0abbd7b448fdf27214562ed",
+          "note": "59 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2329,
+          "sha256": "01d5f63c1366352d4932d577e4f151652fdc0b71bcd4dbfc5170a7e5b73b005a",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1441,
+          "sha256": "d4a4567cfd2007e98ab70580a22d98af2c10f833f83476fdaf2f6e5698a8aeda",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1816,
+          "sha256": "48c58e1521bac2b5c445ad022d61af60d165d4897fb33a001d360bc521eb17f6",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-10",
+      "district_number": 10,
+      "name_fa": "منطقه 10",
+      "native_key": "272895:10",
+      "area_id": "5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5691,
+          "sha256": "97925feef810405a01d262621a22ff048d7c4569c51a0f268bf4b146a2a0a9df",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 14260,
+          "sha256": "274655a2bef8fc628d33703cff0eb38695940b1410fc9e8e205551790f40a0f0",
+          "note": "53 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2322,
+          "sha256": "f0d2a068763c790b9b7f02cb09d2a5ec443de42dc01b51b29b4ea4b74423ef1e",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1441,
+          "sha256": "30fb7a78490ecde3458935e4f9263c5d14f09ba9fe2ff9d5f3400c4883048c70",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1831,
+          "sha256": "1ba4027e6f47efaa4d0d407560867c4914b37fe35555b705d4ab6f6e4b5839bb",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-11",
+      "district_number": 11,
+      "name_fa": "منطقه 11",
+      "native_key": "272895:11",
+      "area_id": "06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5698,
+          "sha256": "fc3a42eba0c0ca41426c2dec99705c5627e2cc9e4a7c298e515a8156e1f5fc29",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 13759,
+          "sha256": "8efd1cbae6b76f58e0e49ab920342a3c7003e186d1954b393a951740b27bc539",
+          "note": "51 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2327,
+          "sha256": "7dcd76c188a6b1977911c61677deb4bfaecc11f955d0b114fcf951b3ce7c99e2",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1444,
+          "sha256": "290cf427d1d7697e85a05f1820c4d92e7204e8c926a7d9fc245ae9617911ebc0",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1824,
+          "sha256": "6c667dba33de1f5356bb8bc36824c4f10edbb53fdf0e4ce1879132507b7b30e4",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-12",
+      "district_number": 12,
+      "name_fa": "منطقه 12",
+      "native_key": "272895:12",
+      "area_id": "3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5694,
+          "sha256": "583cfc29736a731846c65b8b94e52f481ce144f216c16cb6ca0b08ae0770e36b",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 13252,
+          "sha256": "51b4d6286b342e3f63578e55e1b64e20c8b20890026a12b3fa360541715ceb9f",
+          "note": "49 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2337,
+          "sha256": "a7aaa3582a6bdda4b600b0f79f90298c88f978f036324d4dee81e6099d539723",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1446,
+          "sha256": "4cf769f6086f1009f14c0e43869cb615d31492266d3ffdb4d6779a34983ccca1",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1822,
+          "sha256": "48c3292616168a49f9a86833622872df6d9a1477a8777e9727c9b2579c674e6a",
+          "note": "available=True, horizon=6"
+        }
+      }
+    },
+    {
+      "dir": "region-13",
+      "district_number": 13,
+      "name_fa": "منطقه 13",
+      "native_key": "272895:13",
+      "area_id": "09aef6ae-fe73-d123-0450-1047173a32dd",
+      "endpoints": {
+        "stats": {
+          "endpoint": "stats",
+          "path": "/stats",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 5922,
+          "sha256": "c0f6571d56e7116c6a47e095d6f706a392837f2a9ffa9ac86a2b239cd45441e1",
+          "note": "4 groups, empty=ASKING_RENT"
+        },
+        "area-series": {
+          "endpoint": "area-series",
+          "path": "/area-series",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 12695,
+          "sha256": "943a42c08d7f9fb6fcc98ffb045c62514173cac01c64a5d493acad6c039c2d0f",
+          "note": "47 points, last=1405-05"
+        },
+        "supply": {
+          "endpoint": "supply",
+          "path": "/supply",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 2306,
+          "sha256": "c8563b360ef1db43f653477c63cc089f09168b4ffd0a521dc7edc357f9008a4f",
+          "note": "12 points"
+        },
+        "floor-area": {
+          "endpoint": "floor-area",
+          "path": "/floor-area",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1431,
+          "sha256": "09db7bd7aeb22cb91c17d07a781c95ce50cd5f26f8663d839100ff3468a4919c",
+          "note": "6 buckets, period=1405-05"
+        },
+        "forecast": {
+          "endpoint": "forecast",
+          "path": "/forecast",
+          "ok": true,
+          "from_cache": true,
+          "bytes": 1843,
+          "sha256": "9433c153b974c24938cc0d0fc3a92c5c07366c2ed902132702324fd866846b50",
+          "note": "available=True, horizon=6"
+        }
+      }
+    }
+  ],
+  "normalized": {
+    "sale_series": {
+      "file": "normalized/kilid_mashhad_sale_price_monthly.csv",
+      "rows": 678,
+      "districts_with_series": 13,
+      "districts_without_series": [],
+      "skipped": []
+    },
+    "rent": {
+      "file": "normalized/kilid_mashhad_rent_available.csv",
+      "rows": 0,
+      "districts_with_current_rent": [],
+      "districts_without_current_rent": [
+        {
+          "dir": "region-01",
+          "name_fa": "منطقه 1"
+        },
+        {
+          "dir": "region-02",
+          "name_fa": "منطقه 2"
+        },
+        {
+          "dir": "region-03",
+          "name_fa": "منطقه 3"
+        },
+        {
+          "dir": "region-04",
+          "name_fa": "منطقه 4"
+        },
+        {
+          "dir": "region-05",
+          "name_fa": "منطقه 5"
+        },
+        {
+          "dir": "region-06",
+          "name_fa": "منطقه 6"
+        },
+        {
+          "dir": "region-07",
+          "name_fa": "منطقه 7"
+        },
+        {
+          "dir": "region-08",
+          "name_fa": "منطقه 8"
+        },
+        {
+          "dir": "region-09",
+          "name_fa": "منطقه 9"
+        },
+        {
+          "dir": "region-10",
+          "name_fa": "منطقه 10"
+        },
+        {
+          "dir": "region-11",
+          "name_fa": "منطقه 11"
+        },
+        {
+          "dir": "region-12",
+          "name_fa": "منطقه 12"
+        },
+        {
+          "dir": "region-13",
+          "name_fa": "منطقه 13"
+        }
+      ],
+      "districts_without_stats": [],
+      "note": "Empty ASKING_RENT is preserved as empty: no row, no zero, no inference from sale prices."
+    },
+    "availability": {
+      "file": "normalized/kilid_mashhad_availability.csv",
+      "rows": 13
+    }
+  },
+  "validation": {
+    "checks": [
+      {
+        "check": "geography.district_count",
+        "status": "pass",
+        "detail": "found 13 child areas at the requested level (expected 22)",
+        "expected": null,
+        "found": 13
+      },
+      {
+        "check": "geography.unique_area_ids",
+        "status": "pass",
+        "detail": "13 unique areaId values for 13 districts"
+      },
+      {
+        "check": "geography.unique_native_keys",
+        "status": "pass",
+        "detail": "13 unique nativeKey values for 13 districts"
+      },
+      {
+        "check": "geography.district_numbering",
+        "status": "pass",
+        "detail": "numbers 1..13; missing numbers: none"
+      },
+      {
+        "check": "history.area_series_present",
+        "status": "pass",
+        "detail": "13/13 districts returned a non-empty area-series",
+        "missing": []
+      },
+      {
+        "check": "history.period_codes_parseable",
+        "status": "pass",
+        "detail": "all periodCode values match YYYY-MM (Jalali)"
+      },
+      {
+        "check": "history.no_duplicate_period_codes",
+        "status": "pass",
+        "detail": "no duplicate periodCode within any district"
+      },
+      {
+        "check": "history.ascending_order",
+        "status": "pass",
+        "detail": "every district's points are in ascending periodCode order"
+      },
+      {
+        "check": "history.latest_period_consistency",
+        "status": "pass",
+        "detail": "modal area-series last period = 1405-05; all districts agree",
+        "modal": "1405-05",
+        "outliers": []
+      },
+      {
+        "check": "history.last_observed_period_consistency",
+        "status": "pass",
+        "detail": "modal stats.series.lastObservedPeriodCode = 1405-06; all districts agree",
+        "modal": "1405-06",
+        "outliers": []
+      },
+      {
+        "check": "rent.coverage",
+        "status": "pass",
+        "detail": "0 district(s) with current ASKING_RENT, 13 with an empty ASKING_RENT section, 0 with no ASKING_RENT section (absence is reported, never converted to zero)",
+        "with_current_rent": [],
+        "empty_section": [
+          "region-01",
+          "region-02",
+          "region-03",
+          "region-04",
+          "region-05",
+          "region-06",
+          "region-07",
+          "region-08",
+          "region-09",
+          "region-10",
+          "region-11",
+          "region-12",
+          "region-13"
+        ],
+        "no_section": []
+      },
+      {
+        "check": "integrity.raw_files_present",
+        "status": "pass",
+        "detail": "65 raw response files under raw/ (5 expected per district)"
+      }
+    ],
+    "failed": 0,
+    "warned": 0,
+    "status": "pass"
+  },
+  "fetches": [
+    {
+      "label": "discovery:provinces",
+      "url": "https://kilid.com/api/map/provinces",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/discovery/provinces.json",
+      "from_cache": true,
+      "bytes": 41321,
+      "sha256": "f03d1eefd9877b2a6dee4668acea973cfedcbd8f893ca56df8fa483ee4528bb3",
+      "file_mtime": "2026-09-15T12:44:27Z"
+    },
+    {
+      "label": "discovery:national-cities",
+      "url": "https://kilid.com/api/map/comparison?childLevel=CITY",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/discovery/national_city_children.json",
+      "from_cache": true,
+      "bytes": 64576,
+      "sha256": "76cfa5b686071bebadf80e8916619f333ec17cdaf2aa8754bac532d7b69885fc",
+      "file_mtime": "2026-09-15T12:44:28Z"
+    },
+    {
+      "label": "tehran:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272905",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/discovery/tehran_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 8493,
+      "sha256": "4ea53cf07c8a0f8fb7e5551eb30d46d117a2355fa44efee3dc212bb49d53a2aa",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "mashhad:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272895",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/discovery/mashhad_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 5108,
+      "sha256": "64cc141c57f841bdd86137d679451aa13ce56069c69f1caa6bc1ea1cc01fc794",
+      "file_mtime": "2026-09-15T12:45:02Z"
+    },
+    {
+      "label": "isfahan:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272903",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/isfahan/discovery/isfahan_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 6012,
+      "sha256": "50e469d421dbae62d732b999530880c47e414b3ee79c96d69b270ec73b34a634",
+      "file_mtime": "2026-09-15T12:45:06Z"
+    },
+    {
+      "label": "karaj:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=273014",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/karaj/discovery/karaj_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 4672,
+      "sha256": "30db13c6e9c5ed0c219b4e3bceb892b863cf2b2f6642c2d8c8f755375ad1a297",
+      "file_mtime": "2026-09-15T12:45:09Z"
+    },
+    {
+      "label": "shiraz:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272896",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/shiraz/discovery/shiraz_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 4602,
+      "sha256": "e3f7da6b9f0c2a0d8ea240784dc6c552859a0266973021f414977cfab0776b25",
+      "file_mtime": "2026-09-15T12:45:12Z"
+    },
+    {
+      "label": "tabriz:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242459",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tabriz/discovery/tabriz_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 4249,
+      "sha256": "72facbd313e435fca795881ed01ea161f84169e5dc80935ecd5feeb2100117ef",
+      "file_mtime": "2026-09-15T12:45:15Z"
+    },
+    {
+      "label": "qom:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242483",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/qom/discovery/qom_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 1827,
+      "sha256": "dc47e887ddaa7e4f326492d39bb3fdfb2198a6979fe4cf75cadbd0d3359adebe",
+      "file_mtime": "2026-09-15T12:45:18Z"
+    },
+    {
+      "label": "ahvaz:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242398",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/ahvaz/discovery/ahvaz_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 2229,
+      "sha256": "ef03d72e30624dc3b8e5f1974b31fab05506d1b47d2cdc6e874d4df19a0809c4",
+      "file_mtime": "2026-09-15T12:45:21Z"
+    },
+    {
+      "label": "kermanshah:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242666",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/kermanshah/discovery/kermanshah_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 344,
+      "sha256": "54c0141ff7fc9d386d861b97cc524a8fbf67198feab4881b125e4aed9a01a751",
+      "file_mtime": "2026-09-15T12:45:24Z"
+    },
+    {
+      "label": "urumia:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242382",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/urumia/discovery/urumia_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 2583,
+      "sha256": "1f28fd7e4dfdd7a1728c867c5da15f82f0bca582967ffc3a88a9ccadf91d8645",
+      "file_mtime": "2026-09-15T12:45:27Z"
+    },
+    {
+      "label": "rasht:discovery",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=242556",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/rasht/discovery/rasht_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 2500,
+      "sha256": "8238af85d86fa3ed164f89f29a5719054a170c34b559f2d337409804b8c4db6c",
+      "file_mtime": "2026-09-15T12:45:52Z"
+    },
+    {
+      "label": "discovery:comparison",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272905",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/discovery/tehran_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 8493,
+      "sha256": "4ea53cf07c8a0f8fb7e5551eb30d46d117a2355fa44efee3dc212bb49d53a2aa",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "discovery:regions",
+      "url": "https://kilid.com/api/map/regions?cityId=272905",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/discovery/tehran_regions.json",
+      "from_cache": true,
+      "bytes": 74251,
+      "sha256": "db5f9a4b7fdf76bf009781349859a40b0ad967453d0123c273e228f7cea7b25f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-01:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=38b6af3d-45f5-546e-0af0-d43282543dfb",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-01/stats.json",
+      "from_cache": true,
+      "bytes": 6288,
+      "sha256": "ab7eedbce8142e34ad8e23137b66afc3209f69d8709312a0ff00dfaadba00844",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-01:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=38b6af3d-45f5-546e-0af0-d43282543dfb&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-01/area-series.json",
+      "from_cache": true,
+      "bytes": 16384,
+      "sha256": "60828cd1665175962113564206c4f76d4c2a2fbd6b8498cd9d22b9e7117eeff5",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-01:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=38b6af3d-45f5-546e-0af0-d43282543dfb",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-01/supply.json",
+      "from_cache": true,
+      "bytes": 2343,
+      "sha256": "5e7c8a773c26efa79de7c8d354afc67c8765f7e16f2984eeb5290783bc2233f1",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-01:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=38b6af3d-45f5-546e-0af0-d43282543dfb",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-01/floor-area.json",
+      "from_cache": true,
+      "bytes": 1463,
+      "sha256": "0eec6e98f799887a75c4b42403650de9a24ca8db10a48f0c6269b7fb081ab788",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-01:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=38b6af3d-45f5-546e-0af0-d43282543dfb",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-01/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "d76f254fe022330e0adc6e9e1449761ff487ec0e9c327aa479eb93f7e1acadf3",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-02:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=5e92f55b-b28e-842d-0bff-ebedf489023f",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-02/stats.json",
+      "from_cache": true,
+      "bytes": 6289,
+      "sha256": "e51dc31f0566af6bdddbffc0136562aec073872b0449c997e7acaedbaf241e7b",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-02:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=5e92f55b-b28e-842d-0bff-ebedf489023f&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-02/area-series.json",
+      "from_cache": true,
+      "bytes": 16390,
+      "sha256": "74c4a07191aac9a676ae04bb5472687f70e08ee2f29cbec0499ee794f1814223",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-02:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=5e92f55b-b28e-842d-0bff-ebedf489023f",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-02/supply.json",
+      "from_cache": true,
+      "bytes": 2369,
+      "sha256": "24ca9975b6354b026c06aa2d253c810eecdac54bdd17da599a9252ebb26b9d18",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-02:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=5e92f55b-b28e-842d-0bff-ebedf489023f",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-02/floor-area.json",
+      "from_cache": true,
+      "bytes": 1462,
+      "sha256": "264ac34809eb107c794a8e401d54cb1f0e465092c1f50650c54506f7a7639755",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-02:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=5e92f55b-b28e-842d-0bff-ebedf489023f",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-02/forecast.json",
+      "from_cache": true,
+      "bytes": 1816,
+      "sha256": "70a3aaf83385feac9e8b411a471204efc78b7f9b4f53bd141af5c70be0fcad17",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-03:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=ff50928d-cafd-7ddc-8a2a-687762b0254d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-03/stats.json",
+      "from_cache": true,
+      "bytes": 6288,
+      "sha256": "e8a3c6ddbebc6cab15fad909b8be7bd225cf623a215556ca46e529fc6d5642dd",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-03:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=ff50928d-cafd-7ddc-8a2a-687762b0254d&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-03/area-series.json",
+      "from_cache": true,
+      "bytes": 16371,
+      "sha256": "02bd943969fdf0b8d07d3ad3ed851fbeb9968d3c33277bbf16db96b351d6d2b4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-03:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=ff50928d-cafd-7ddc-8a2a-687762b0254d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-03/supply.json",
+      "from_cache": true,
+      "bytes": 2354,
+      "sha256": "ac95c96c80a3a88708f095e6183c376d960965a274eb5357e598d0601b173101",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-03:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=ff50928d-cafd-7ddc-8a2a-687762b0254d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-03/floor-area.json",
+      "from_cache": true,
+      "bytes": 1464,
+      "sha256": "9ef9706d2239fe9b4fd08d1cd5235deac5c24f4082105e0b51015f2a8391ee8d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-03:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=ff50928d-cafd-7ddc-8a2a-687762b0254d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-03/forecast.json",
+      "from_cache": true,
+      "bytes": 1816,
+      "sha256": "fcf9cf6b79026d9b238f82f7a99957119081d5f6b16db5f5cd05885c62c85121",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-04:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=9e522432-7d71-31ab-b475-1f7a9c3befb5",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-04/stats.json",
+      "from_cache": true,
+      "bytes": 6288,
+      "sha256": "53e4c2f0a8183f02b9f533721afa90f535ec9f8934581c7a46783d13ad392519",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-04:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=9e522432-7d71-31ab-b475-1f7a9c3befb5&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-04/area-series.json",
+      "from_cache": true,
+      "bytes": 16304,
+      "sha256": "f60cd69e022ed96132b5bb75ee886c92d7682002b2e7c3bf75a6f1073d75c00c",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-04:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=9e522432-7d71-31ab-b475-1f7a9c3befb5",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-04/supply.json",
+      "from_cache": true,
+      "bytes": 2367,
+      "sha256": "2dde2261039330843a2598b11e2238a3c0355606cf9430fc5c96d2c783b34997",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-04:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=9e522432-7d71-31ab-b475-1f7a9c3befb5",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-04/floor-area.json",
+      "from_cache": true,
+      "bytes": 1462,
+      "sha256": "a1a9afed4e53468ac1d506ab523fb66f2461bd64162e8139adb9c185b90214a9",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-04:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=9e522432-7d71-31ab-b475-1f7a9c3befb5",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-04/forecast.json",
+      "from_cache": true,
+      "bytes": 1821,
+      "sha256": "ee3499c698261996c7f3d00dde88e4bb6bec854dd3b7de9bc2badeed63318778",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-05:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=c88afe7c-7484-7ae2-9fc4-810ac1a3ef44",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-05/stats.json",
+      "from_cache": true,
+      "bytes": 6288,
+      "sha256": "5b6fad72d6e9dabcb0ce416a7af7a0f614accdee6ff24f976b6175fba19f5101",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-05:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=c88afe7c-7484-7ae2-9fc4-810ac1a3ef44&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-05/area-series.json",
+      "from_cache": true,
+      "bytes": 16317,
+      "sha256": "1d430b2614167b319a6a4d7e98a19ccaf899534a6e783c168bb1a49e80734e99",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-05:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=c88afe7c-7484-7ae2-9fc4-810ac1a3ef44",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-05/supply.json",
+      "from_cache": true,
+      "bytes": 2358,
+      "sha256": "4b837abdfa0348ebcde95115c541f38653ea3060880133bc608b55dcefb52b38",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-05:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=c88afe7c-7484-7ae2-9fc4-810ac1a3ef44",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-05/floor-area.json",
+      "from_cache": true,
+      "bytes": 1462,
+      "sha256": "6e50e95d49b7946b7556b0b4b5247b6bed03d69859fda0a7e644fa1d06ef8a24",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-05:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=c88afe7c-7484-7ae2-9fc4-810ac1a3ef44",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-05/forecast.json",
+      "from_cache": true,
+      "bytes": 1815,
+      "sha256": "c2f00dc91606ae177b7dbeeda875b7e3503a95aa9f6da333de0763513d7308fc",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-06:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=ef14e327-e7dc-483a-69e3-31672bf61984",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-06/stats.json",
+      "from_cache": true,
+      "bytes": 6278,
+      "sha256": "16947edac0387a1b99bfab06d61f80583fff51932a182247a44c1bdc9449cfe4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-06:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=ef14e327-e7dc-483a-69e3-31672bf61984&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-06/area-series.json",
+      "from_cache": true,
+      "bytes": 16324,
+      "sha256": "05e4958aa8c0e575a73f791fd84cc3e5231ada80f03c07cb3f58d0def1bc5867",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-06:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=ef14e327-e7dc-483a-69e3-31672bf61984",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-06/supply.json",
+      "from_cache": true,
+      "bytes": 2350,
+      "sha256": "a9b451d3528318af2bac9d6152d8d1fca074b64c0f73581c488a173b78402047",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-06:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=ef14e327-e7dc-483a-69e3-31672bf61984",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-06/floor-area.json",
+      "from_cache": true,
+      "bytes": 1465,
+      "sha256": "74f334176bae855d578dd88d97147501f6ab75ac27685af1c8965d5449ea7a22",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-06:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=ef14e327-e7dc-483a-69e3-31672bf61984",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-06/forecast.json",
+      "from_cache": true,
+      "bytes": 1818,
+      "sha256": "fccafca45b16ff3055867d8001a6ca1a26ccade73e1c3882675f5cb3fb466a5e",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-07:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=0fee0154-6dda-1109-17ab-7af2df64b692",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-07/stats.json",
+      "from_cache": true,
+      "bytes": 6284,
+      "sha256": "1aea678165e18c147ccd9fe68b6a0d30d1d19de6b229835cd48d598a7740ebcf",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-07:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=0fee0154-6dda-1109-17ab-7af2df64b692&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-07/area-series.json",
+      "from_cache": true,
+      "bytes": 16263,
+      "sha256": "2510d83b53e88715c86b0d4db40e40e4c7d3ad6705649a42c194c7f0f738fe0a",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-07:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=0fee0154-6dda-1109-17ab-7af2df64b692",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-07/supply.json",
+      "from_cache": true,
+      "bytes": 2350,
+      "sha256": "9081a8c0f95c1dedc876545b6cf36f354a9f83fe91c69da278ac695dd72ff3bf",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-07:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=0fee0154-6dda-1109-17ab-7af2df64b692",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-07/floor-area.json",
+      "from_cache": true,
+      "bytes": 1465,
+      "sha256": "8eee082b860f72265e280f5e5c57189f26051ed4740eca63d18b146e7f8f2bd9",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-07:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=0fee0154-6dda-1109-17ab-7af2df64b692",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-07/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "26634dace805fa61ba245972c482855f9d537bfd11458afda90e2a1c44c8d7c4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-08:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=04a45272-086f-638d-ff1a-433172fb6aa3",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-08/stats.json",
+      "from_cache": true,
+      "bytes": 6280,
+      "sha256": "7a06caea03d0c76ab3884779d97e54c18eb45e9dfa87bbc308312d268110b019",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-08:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=04a45272-086f-638d-ff1a-433172fb6aa3&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-08/area-series.json",
+      "from_cache": true,
+      "bytes": 16203,
+      "sha256": "fe3d5dafe4e4f6d15113f941fd7ff611c1647ddc652b960b30b9dd401d81ffe2",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-08:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=04a45272-086f-638d-ff1a-433172fb6aa3",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-08/supply.json",
+      "from_cache": true,
+      "bytes": 2345,
+      "sha256": "aeba1c40f9c07767d8d2bfb293a17d356c5e294973c1b73a42f110ac03cacfe8",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-08:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=04a45272-086f-638d-ff1a-433172fb6aa3",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-08/floor-area.json",
+      "from_cache": true,
+      "bytes": 1466,
+      "sha256": "0eb5ab7557560b6f389864fe767b16a30b808a43d993b9ef96eb3f2626ec0180",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-08:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=04a45272-086f-638d-ff1a-433172fb6aa3",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-08/forecast.json",
+      "from_cache": true,
+      "bytes": 1820,
+      "sha256": "a6150dc8c91d67e997b0f628bc4c3e0a5da6466db3495fa8671126ad7efe43ac",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-09:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=006dc5f4-0883-4a22-bfa9-857d98262079",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-09/stats.json",
+      "from_cache": true,
+      "bytes": 6269,
+      "sha256": "053dd7f3c051d687b0220f08f9671f0efe3044e188dfcea7988345c57fde60fe",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-09:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=006dc5f4-0883-4a22-bfa9-857d98262079&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-09/area-series.json",
+      "from_cache": true,
+      "bytes": 16190,
+      "sha256": "40e6797297eb3a0f5f1c4f5e2ed384188621829f5ddf0ea6ab02b92126e7e2c4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-09:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=006dc5f4-0883-4a22-bfa9-857d98262079",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-09/supply.json",
+      "from_cache": true,
+      "bytes": 2337,
+      "sha256": "525c8e0851ed211c04d43445412ab047cbfaa75c033be9443f82d0bf33f9538c",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-09:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=006dc5f4-0883-4a22-bfa9-857d98262079",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-09/floor-area.json",
+      "from_cache": true,
+      "bytes": 1456,
+      "sha256": "112546c2538e7bb158e0dec9d7a9752fcc65d88d6c6151c4f149908a2698604d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-09:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=006dc5f4-0883-4a22-bfa9-857d98262079",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-09/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "bfa57c69e10d926c878c6480165790569610bc22af8d142098840f960ef58640",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-10:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=3c94c0ff-94e1-3c73-70b1-3c2774333b48",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-10/stats.json",
+      "from_cache": true,
+      "bytes": 6290,
+      "sha256": "d2e228453dc8656901882a9fd10f9ad271da4fddc578dc33ab4220bdc32eeb70",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-10:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=3c94c0ff-94e1-3c73-70b1-3c2774333b48&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-10/area-series.json",
+      "from_cache": true,
+      "bytes": 16228,
+      "sha256": "9243146952615abe5364f6d5b40cb44a7595f5a91b89f232ac8a259025a1a2ca",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-10:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=3c94c0ff-94e1-3c73-70b1-3c2774333b48",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-10/supply.json",
+      "from_cache": true,
+      "bytes": 2358,
+      "sha256": "ea8bd2cd82a9c20952615fd8bb68e81c7d8cdb01111d7a49b667f8c1936c1c77",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-10:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=3c94c0ff-94e1-3c73-70b1-3c2774333b48",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-10/floor-area.json",
+      "from_cache": true,
+      "bytes": 1463,
+      "sha256": "7b6dacc4fbd8b888ef295fa63d3ee67998c060dfa83b5308b8a5b623af4f346a",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-10:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=3c94c0ff-94e1-3c73-70b1-3c2774333b48",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-10/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "22e148af7f3d051a93e80f3ce41319d728cd90917623a652f9adfa7ba0bd9b2d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-11:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=7ec6174a-b77f-7483-2e27-661eaab9f4d7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-11/stats.json",
+      "from_cache": true,
+      "bytes": 6278,
+      "sha256": "2caeb44f044d1096dd82d7df066297f01fd53c2742b332576349262e6b856da4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-11:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=7ec6174a-b77f-7483-2e27-661eaab9f4d7&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-11/area-series.json",
+      "from_cache": true,
+      "bytes": 16169,
+      "sha256": "378e7d83d723f7ef4af38fb52da896d942a624d878614c0a6b00dab3628d3d8c",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-11:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=7ec6174a-b77f-7483-2e27-661eaab9f4d7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-11/supply.json",
+      "from_cache": true,
+      "bytes": 2350,
+      "sha256": "733a0092d19b78cc1cae6fdf63e64e4c29d9ea2a91bdd5c7575b3612dde38bb4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-11:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=7ec6174a-b77f-7483-2e27-661eaab9f4d7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-11/floor-area.json",
+      "from_cache": true,
+      "bytes": 1462,
+      "sha256": "4ca4a6916db7b0b978bf8ae67096af704ae48d3d4141d4abc3fe2d8f223ead78",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-11:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=7ec6174a-b77f-7483-2e27-661eaab9f4d7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-11/forecast.json",
+      "from_cache": true,
+      "bytes": 1818,
+      "sha256": "ce6e3c0dcc9e780d78c0074f8acfaeb77b77459efc87af0cfaf64ca537257716",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-12:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=cbde05c0-583f-78ee-2e47-152941edafa0",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-12/stats.json",
+      "from_cache": true,
+      "bytes": 6276,
+      "sha256": "1f2673645bd6637b47b6caded2652c2ecdb1fc08a754763e82443f4a5a1f536e",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-12:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=cbde05c0-583f-78ee-2e47-152941edafa0&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-12/area-series.json",
+      "from_cache": true,
+      "bytes": 16147,
+      "sha256": "33ea4ca51ab1795bd8a29d701dd3c9d49c204b3216eae9134e2590ee33ec435f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-12:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=cbde05c0-583f-78ee-2e47-152941edafa0",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-12/supply.json",
+      "from_cache": true,
+      "bytes": 2339,
+      "sha256": "9c5673d9bc8e9d4df4b2ddda8b66793f1bcc991b839e6ad10ec458b000422856",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-12:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=cbde05c0-583f-78ee-2e47-152941edafa0",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-12/floor-area.json",
+      "from_cache": true,
+      "bytes": 1463,
+      "sha256": "4a43796a10c559b90e12175d7903782030e04eb4b72d088ce435d91e5957440b",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-12:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=cbde05c0-583f-78ee-2e47-152941edafa0",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-12/forecast.json",
+      "from_cache": true,
+      "bytes": 1816,
+      "sha256": "f7a0e5c9637aebd75f8e62712a9f3f15bae0f37e208e02462c178ac693bc760e",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-13:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=242b15af-a5fc-6303-cc74-5d9ab8437470",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-13/stats.json",
+      "from_cache": true,
+      "bytes": 6270,
+      "sha256": "77d4b53c7168400d223498da5f816e124f6c88aec90673833785bb2b97fe2a78",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-13:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=242b15af-a5fc-6303-cc74-5d9ab8437470&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-13/area-series.json",
+      "from_cache": true,
+      "bytes": 16143,
+      "sha256": "06bad3d3dd9d9eb6f5beeef83f387f0dccb3853b1b7e5ad232d23dc274329135",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-13:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=242b15af-a5fc-6303-cc74-5d9ab8437470",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-13/supply.json",
+      "from_cache": true,
+      "bytes": 2343,
+      "sha256": "5d44b041143a0aaae458b1ab90507d23599c5e9b1f84d42db7884f618dbe56cf",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-13:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=242b15af-a5fc-6303-cc74-5d9ab8437470",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-13/floor-area.json",
+      "from_cache": true,
+      "bytes": 1458,
+      "sha256": "b32164bcf15c02e699bcf8ab73f0759110f2ef7548e31e9a1f7bf2c6cf21193f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-13:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=242b15af-a5fc-6303-cc74-5d9ab8437470",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-13/forecast.json",
+      "from_cache": true,
+      "bytes": 1817,
+      "sha256": "688f3d8e72cf727ce2e2bbbb8700c76620766baeaec1629bbc68477d74002e19",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-14:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=fa66bf31-710b-be2b-defd-7dae7e1e1371",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-14/stats.json",
+      "from_cache": true,
+      "bytes": 6275,
+      "sha256": "4aef73be93d8d9b60d20e741629b2dcac65dabd42fbc32902bb8726bc4bd77ac",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-14:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=fa66bf31-710b-be2b-defd-7dae7e1e1371&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-14/area-series.json",
+      "from_cache": true,
+      "bytes": 16209,
+      "sha256": "128f0b46248e47563380631b2e76df541c0e7c52c0df22ae3360fcdf1a258f1c",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-14:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=fa66bf31-710b-be2b-defd-7dae7e1e1371",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-14/supply.json",
+      "from_cache": true,
+      "bytes": 2349,
+      "sha256": "936efd0d1979b38dda18a9d8f73f3f9022bb28435721e818e486c3941d925153",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-14:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=fa66bf31-710b-be2b-defd-7dae7e1e1371",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-14/floor-area.json",
+      "from_cache": true,
+      "bytes": 1460,
+      "sha256": "0f4c825a22f60c86afaf4786c4f79405c9ef71fdb04fdbe7cb51fb3d648af414",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-14:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=fa66bf31-710b-be2b-defd-7dae7e1e1371",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-14/forecast.json",
+      "from_cache": true,
+      "bytes": 1821,
+      "sha256": "4411a145aa49df93f6f515a45fcbe423d6bce700400efb5f2383c1272f46e84d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-15:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=3fa1da83-c366-bfd2-91cf-f7e44c86ed9c",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-15/stats.json",
+      "from_cache": true,
+      "bytes": 6279,
+      "sha256": "e175d33bcb1a200b1fcce886888fd4bccbc49a4c31d72ba411abb4e5bad3c893",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-15:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=3fa1da83-c366-bfd2-91cf-f7e44c86ed9c&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-15/area-series.json",
+      "from_cache": true,
+      "bytes": 16176,
+      "sha256": "9171c79308307cf5fe43398e52a26c89afe501467a287dee77f3eded57f4289b",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-15:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=3fa1da83-c366-bfd2-91cf-f7e44c86ed9c",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-15/supply.json",
+      "from_cache": true,
+      "bytes": 2344,
+      "sha256": "ff0aeac1a4d5779027f07b77af7ea4258222a1cd111941d93d8630778a17feee",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-15:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=3fa1da83-c366-bfd2-91cf-f7e44c86ed9c",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-15/floor-area.json",
+      "from_cache": true,
+      "bytes": 1457,
+      "sha256": "7e0492ef0348a516be518886721f144be3b9f6db938438842f6f70e84fc2c828",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-15:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=3fa1da83-c366-bfd2-91cf-f7e44c86ed9c",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-15/forecast.json",
+      "from_cache": true,
+      "bytes": 1820,
+      "sha256": "e9b203a168ea91b528b780c591d3e8793e84b7c520737c3ff8c4ef526e41855a",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-16:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=85a94198-ee48-2a86-2c76-6db3ab0e6822",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-16/stats.json",
+      "from_cache": true,
+      "bytes": 6256,
+      "sha256": "4dfccba8b0ffca0ef934ee83f751c89c9f1db8f071dc2705921c19c7715007c7",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-16:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=85a94198-ee48-2a86-2c76-6db3ab0e6822&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-16/area-series.json",
+      "from_cache": true,
+      "bytes": 16115,
+      "sha256": "8541289b627fde0215bc3b85b1b34b5c560a380e9b097afffc696a923871a5d1",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-16:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=85a94198-ee48-2a86-2c76-6db3ab0e6822",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-16/supply.json",
+      "from_cache": true,
+      "bytes": 2343,
+      "sha256": "f7bb0ed4591a0ffa2dfdfcbc598f571cb6c7b09889bfa2371c78b56d09e1d5ab",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-16:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=85a94198-ee48-2a86-2c76-6db3ab0e6822",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-16/floor-area.json",
+      "from_cache": true,
+      "bytes": 1453,
+      "sha256": "ff72cbd0dd161a21fe3a0ec4c1c81541411f19aee9e18da81c6b8fd3e6441179",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-16:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=85a94198-ee48-2a86-2c76-6db3ab0e6822",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-16/forecast.json",
+      "from_cache": true,
+      "bytes": 1821,
+      "sha256": "a7c15fbfab15d156d097401ddcc35aac5c1eb83b3d7afb1fb71dbfa9f5a373a7",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-17:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=0f4e5ea7-940e-bf26-6074-ac7b3dd75317",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-17/stats.json",
+      "from_cache": true,
+      "bytes": 6272,
+      "sha256": "375985edb1203eab095c261486e718b27bb7597db12e4154536d636a5ddf6a81",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-17:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=0f4e5ea7-940e-bf26-6074-ac7b3dd75317&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-17/area-series.json",
+      "from_cache": true,
+      "bytes": 16132,
+      "sha256": "89e3f3f66226c11497a410c3cf51d3eab094402e73f9f9d75afa57d9842b0cbd",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-17:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=0f4e5ea7-940e-bf26-6074-ac7b3dd75317",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-17/supply.json",
+      "from_cache": true,
+      "bytes": 2343,
+      "sha256": "8b9e2aaa7a2cdfa6211f28174523fb91b9301238f19735bfa7b9adef7383772d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-17:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=0f4e5ea7-940e-bf26-6074-ac7b3dd75317",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-17/floor-area.json",
+      "from_cache": true,
+      "bytes": 1456,
+      "sha256": "0f6de2818016a8c9218cc63ef59f3738568395f61ed1915b7a1c42d1b255ad96",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-17:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=0f4e5ea7-940e-bf26-6074-ac7b3dd75317",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-17/forecast.json",
+      "from_cache": true,
+      "bytes": 1820,
+      "sha256": "1d85adf5f70ffc2517d289e743c74c77cb0deef0ebafc48aad2a41afef046332",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-18:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=d0b9d990-5b5e-5625-112b-1a5f5b446501",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-18/stats.json",
+      "from_cache": true,
+      "bytes": 6268,
+      "sha256": "8aa0bdcceff9fdedbce4d7af03fe4545a3e4990fdb695b8a51533ee45bcc7476",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-18:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=d0b9d990-5b5e-5625-112b-1a5f5b446501&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-18/area-series.json",
+      "from_cache": true,
+      "bytes": 16123,
+      "sha256": "4f9ecf5674bc68d932c4dd40a6d7b64cf05c13c7e98a7dbc01cebb4ee3c795f4",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-18:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=d0b9d990-5b5e-5625-112b-1a5f5b446501",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-18/supply.json",
+      "from_cache": true,
+      "bytes": 2340,
+      "sha256": "f5b2aa410c46a9f6257cb714c358db1800a82fa580f1a36dfa6d7af53bebcfef",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-18:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=d0b9d990-5b5e-5625-112b-1a5f5b446501",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-18/floor-area.json",
+      "from_cache": true,
+      "bytes": 1458,
+      "sha256": "fec67956bed661b76d7e288047853740622b791e368680dd62e8cabd0cf88a2f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-18:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=d0b9d990-5b5e-5625-112b-1a5f5b446501",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-18/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "b2911cdb379c040a85fff0975abb0513e46cb185ee2a22230866348f18caeaa5",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-19:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=53b7a2a5-d503-16b5-4790-b5c2c786e5ff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-19/stats.json",
+      "from_cache": true,
+      "bytes": 6278,
+      "sha256": "41c20148b4732100ca46e40b4c8650b2f9c872e903590e6975cb4460d61040e7",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-19:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=53b7a2a5-d503-16b5-4790-b5c2c786e5ff&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-19/area-series.json",
+      "from_cache": true,
+      "bytes": 16072,
+      "sha256": "9b60b569d07679d9b67d24d03ec5d001d7a426a51bbbd64b57e75f44c9df103f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-19:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=53b7a2a5-d503-16b5-4790-b5c2c786e5ff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-19/supply.json",
+      "from_cache": true,
+      "bytes": 2339,
+      "sha256": "d012b112500e2aedd8085e317bdbbe48a0ad1c8f0feaf5484e9bdd90b62dd618",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-19:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=53b7a2a5-d503-16b5-4790-b5c2c786e5ff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-19/floor-area.json",
+      "from_cache": true,
+      "bytes": 1446,
+      "sha256": "feaf676bb149c546a8e7cfc1c7d4a4dc9cf37d7b45683684a6a09086980be31a",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-19:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=53b7a2a5-d503-16b5-4790-b5c2c786e5ff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-19/forecast.json",
+      "from_cache": true,
+      "bytes": 1823,
+      "sha256": "b7f0f054a6d58df9b4a50825ec1033dd7b556cf7a2ff9cd615410f6d81c5089c",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-20:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=11381946-4708-82c0-d9c5-1e51c4cdb31e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-20/stats.json",
+      "from_cache": true,
+      "bytes": 6255,
+      "sha256": "f342abd709fd2436fb0ea5c85ac819fca7b844373f4fe4ab6c4591c89ac05496",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-20:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=11381946-4708-82c0-d9c5-1e51c4cdb31e&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-20/area-series.json",
+      "from_cache": true,
+      "bytes": 16136,
+      "sha256": "0e35e1985a6d66b01203ab178fa679684892b235435a5a03d53f439d3a665e4f",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-20:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=11381946-4708-82c0-d9c5-1e51c4cdb31e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-20/supply.json",
+      "from_cache": true,
+      "bytes": 1950,
+      "sha256": "5e2b25c24f891ca9e086a401fb1eb86358b874756f0c04c201b849fed53eb738",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-20:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=11381946-4708-82c0-d9c5-1e51c4cdb31e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-20/floor-area.json",
+      "from_cache": true,
+      "bytes": 1454,
+      "sha256": "3ca76502ad4059901ecceaefedac267c4682c9632c424d06ced7be58a9971823",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-20:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=11381946-4708-82c0-d9c5-1e51c4cdb31e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-20/forecast.json",
+      "from_cache": true,
+      "bytes": 1819,
+      "sha256": "0e8c71d1c0e2c0df6931797891aa97c6236ffd9f1921778d9d3a983f33d5f530",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-21:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=e860034a-c7ae-0d72-ae12-45d668f20874",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-21/stats.json",
+      "from_cache": true,
+      "bytes": 6269,
+      "sha256": "e3253d5f447773b2de7331d03233d60645d4b07ec414a0cc513ea2fc43232c43",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-21:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=e860034a-c7ae-0d72-ae12-45d668f20874&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-21/area-series.json",
+      "from_cache": true,
+      "bytes": 16133,
+      "sha256": "63d38e44e694a10c520f895dd62ba7429892e3b8e7f23e4afacb78b542e34ab9",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-21:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=e860034a-c7ae-0d72-ae12-45d668f20874",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-21/supply.json",
+      "from_cache": true,
+      "bytes": 2336,
+      "sha256": "a75ac514b946c8847caee8395dfec80eb14a8b9c1c902be6628c4561fe70d3b1",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-21:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=e860034a-c7ae-0d72-ae12-45d668f20874",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-21/floor-area.json",
+      "from_cache": true,
+      "bytes": 1464,
+      "sha256": "2bfbbe1557b9dda05c665bfa9da0d17a4bb384a481853bf334e8b293ca63c3a0",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-21:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=e860034a-c7ae-0d72-ae12-45d668f20874",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-21/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "ee2961aa8fd2a0bedbff25837553ddeec3cabdb18d245b0d54d156c3e9bbcf77",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-22:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=2660254d-bc9f-c4eb-5ec4-f962a708cec2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-22/stats.json",
+      "from_cache": true,
+      "bytes": 6275,
+      "sha256": "104fd62f63da0830c683c6fb244de1d6ba96a57d4ea9ef2ac9d3d67ddeebb93a",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-22:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=2660254d-bc9f-c4eb-5ec4-f962a708cec2&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-22/area-series.json",
+      "from_cache": true,
+      "bytes": 16175,
+      "sha256": "fb92dbedd8b07a942728f727ae46e18e00517732fb770f52f338f7da9d895244",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-22:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=2660254d-bc9f-c4eb-5ec4-f962a708cec2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-22/supply.json",
+      "from_cache": true,
+      "bytes": 2346,
+      "sha256": "cae1bd65e17faacf8d42cc7a12183875106fbdaa0fd1ae8cef7e52012d2b0751",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-22:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=2660254d-bc9f-c4eb-5ec4-f962a708cec2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-22/floor-area.json",
+      "from_cache": true,
+      "bytes": 1469,
+      "sha256": "a845da93a2308f656ea4f5b21d722464ed6e9cfd24775e9b9d0c7eeba15e681d",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "region-22:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=2660254d-bc9f-c4eb-5ec4-f962a708cec2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/tehran/raw/region-22/forecast.json",
+      "from_cache": true,
+      "bytes": 1817,
+      "sha256": "4582020fb4436441b8343c7458b0b9125dcae77b69b91241d4a8c6dd2a39d82e",
+      "file_mtime": "2026-09-15T12:48:26Z"
+    },
+    {
+      "label": "discovery:comparison",
+      "url": "https://kilid.com/api/map/comparison?childLevel=MUNICIPAL_AREA&cityId=272895",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/discovery/mashhad_municipal_area_children.json",
+      "from_cache": true,
+      "bytes": 5108,
+      "sha256": "64cc141c57f841bdd86137d679451aa13ce56069c69f1caa6bc1ea1cc01fc794",
+      "file_mtime": "2026-09-15T12:45:02Z"
+    },
+    {
+      "label": "discovery:regions",
+      "url": "https://kilid.com/api/map/regions?cityId=272895",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/discovery/mashhad_regions.json",
+      "from_cache": true,
+      "bytes": 23451,
+      "sha256": "19ad14a5bf5df0ec0a9eed7ce33f22e97f486f10d0aea33df0f0127327023a92",
+      "file_mtime": "2026-09-15T12:48:41Z"
+    },
+    {
+      "label": "region-01:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-01/stats.json",
+      "from_cache": true,
+      "bytes": 5681,
+      "sha256": "85098250db87cc54d736e2b22baec68339138e6af10f0c1214ebf83b0f7e59b2",
+      "file_mtime": "2026-09-15T12:48:42Z"
+    },
+    {
+      "label": "region-01:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-01/area-series.json",
+      "from_cache": true,
+      "bytes": 14238,
+      "sha256": "86ce3ce83bdf4b42f1f87f2127d23ee48c2a852a2e5228705cdcf68f5f09740e",
+      "file_mtime": "2026-09-15T12:48:44Z"
+    },
+    {
+      "label": "region-01:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-01/supply.json",
+      "from_cache": true,
+      "bytes": 2322,
+      "sha256": "c2367c7bdfb5309e44ee0614a886e8ef2337a285ceede17668bd96d171fcbd0b",
+      "file_mtime": "2026-09-15T12:48:46Z"
+    },
+    {
+      "label": "region-01:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-01/floor-area.json",
+      "from_cache": true,
+      "bytes": 1430,
+      "sha256": "9505ae81c00ab6bf5431943763fec96e367bf27e56e9575808d997e2e9fd6d41",
+      "file_mtime": "2026-09-15T12:48:48Z"
+    },
+    {
+      "label": "region-01:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=de0ba416-7d2d-7b0d-ba34-4b1b4ba4f1d2",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-01/forecast.json",
+      "from_cache": true,
+      "bytes": 1811,
+      "sha256": "23f1b751e0cab936f7ea7aa6d4ec0af255aec6bf3e75ae2b27a46032ddb6201b",
+      "file_mtime": "2026-09-15T12:48:49Z"
+    },
+    {
+      "label": "region-02:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=ea068aac-1108-c5e2-0af9-70041a711c96",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-02/stats.json",
+      "from_cache": true,
+      "bytes": 5674,
+      "sha256": "da2adfbf715c3915b8ef5a6c275f0f4271f0ab9806f16992cdc317c96a2687bc",
+      "file_mtime": "2026-09-15T12:48:51Z"
+    },
+    {
+      "label": "region-02:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=ea068aac-1108-c5e2-0af9-70041a711c96&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-02/area-series.json",
+      "from_cache": true,
+      "bytes": 14233,
+      "sha256": "22b9c7dee54a7620814659b2db14590ed5c5ffc5da74c71bed95a49b50f61b00",
+      "file_mtime": "2026-09-15T12:48:53Z"
+    },
+    {
+      "label": "region-02:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=ea068aac-1108-c5e2-0af9-70041a711c96",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-02/supply.json",
+      "from_cache": true,
+      "bytes": 2322,
+      "sha256": "51679c210c1a620612bc4825bf57b525dda38e0786726c2f4ac92d1ce7c545f1",
+      "file_mtime": "2026-09-15T12:48:55Z"
+    },
+    {
+      "label": "region-02:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=ea068aac-1108-c5e2-0af9-70041a711c96",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-02/floor-area.json",
+      "from_cache": true,
+      "bytes": 1436,
+      "sha256": "50f8e4b21f7e2eb3dfcaa22b5943eaf41ef339ca77fcbe1fa64cac9b8f55848b",
+      "file_mtime": "2026-09-15T12:48:57Z"
+    },
+    {
+      "label": "region-02:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=ea068aac-1108-c5e2-0af9-70041a711c96",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-02/forecast.json",
+      "from_cache": true,
+      "bytes": 1814,
+      "sha256": "ffe8dd5925b52f36013ea2fbc602dc7f0d9accc800884c661b565cc4285285d7",
+      "file_mtime": "2026-09-15T12:48:58Z"
+    },
+    {
+      "label": "region-03:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=445675b3-efeb-ea5f-419c-2163f867b44e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-03/stats.json",
+      "from_cache": true,
+      "bytes": 5661,
+      "sha256": "ec4ca80532fc9c7f297a31567da47d66d207c6fc8d586d67e3dc98c7913bb7c0",
+      "file_mtime": "2026-09-15T12:49:00Z"
+    },
+    {
+      "label": "region-03:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=445675b3-efeb-ea5f-419c-2163f867b44e&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-03/area-series.json",
+      "from_cache": true,
+      "bytes": 13456,
+      "sha256": "4d49e227567bf0f9e5c0db8ed2edf58c943171086128c4726edd241b9ce2ed3d",
+      "file_mtime": "2026-09-15T12:49:02Z"
+    },
+    {
+      "label": "region-03:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=445675b3-efeb-ea5f-419c-2163f867b44e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-03/supply.json",
+      "from_cache": true,
+      "bytes": 2316,
+      "sha256": "9011124a834a94dfb3aa60670697e42100695520fa92f565be17d7a8c1ef0769",
+      "file_mtime": "2026-09-15T12:49:04Z"
+    },
+    {
+      "label": "region-03:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=445675b3-efeb-ea5f-419c-2163f867b44e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-03/floor-area.json",
+      "from_cache": true,
+      "bytes": 1434,
+      "sha256": "fc5f2d6e3806f2feef8e044d58b293bb3c40f52152fbba09e6344448f204db16",
+      "file_mtime": "2026-09-15T12:49:06Z"
+    },
+    {
+      "label": "region-03:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=445675b3-efeb-ea5f-419c-2163f867b44e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-03/forecast.json",
+      "from_cache": true,
+      "bytes": 1812,
+      "sha256": "9b26e67d6622f12ffed0dececb7686d5eeb314efcfad0980927c8f2da1fb545f",
+      "file_mtime": "2026-09-15T12:49:07Z"
+    },
+    {
+      "label": "region-04:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-04/stats.json",
+      "from_cache": true,
+      "bytes": 5664,
+      "sha256": "33fc04ed54dab92150d5843317d7bc3d778949d308035041445bf815e65ddbd5",
+      "file_mtime": "2026-09-15T12:49:09Z"
+    },
+    {
+      "label": "region-04:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=82ac794f-5ef1-844d-68b7-1da3bef9f99b&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-04/area-series.json",
+      "from_cache": true,
+      "bytes": 13678,
+      "sha256": "18d3a0b81f3f44e15eeb92639e4df8112c9a6c5cca24825b6a653619d8700479",
+      "file_mtime": "2026-09-15T12:49:11Z"
+    },
+    {
+      "label": "region-04:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-04/supply.json",
+      "from_cache": true,
+      "bytes": 2319,
+      "sha256": "77cd6c28bd12c596a9d76a92dc16b564d19e1772ce1095c6698962f3c7e38cb1",
+      "file_mtime": "2026-09-15T12:49:13Z"
+    },
+    {
+      "label": "region-04:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-04/floor-area.json",
+      "from_cache": true,
+      "bytes": 1428,
+      "sha256": "1c73f6b975aeb65f4def938de1063c76c45dbb4bb7e4e6e113e77d7314fad1c3",
+      "file_mtime": "2026-09-15T12:49:14Z"
+    },
+    {
+      "label": "region-04:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=82ac794f-5ef1-844d-68b7-1da3bef9f99b",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-04/forecast.json",
+      "from_cache": true,
+      "bytes": 1812,
+      "sha256": "779b3fce4f0a6fb49b1e35410231e83936ee4424eee7752af44d298444543e95",
+      "file_mtime": "2026-09-15T12:49:16Z"
+    },
+    {
+      "label": "region-05:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-05/stats.json",
+      "from_cache": true,
+      "bytes": 5651,
+      "sha256": "7338a589ac8d27465874beeac70f4d9a9bed752459023742356e0415a85fd4c7",
+      "file_mtime": "2026-09-15T12:49:18Z"
+    },
+    {
+      "label": "region-05:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=15e82ef6-157a-ecc9-9e81-f64bf056b907&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-05/area-series.json",
+      "from_cache": true,
+      "bytes": 14234,
+      "sha256": "46b8c497ab10f231f74cd76db07562c15c634638182cbe1f7f7d45c524fc1320",
+      "file_mtime": "2026-09-15T12:49:20Z"
+    },
+    {
+      "label": "region-05:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-05/supply.json",
+      "from_cache": true,
+      "bytes": 2307,
+      "sha256": "45a752db09c161ce79d684e68b5fbc1d51da173267df03dafb731458bc0b5357",
+      "file_mtime": "2026-09-15T12:49:22Z"
+    },
+    {
+      "label": "region-05:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-05/floor-area.json",
+      "from_cache": true,
+      "bytes": 1428,
+      "sha256": "280fc4c17c9dd829d00da315bfbd6538c65df107979befc06a5fb64161132f05",
+      "file_mtime": "2026-09-15T12:49:24Z"
+    },
+    {
+      "label": "region-05:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=15e82ef6-157a-ecc9-9e81-f64bf056b907",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-05/forecast.json",
+      "from_cache": true,
+      "bytes": 1820,
+      "sha256": "058ecbffc6ada61b61e5f145d1be6c46ad3364fd26fed4683d621116154e953f",
+      "file_mtime": "2026-09-15T12:49:25Z"
+    },
+    {
+      "label": "region-06:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=f63168ea-9f0c-e853-e800-688831354dff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-06/stats.json",
+      "from_cache": true,
+      "bytes": 5663,
+      "sha256": "9afa3cfb2e0bd922de761254c988a62755f8bd5a59a6abecc9c3faa92af79683",
+      "file_mtime": "2026-09-15T12:49:27Z"
+    },
+    {
+      "label": "region-06:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=f63168ea-9f0c-e853-e800-688831354dff&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-06/area-series.json",
+      "from_cache": true,
+      "bytes": 14206,
+      "sha256": "98cc5b0a0ea9169c4cebac182ac124a9b40bb17063ec6059f59b33261997e3a2",
+      "file_mtime": "2026-09-15T12:49:29Z"
+    },
+    {
+      "label": "region-06:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=f63168ea-9f0c-e853-e800-688831354dff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-06/supply.json",
+      "from_cache": true,
+      "bytes": 2321,
+      "sha256": "eae685568863e3afdd8e2b95d83949a0388e0baeb87b2f17172d1954f2555757",
+      "file_mtime": "2026-09-15T12:49:31Z"
+    },
+    {
+      "label": "region-06:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=f63168ea-9f0c-e853-e800-688831354dff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-06/floor-area.json",
+      "from_cache": true,
+      "bytes": 1431,
+      "sha256": "92dfab06cb0d3e330c2fa508c151ca9778dfeb6206f66dd90c4b78ec6280e104",
+      "file_mtime": "2026-09-15T12:49:33Z"
+    },
+    {
+      "label": "region-06:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=f63168ea-9f0c-e853-e800-688831354dff",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-06/forecast.json",
+      "from_cache": true,
+      "bytes": 1801,
+      "sha256": "1ce8f341d5648ca075358cd5ca3b437d212edf1fe74b278f177a1c5b967cc0c4",
+      "file_mtime": "2026-09-15T12:49:34Z"
+    },
+    {
+      "label": "region-07:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-07/stats.json",
+      "from_cache": true,
+      "bytes": 5679,
+      "sha256": "32635389df6c7f2f82ebaaffd99a2b2c4e1256824cf1b671f95ba8be26b0441e",
+      "file_mtime": "2026-09-15T12:49:36Z"
+    },
+    {
+      "label": "region-07:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=4f69b050-dcd4-20b6-0698-f620bd4fa2b7&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-07/area-series.json",
+      "from_cache": true,
+      "bytes": 14758,
+      "sha256": "981f95df827cccfca3076a48571e65540de1d76a89be5ee163b8d12dc4f21162",
+      "file_mtime": "2026-09-15T12:49:38Z"
+    },
+    {
+      "label": "region-07:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-07/supply.json",
+      "from_cache": true,
+      "bytes": 2324,
+      "sha256": "9529ea32b1b35c5e4897d3d697f0726267a1054919f7ce9af6c0c445a8e42acc",
+      "file_mtime": "2026-09-15T12:49:40Z"
+    },
+    {
+      "label": "region-07:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-07/floor-area.json",
+      "from_cache": true,
+      "bytes": 1433,
+      "sha256": "f9a3bdfc9012a0e1e8c87d28da3a70104f57facdadd4b1f2c2282a1054669fa4",
+      "file_mtime": "2026-09-15T12:49:43Z"
+    },
+    {
+      "label": "region-07:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=4f69b050-dcd4-20b6-0698-f620bd4fa2b7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-07/forecast.json",
+      "from_cache": true,
+      "bytes": 1821,
+      "sha256": "c52765d44db80ffd25ba3f240e8c2fac7c8d8110593dc72883c8ba941a124a6c",
+      "file_mtime": "2026-09-15T12:49:45Z"
+    },
+    {
+      "label": "region-08:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-08/stats.json",
+      "from_cache": true,
+      "bytes": 5669,
+      "sha256": "112fba9c1d835f915f287a78269a527f314994b2734b1bd9e8b1dd3134510157",
+      "file_mtime": "2026-09-15T12:49:46Z"
+    },
+    {
+      "label": "region-08:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=cb3aa3ec-e3db-49d3-f122-1894b87433e7&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-08/area-series.json",
+      "from_cache": true,
+      "bytes": 13741,
+      "sha256": "7146c50d64cf390c9dca72ade4206f6f3873cf51d76ac129be1a544300c14878",
+      "file_mtime": "2026-09-15T12:49:48Z"
+    },
+    {
+      "label": "region-08:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-08/supply.json",
+      "from_cache": true,
+      "bytes": 2321,
+      "sha256": "6a9537ccbfa3db1d487e7ecf0adcfb817b9d819f2b414da6bc4e10c1c7e4efee",
+      "file_mtime": "2026-09-15T12:49:50Z"
+    },
+    {
+      "label": "region-08:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-08/floor-area.json",
+      "from_cache": true,
+      "bytes": 1436,
+      "sha256": "e0ef6598da550c8e3f3c7b6908c2d47eac975235f95a96fdc258727e852940ca",
+      "file_mtime": "2026-09-15T12:49:52Z"
+    },
+    {
+      "label": "region-08:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=cb3aa3ec-e3db-49d3-f122-1894b87433e7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-08/forecast.json",
+      "from_cache": true,
+      "bytes": 1819,
+      "sha256": "f2cc4e5d131fce55bbf162fcf0bb5a8cec3c5bdfa2af522cfa957e6932631b65",
+      "file_mtime": "2026-09-15T12:49:54Z"
+    },
+    {
+      "label": "region-09:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-09/stats.json",
+      "from_cache": true,
+      "bytes": 5694,
+      "sha256": "0edb59247e9f6750905a24c5573f7d368c683474dfb6318def6375b8d6ae7db5",
+      "file_mtime": "2026-09-15T12:49:55Z"
+    },
+    {
+      "label": "region-09:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=3b1db13c-5375-2f43-d970-0655a2b5e18e&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-09/area-series.json",
+      "from_cache": true,
+      "bytes": 15866,
+      "sha256": "b58f00d6b0ca275f1f2b7d9de8c617695736493ce0abbd7b448fdf27214562ed",
+      "file_mtime": "2026-09-15T12:49:57Z"
+    },
+    {
+      "label": "region-09:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-09/supply.json",
+      "from_cache": true,
+      "bytes": 2329,
+      "sha256": "01d5f63c1366352d4932d577e4f151652fdc0b71bcd4dbfc5170a7e5b73b005a",
+      "file_mtime": "2026-09-15T12:49:59Z"
+    },
+    {
+      "label": "region-09:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-09/floor-area.json",
+      "from_cache": true,
+      "bytes": 1441,
+      "sha256": "d4a4567cfd2007e98ab70580a22d98af2c10f833f83476fdaf2f6e5698a8aeda",
+      "file_mtime": "2026-09-15T12:50:01Z"
+    },
+    {
+      "label": "region-09:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=3b1db13c-5375-2f43-d970-0655a2b5e18e",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-09/forecast.json",
+      "from_cache": true,
+      "bytes": 1816,
+      "sha256": "48c58e1521bac2b5c445ad022d61af60d165d4897fb33a001d360bc521eb17f6",
+      "file_mtime": "2026-09-15T12:50:02Z"
+    },
+    {
+      "label": "region-10:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-10/stats.json",
+      "from_cache": true,
+      "bytes": 5691,
+      "sha256": "97925feef810405a01d262621a22ff048d7c4569c51a0f268bf4b146a2a0a9df",
+      "file_mtime": "2026-09-15T12:50:04Z"
+    },
+    {
+      "label": "region-10:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=5ca4809c-79f0-ec4a-4993-1d01fde9600d&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-10/area-series.json",
+      "from_cache": true,
+      "bytes": 14260,
+      "sha256": "274655a2bef8fc628d33703cff0eb38695940b1410fc9e8e205551790f40a0f0",
+      "file_mtime": "2026-09-15T12:50:06Z"
+    },
+    {
+      "label": "region-10:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-10/supply.json",
+      "from_cache": true,
+      "bytes": 2322,
+      "sha256": "f0d2a068763c790b9b7f02cb09d2a5ec443de42dc01b51b29b4ea4b74423ef1e",
+      "file_mtime": "2026-09-15T12:50:08Z"
+    },
+    {
+      "label": "region-10:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-10/floor-area.json",
+      "from_cache": true,
+      "bytes": 1441,
+      "sha256": "30fb7a78490ecde3458935e4f9263c5d14f09ba9fe2ff9d5f3400c4883048c70",
+      "file_mtime": "2026-09-15T12:50:10Z"
+    },
+    {
+      "label": "region-10:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=5ca4809c-79f0-ec4a-4993-1d01fde9600d",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-10/forecast.json",
+      "from_cache": true,
+      "bytes": 1831,
+      "sha256": "1ba4027e6f47efaa4d0d407560867c4914b37fe35555b705d4ab6f6e4b5839bb",
+      "file_mtime": "2026-09-15T12:50:12Z"
+    },
+    {
+      "label": "region-11:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-11/stats.json",
+      "from_cache": true,
+      "bytes": 5698,
+      "sha256": "fc3a42eba0c0ca41426c2dec99705c5627e2cc9e4a7c298e515a8156e1f5fc29",
+      "file_mtime": "2026-09-15T12:50:14Z"
+    },
+    {
+      "label": "region-11:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-11/area-series.json",
+      "from_cache": true,
+      "bytes": 13759,
+      "sha256": "8efd1cbae6b76f58e0e49ab920342a3c7003e186d1954b393a951740b27bc539",
+      "file_mtime": "2026-09-15T12:50:16Z"
+    },
+    {
+      "label": "region-11:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-11/supply.json",
+      "from_cache": true,
+      "bytes": 2327,
+      "sha256": "7dcd76c188a6b1977911c61677deb4bfaecc11f955d0b114fcf951b3ce7c99e2",
+      "file_mtime": "2026-09-15T12:50:18Z"
+    },
+    {
+      "label": "region-11:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-11/floor-area.json",
+      "from_cache": true,
+      "bytes": 1444,
+      "sha256": "290cf427d1d7697e85a05f1820c4d92e7204e8c926a7d9fc245ae9617911ebc0",
+      "file_mtime": "2026-09-15T12:50:20Z"
+    },
+    {
+      "label": "region-11:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=06c5bf0e-6ae9-d9bb-d2fe-0a13fb4e4cb7",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-11/forecast.json",
+      "from_cache": true,
+      "bytes": 1824,
+      "sha256": "6c667dba33de1f5356bb8bc36824c4f10edbb53fdf0e4ce1879132507b7b30e4",
+      "file_mtime": "2026-09-15T12:50:22Z"
+    },
+    {
+      "label": "region-12:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-12/stats.json",
+      "from_cache": true,
+      "bytes": 5694,
+      "sha256": "583cfc29736a731846c65b8b94e52f481ce144f216c16cb6ca0b08ae0770e36b",
+      "file_mtime": "2026-09-15T12:50:24Z"
+    },
+    {
+      "label": "region-12:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=3c325875-9c64-1dbd-55e5-e8c2ae159a63&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-12/area-series.json",
+      "from_cache": true,
+      "bytes": 13252,
+      "sha256": "51b4d6286b342e3f63578e55e1b64e20c8b20890026a12b3fa360541715ceb9f",
+      "file_mtime": "2026-09-15T12:50:26Z"
+    },
+    {
+      "label": "region-12:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-12/supply.json",
+      "from_cache": true,
+      "bytes": 2337,
+      "sha256": "a7aaa3582a6bdda4b600b0f79f90298c88f978f036324d4dee81e6099d539723",
+      "file_mtime": "2026-09-15T12:50:28Z"
+    },
+    {
+      "label": "region-12:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-12/floor-area.json",
+      "from_cache": true,
+      "bytes": 1446,
+      "sha256": "4cf769f6086f1009f14c0e43869cb615d31492266d3ffdb4d6779a34983ccca1",
+      "file_mtime": "2026-09-15T12:50:30Z"
+    },
+    {
+      "label": "region-12:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=3c325875-9c64-1dbd-55e5-e8c2ae159a63",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-12/forecast.json",
+      "from_cache": true,
+      "bytes": 1822,
+      "sha256": "48c3292616168a49f9a86833622872df6d9a1477a8777e9727c9b2579c674e6a",
+      "file_mtime": "2026-09-15T12:50:31Z"
+    },
+    {
+      "label": "region-13:stats",
+      "url": "https://kilid.com/api/map/stats?months=60&mode=RAW&areaId=09aef6ae-fe73-d123-0450-1047173a32dd",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-13/stats.json",
+      "from_cache": true,
+      "bytes": 5922,
+      "sha256": "c0f6571d56e7116c6a47e095d6f706a392837f2a9ffa9ac86a2b239cd45441e1",
+      "file_mtime": "2026-09-15T12:50:33Z"
+    },
+    {
+      "label": "region-13:area-series",
+      "url": "https://kilid.com/api/map/area-series?areaId=09aef6ae-fe73-d123-0450-1047173a32dd&months=60",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-13/area-series.json",
+      "from_cache": true,
+      "bytes": 12695,
+      "sha256": "943a42c08d7f9fb6fcc98ffb045c62514173cac01c64a5d493acad6c039c2d0f",
+      "file_mtime": "2026-09-15T12:50:35Z"
+    },
+    {
+      "label": "region-13:supply",
+      "url": "https://kilid.com/api/map/supply?areaId=09aef6ae-fe73-d123-0450-1047173a32dd",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-13/supply.json",
+      "from_cache": true,
+      "bytes": 2306,
+      "sha256": "c8563b360ef1db43f653477c63cc089f09168b4ffd0a521dc7edc357f9008a4f",
+      "file_mtime": "2026-09-15T12:50:37Z"
+    },
+    {
+      "label": "region-13:floor-area",
+      "url": "https://kilid.com/api/map/floor-area?areaId=09aef6ae-fe73-d123-0450-1047173a32dd",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-13/floor-area.json",
+      "from_cache": true,
+      "bytes": 1431,
+      "sha256": "09db7bd7aeb22cb91c17d07a781c95ce50cd5f26f8663d839100ff3468a4919c",
+      "file_mtime": "2026-09-15T12:50:39Z"
+    },
+    {
+      "label": "region-13:forecast",
+      "url": "https://kilid.com/api/map/forecast?areaId=09aef6ae-fe73-d123-0450-1047173a32dd",
+      "file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_data/cities/mashhad/raw/region-13/forecast.json",
+      "from_cache": true,
+      "bytes": 1843,
+      "sha256": "9433c153b974c24938cc0d0fc3a92c5c07366c2ed902132702324fd866846b50",
+      "file_mtime": "2026-09-15T12:50:41Z"
+    }
+  ],
+  "errors": [],
+  "exit_code": 0
+}

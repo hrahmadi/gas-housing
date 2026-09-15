@@ -1,0 +1,228 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 22,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "38b6af3d-45f5-546e-0af0-d43282543dfb",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "272905:1",
+      "district_number": 1,
+      "slug": "tehran-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "5e92f55b-b28e-842d-0bff-ebedf489023f",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "272905:2",
+      "district_number": 2,
+      "slug": "tehran-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "ff50928d-cafd-7ddc-8a2a-687762b0254d",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "272905:3",
+      "district_number": 3,
+      "slug": "tehran-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "9e522432-7d71-31ab-b475-1f7a9c3befb5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "272905:4",
+      "district_number": 4,
+      "slug": "tehran-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "c88afe7c-7484-7ae2-9fc4-810ac1a3ef44",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "272905:5",
+      "district_number": 5,
+      "slug": "tehran-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "ef14e327-e7dc-483a-69e3-31672bf61984",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "272905:6",
+      "district_number": 6,
+      "slug": "tehran-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "0fee0154-6dda-1109-17ab-7af2df64b692",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "272905:7",
+      "district_number": 7,
+      "slug": "tehran-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "04a45272-086f-638d-ff1a-433172fb6aa3",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "272905:8",
+      "district_number": 8,
+      "slug": "tehran-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "006dc5f4-0883-4a22-bfa9-857d98262079",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "272905:9",
+      "district_number": 9,
+      "slug": "tehran-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "3c94c0ff-94e1-3c73-70b1-3c2774333b48",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "272905:10",
+      "district_number": 10,
+      "slug": "tehran-region10"
+    },
+    {
+      "index": 11,
+      "dir": "region-11",
+      "area_id": "7ec6174a-b77f-7483-2e27-661eaab9f4d7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "272905:11",
+      "district_number": 11,
+      "slug": "tehran-region11"
+    },
+    {
+      "index": 12,
+      "dir": "region-12",
+      "area_id": "cbde05c0-583f-78ee-2e47-152941edafa0",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 12",
+      "native_key": "272905:12",
+      "district_number": 12,
+      "slug": "tehran-region12"
+    },
+    {
+      "index": 13,
+      "dir": "region-13",
+      "area_id": "242b15af-a5fc-6303-cc74-5d9ab8437470",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 13",
+      "native_key": "272905:13",
+      "district_number": 13,
+      "slug": "tehran-region13"
+    },
+    {
+      "index": 14,
+      "dir": "region-14",
+      "area_id": "fa66bf31-710b-be2b-defd-7dae7e1e1371",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 14",
+      "native_key": "272905:14",
+      "district_number": 14,
+      "slug": "tehran-region14"
+    },
+    {
+      "index": 15,
+      "dir": "region-15",
+      "area_id": "3fa1da83-c366-bfd2-91cf-f7e44c86ed9c",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 15",
+      "native_key": "272905:15",
+      "district_number": 15,
+      "slug": "tehran-region15"
+    },
+    {
+      "index": 16,
+      "dir": "region-16",
+      "area_id": "85a94198-ee48-2a86-2c76-6db3ab0e6822",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 16",
+      "native_key": "272905:16",
+      "district_number": 16,
+      "slug": "tehran-region16"
+    },
+    {
+      "index": 17,
+      "dir": "region-17",
+      "area_id": "0f4e5ea7-940e-bf26-6074-ac7b3dd75317",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 17",
+      "native_key": "272905:17",
+      "district_number": 17,
+      "slug": "tehran-region17"
+    },
+    {
+      "index": 18,
+      "dir": "region-18",
+      "area_id": "d0b9d990-5b5e-5625-112b-1a5f5b446501",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 18",
+      "native_key": "272905:18",
+      "district_number": 18,
+      "slug": "tehran-region18"
+    },
+    {
+      "index": 19,
+      "dir": "region-19",
+      "area_id": "53b7a2a5-d503-16b5-4790-b5c2c786e5ff",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 19",
+      "native_key": "272905:19",
+      "district_number": 19,
+      "slug": "tehran-region19"
+    },
+    {
+      "index": 20,
+      "dir": "region-20",
+      "area_id": "11381946-4708-82c0-d9c5-1e51c4cdb31e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 20",
+      "native_key": "272905:20",
+      "district_number": 20,
+      "slug": "tehran-region20"
+    },
+    {
+      "index": 21,
+      "dir": "region-21",
+      "area_id": "e860034a-c7ae-0d72-ae12-45d668f20874",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 21",
+      "native_key": "272905:21",
+      "district_number": 21,
+      "slug": "tehran-region21"
+    },
+    {
+      "index": 22,
+      "dir": "region-22",
+      "area_id": "2660254d-bc9f-c4eb-5ec4-f962a708cec2",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 22",
+      "native_key": "272905:22",
+      "district_number": 22,
+      "slug": "tehran-region22"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

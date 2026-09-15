@@ -1,0 +1,11 @@
+city_id,city_label,city_name_fa,province_name_fa,census_rank_1395,population_1395,level,areas,sale_rows,areas_with_full_window,months_min,months_max,sale_first_period,sale_last_period,latest_sample_size_sum,areas_with_rent,rent_rows,rent_history,validation_status,warnings
+272905,tehran,تهران,تهران,1,8693706,MUNICIPAL_AREA,22,1320,22,60,60,1400-06,1405-05,419629,0,0,unknown,pass,
+272895,mashhad,مشهد,خراسان رضوی,2,3001184,MUNICIPAL_AREA,13,678,0,47,59,1400-06,1405-05,125587,0,0,unknown,pass,
+272903,isfahan,اصفهان,اصفهان,3,1961260,MUNICIPAL_AREA,15,769,0,43,57,1400-06,1405-05,43486,0,0,unknown,pass,
+273014,karaj,کرج,البرز,4,1592492,MUNICIPAL_AREA,12,612,2,44,60,1400-06,1405-05,56609,0,0,unknown,warn,history.latest_period_consistency;history.last_observed_period_consistency
+272896,shiraz,شیراز,فارس,5,1565572,MUNICIPAL_AREA,11,610,1,51,60,1400-06,1405-05,57197,0,0,unknown,pass,
+242459,tabriz,تبریز,آذربایجان شرقی,6,1558693,MUNICIPAL_AREA,10,317,0,20,48,1400-06,1405-05,33859,0,0,unknown,pass,
+242483,qom,قم,قم,7,1201955,MUNICIPAL_AREA,8,131,0,7,35,1401-09,1405-04,4217,0,0,unknown,warn,history.latest_period_consistency;history.last_observed_period_consistency
+242398,ahvaz,اهواز,خوزستان,8,1184788,MUNICIPAL_AREA,8,182,0,14,30,1399-12,1405-05,5437,0,0,unknown,warn,history.latest_period_consistency;history.last_observed_period_consistency
+242382,urumia,ارومیه,آذربایجان غربی,10,736224,MUNICIPAL_AREA,13,143,0,11,11,1401-09,1404-04,4784,0,0,unknown,warn,geography.district_numbering
+242556,rasht,رشت,گیلان,11,679995,MUNICIPAL_AREA,5,197,0,30,54,1400-06,1405-05,24253,0,0,unknown,pass,

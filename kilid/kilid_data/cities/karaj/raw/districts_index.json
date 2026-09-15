@@ -1,0 +1,128 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 12,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "12d3c362-a7df-8f1a-db63-50e148beda7c",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "273014:1",
+      "district_number": 1,
+      "slug": "karaj-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "1abe4d30-f375-ebf3-54a3-9f6778a7ea0e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "273014:2",
+      "district_number": 2,
+      "slug": "karaj-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "4fe6f22d-a665-defe-e0d3-9fd1da6ca55a",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "273014:3",
+      "district_number": 3,
+      "slug": "karaj-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "db67b348-0027-bdfd-4e6f-d02d8595a785",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "273014:4",
+      "district_number": 4,
+      "slug": "karaj-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "05d7c556-45b0-6f2b-4eec-9a5c688806cc",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "273014:5",
+      "district_number": 5,
+      "slug": "karaj-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "ba0a5036-8d85-26b9-9eee-bdf508317195",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "273014:6",
+      "district_number": 6,
+      "slug": "karaj-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "03bfe41b-74e7-6d45-3451-ae3620f5a96f",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "273014:7",
+      "district_number": 7,
+      "slug": "karaj-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "aec89fe6-3419-725b-bdd4-cfb164e0fde7",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "273014:8",
+      "district_number": 8,
+      "slug": "karaj-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "06260d0d-25a3-bd66-7430-3ce76cff05a5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "273014:9",
+      "district_number": 9,
+      "slug": "karaj-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "9e5426b1-520b-2eed-ff42-41be702b4c36",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "273014:10",
+      "district_number": 10,
+      "slug": "karaj-region10"
+    },
+    {
+      "index": 11,
+      "dir": "region-11",
+      "area_id": "b807b3d3-49ab-5f09-cf9a-3baf86a1af55",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "273014:11",
+      "district_number": 11,
+      "slug": "karaj-region11"
+    },
+    {
+      "index": 12,
+      "dir": "region-12",
+      "area_id": "f5065322-d58a-5d9f-22ee-8781ba0b22a8",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 12",
+      "native_key": "273014:12",
+      "district_number": 12,
+      "slug": "karaj-region12"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

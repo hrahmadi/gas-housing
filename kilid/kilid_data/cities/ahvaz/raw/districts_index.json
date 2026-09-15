@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 8,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "7a82010f-1b7d-cc68-9c4d-dbebce362695",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "242398:1",
+      "district_number": 1,
+      "slug": "ahvaz-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "3197b4c6-d54d-4543-0596-d281cd0be735",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "242398:2",
+      "district_number": 2,
+      "slug": "ahvaz-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "17830323-a333-7bf3-c5f5-1fd648b5f1ca",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "242398:3",
+      "district_number": 3,
+      "slug": "ahvaz-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "5cbecc74-f488-1d40-057b-02c7eaa4f13b",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "242398:4",
+      "district_number": 4,
+      "slug": "ahvaz-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "25d9ee8b-3ad5-677a-26da-cf50eb2210e0",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "242398:5",
+      "district_number": 5,
+      "slug": "ahvaz-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "c27d3b6b-c5d6-a507-8ee5-fafaf6c983ad",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "242398:6",
+      "district_number": 6,
+      "slug": "ahvaz-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "a0c60635-9bf9-a8a0-13dd-2dee183bb708",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "242398:7",
+      "district_number": 7,
+      "slug": "ahvaz-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "284ed248-cb36-29e7-8ed9-4bbde71734f8",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "242398:8",
+      "district_number": 8,
+      "slug": "ahvaz-region8"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

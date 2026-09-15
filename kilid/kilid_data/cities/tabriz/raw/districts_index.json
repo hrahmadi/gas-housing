@@ -1,0 +1,108 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 10,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "be3fbc54-8cd3-f58d-be15-6e14c29542f5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "242459:1",
+      "district_number": 1,
+      "slug": "tabriz-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "257a0bec-e1f0-b00c-c92b-6c4690b926fe",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "242459:2",
+      "district_number": 2,
+      "slug": "tabriz-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "1c73b386-7f13-bb5f-81cd-0a9e7b67c4ff",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "242459:3",
+      "district_number": 3,
+      "slug": "tabriz-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "03d083af-55eb-1ae8-9ce5-a704933232c0",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "242459:4",
+      "district_number": 4,
+      "slug": "tabriz-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "214cfbd7-44a4-f77d-74b5-55fb8bfa1b0b",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "242459:5",
+      "district_number": 5,
+      "slug": "tabriz-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "e8dd59bb-ba2b-a7d0-7cb8-dcc5d1e5384b",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "242459:6",
+      "district_number": 6,
+      "slug": "tabriz-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "1e850eee-4864-afd8-14dc-0c9773624237",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "242459:7",
+      "district_number": 7,
+      "slug": "tabriz-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "c4c5c315-c198-042e-77ae-03d71bea1b87",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "242459:8",
+      "district_number": 8,
+      "slug": "tabriz-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "9ecd9bf9-d489-1d21-a63c-82a771c85152",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "242459:9",
+      "district_number": 9,
+      "slug": "tabriz-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "2f86aa8b-cdb8-3dc3-2be2-dbf9d384aa6d",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "242459:10",
+      "district_number": 10,
+      "slug": "tabriz-region10"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

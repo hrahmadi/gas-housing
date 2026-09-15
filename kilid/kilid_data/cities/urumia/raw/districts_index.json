@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 13,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "fb55f9d4-9edc-e75c-d6ed-cadc6a053d14",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "242382:1",
+      "district_number": 1,
+      "slug": "urumia-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "dedfdbde-6b7f-337f-7c10-b7c0e7e4475a",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "242382:2",
+      "district_number": 2,
+      "slug": "urumia-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "ad153c3b-636d-7f58-1c3e-fa81dd6d3558",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "242382:3",
+      "district_number": 3,
+      "slug": "urumia-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "07823aec-c395-924b-c345-b1a7a84c5cfe",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "242382:4",
+      "district_number": 4,
+      "slug": "urumia-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "ed6372eb-d151-9d20-46ca-81bf656e0243",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "242382:5",
+      "district_number": 5,
+      "slug": "urumia-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "b4a93332-afa0-a11d-faf9-8305ce5386dd",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "242382:6",
+      "district_number": 6,
+      "slug": "urumia-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "53b6d904-fee5-a91d-fb14-7ea61031bf22",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "242382:7",
+      "district_number": 7,
+      "slug": "urumia-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-10",
+      "area_id": "c4ca7fba-9a25-5f58-84e8-0965aeaa2e21",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "242382:10",
+      "district_number": 10,
+      "slug": "urumia-region10"
+    },
+    {
+      "index": 9,
+      "dir": "region-11",
+      "area_id": "cf9ad17c-6ed9-a7a6-e1c8-653769ae2ed5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "242382:11",
+      "district_number": 11,
+      "slug": "urumia-region11"
+    },
+    {
+      "index": 10,
+      "dir": "region-12",
+      "area_id": "eec5f644-8938-919e-e251-37bfc1fdf780",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 12",
+      "native_key": "242382:12",
+      "district_number": 12,
+      "slug": "urumia-region12"
+    },
+    {
+      "index": 11,
+      "dir": "region-14",
+      "area_id": "9955e549-37fa-cac0-2332-4fcd29b00b2f",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 14",
+      "native_key": "242382:14",
+      "district_number": 14,
+      "slug": "urumia-region14"
+    },
+    {
+      "index": 12,
+      "dir": "region-21",
+      "area_id": "1fb3e8b8-0d98-1ac4-32f9-997ab3e1fdfe",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 21",
+      "native_key": "242382:21",
+      "district_number": 21,
+      "slug": "urumia-region21"
+    },
+    {
+      "index": 13,
+      "dir": "region-22",
+      "area_id": "7d4d33fb-e1bb-afa1-336b-3cd93f858975",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 22",
+      "native_key": "242382:22",
+      "district_number": 22,
+      "slug": "urumia-region22"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

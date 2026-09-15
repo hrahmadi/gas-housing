@@ -1,0 +1,158 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 15,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "e1dce90b-c860-17ed-d5a3-f537cc7bc1ce",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "272903:1",
+      "district_number": 1,
+      "slug": "isfahan-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "410657a3-ae51-c1fb-ec8b-19f7bc997aa1",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "272903:2",
+      "district_number": 2,
+      "slug": "isfahan-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "afdcb122-1f6d-aa97-14a7-08f471a9af72",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "272903:3",
+      "district_number": 3,
+      "slug": "isfahan-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "aec3f10b-5053-e6a9-f7d5-7e30577f4ca3",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "272903:4",
+      "district_number": 4,
+      "slug": "isfahan-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "161a0ad3-70be-d74e-5f66-83317bf881f0",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "272903:5",
+      "district_number": 5,
+      "slug": "isfahan-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "2b1f6ddd-fdb1-b3f0-870d-815af9ba66b2",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "272903:6",
+      "district_number": 6,
+      "slug": "isfahan-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "1ef0ae93-e7bb-f064-5e48-e0f61e55e841",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "272903:7",
+      "district_number": 7,
+      "slug": "isfahan-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "22e657d6-c8ce-4c4c-391c-6d9f729ab57f",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "272903:8",
+      "district_number": 8,
+      "slug": "isfahan-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "a6c208ce-1a7e-682f-fc3a-f81b8f800f17",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "272903:9",
+      "district_number": 9,
+      "slug": "isfahan-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "a28ec970-cfb3-c6db-c5db-3e2eaaba5083",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "272903:10",
+      "district_number": 10,
+      "slug": "isfahan-region10"
+    },
+    {
+      "index": 11,
+      "dir": "region-11",
+      "area_id": "1509955c-e657-a3a0-0028-4a66e86441b5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "272903:11",
+      "district_number": 11,
+      "slug": "isfahan-region11"
+    },
+    {
+      "index": 12,
+      "dir": "region-12",
+      "area_id": "f4cd0d06-ed3d-d7ba-33b2-45faa2684b47",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 12",
+      "native_key": "272903:12",
+      "district_number": 12,
+      "slug": "isfahan-region12"
+    },
+    {
+      "index": 13,
+      "dir": "region-13",
+      "area_id": "19f40bbb-a7c2-78b0-0880-3cd52094356a",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 13",
+      "native_key": "272903:13",
+      "district_number": 13,
+      "slug": "isfahan-region13"
+    },
+    {
+      "index": 14,
+      "dir": "region-14",
+      "area_id": "95e3ecd4-5c93-71a0-3779-f946ba217117",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 14",
+      "native_key": "272903:14",
+      "district_number": 14,
+      "slug": "isfahan-region14"
+    },
+    {
+      "index": 15,
+      "dir": "region-15",
+      "area_id": "ea4bce18-bc5d-933c-55e3-da2df6ee6e43",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 15",
+      "native_key": "272903:15",
+      "district_number": 15,
+      "slug": "isfahan-region15"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

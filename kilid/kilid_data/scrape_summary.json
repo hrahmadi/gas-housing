@@ -1,8 +1,8 @@
 {
   "run": {
-    "started_at": "2026-09-15T12:35:32Z",
-    "finished_at": "2026-09-15T12:35:32Z",
-    "duration_seconds": 0.08,
+    "started_at": "2026-09-15T12:44:21Z",
+    "finished_at": "2026-09-15T12:44:21Z",
+    "duration_seconds": 0.07,
     "scraper_version": "1.0.0",
     "label": "tehran",
     "city_id": 272905,

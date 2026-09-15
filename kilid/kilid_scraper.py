@@ -38,6 +38,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import collections
 import csv
 import hashlib
 import json
@@ -102,6 +103,40 @@ KNOWN_API_NOTES: Tuple[str, ...] = (
     "2026-09-15, so the availability report marks rent history as 'unknown'.",
     "/stats carries four groups: AVM, ASKING_SALE, ASKING_RENT and TRANSACTION. ASKING_RENT "
     "is empty for Tehran district 2 (and must stay empty in our output).",
+)
+
+#: The ONLY external dataset in this scraper, and it is used for *selection only*.
+#: It is never merged into the normalized sale/rent CSVs, and it must be checked
+#: against the published census tables before anything is published.
+CENSUS_1395_SOURCE: Dict[str, Any] = {
+    "name": "Statistical Center of Iran — 1395 (2016) national census, urban population of the city proper",
+    "entered_by_hand": True,
+    "needs_verification": True,
+    "purpose": "choosing which cities to scrape (Kilid exposes no population field)",
+}
+
+#: (census rank, city name exactly as Kilid spells it, population)
+CENSUS_1395_TOP_CITIES: Tuple[Tuple[int, str, int], ...] = (
+    (1, "تهران", 8693706),
+    (2, "مشهد", 3001184),
+    (3, "اصفهان", 1961260),
+    (4, "کرج", 1592492),
+    (5, "شیراز", 1565572),
+    (6, "تبریز", 1558693),
+    (7, "قم", 1201955),
+    (8, "اهواز", 1184788),
+    (9, "کرمانشاه", 946651),
+    (10, "ارومیه", 736224),
+    (11, "رشت", 679995),
+    (12, "زاهدان", 587730),
+    (13, "همدان", 554406),
+    (14, "کرمان", 537718),
+    (15, "یزد", 529673),
+    (16, "اردبیل", 529374),
+    (17, "بندرعباس", 526648),
+    (18, "اراک", 520944),
+    (19, "اسلامشهر", 448129),
+    (20, "زنجان", 430871),
 )
 
 AVAILABILITY_FIELDS: Tuple[str, ...] = (
@@ -1223,6 +1258,7 @@ def build_metadata(
     expected_count: Optional[int],
     args: argparse.Namespace,
     repo_root: Path,
+    selection: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     commit = git_commit(repo_root)
     return {
@@ -1253,6 +1289,7 @@ def build_metadata(
         "raw_files_are_verbatim": True,
         "districts_found": districts_found,
         "districts_expected": expected_count,
+        "selection": selection,
         "notes": list(KNOWN_API_NOTES),
         "rules": [
             "raw responses are never overwritten with cleaned values",
@@ -1332,34 +1369,33 @@ def build_summary(
 # --------------------------------------------------------------------------------------
 
 
-def run_city(args: argparse.Namespace) -> int:
+def process_city(
+    client: KilidClient,
+    out_dir: Path,
+    *,
+    city_id: int,
+    label: str,
+    city_name: str,
+    expected: Optional[int],
+    args: argparse.Namespace,
+    selection: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Full pipeline for one city: discovery -> download -> normalize -> validate -> reports.
+
+    ``out_dir`` is the *city* directory. For ``--tehran``/``--city`` that is ``--out``
+    itself; multi-city runs pass ``<out>/cities/<label>``. Returns a result dict with
+    ``exit_code`` and the written summary.
+    """
     started_monotonic = time.monotonic()
     started_at = utc_now_iso()
-    out_dir = Path(args.out).resolve()
     repo_root = Path(__file__).resolve().parent.parent
 
-    if args.tehran:
-        city_id = TEHRAN_CITY_ID
-        label = "tehran"
-        city_name = "Tehran"
-        expected: Optional[int] = TEHRAN_EXPECTED_DISTRICTS if args.expect_districts is None else args.expect_districts
-    else:
-        city_id = int(args.city)
-        label = args.label or f"city-{city_id}"
-        city_name = args.label or f"city {city_id}"
-        expected = args.expect_districts
-
-    client = KilidClient(
-        delay=args.delay, timeout=args.timeout, retries=args.retries, force=args.force, verbose=not args.quiet
-    )
-
-    print(f"Kilid scraper v{SCRAPER_VERSION} — {city_name} (cityId={city_id}), level={args.child_level}", flush=True)
-    print(f"output: {out_dir}", flush=True)
-    print(f"cache: {'FORCE refresh' if args.force else 'reuse existing raw JSON'}, delay={args.delay}s", flush=True)
+    if not args.quiet:
+        print(f"\n=== {city_name} (cityId={city_id}), level={args.child_level} -> {out_dir}", flush=True)
 
     errors: List[Dict[str, Any]] = []
 
-    print("\n[1/5] discovery: child areas of the city", flush=True)
+    print("[1/5] discovery: child areas of the city", flush=True)
     try:
         discovery = discover_city(
             client,
@@ -1371,7 +1407,15 @@ def run_city(args: argparse.Namespace) -> int:
         )
     except FetchError as exc:
         print(f"  discovery failed: {exc}", flush=True)
-        return 1
+        write_json(
+            out_dir / "scrape_summary.json",
+            {
+                "run": {"started_at": started_at, "finished_at": utc_now_iso(), "label": label, "city_id": city_id},
+                "errors": [{"stage": "discovery", "error": str(exc)}],
+                "exit_code": 1,
+            },
+        )
+        return {"exit_code": 1, "summary": None, "label": label, "city_id": city_id, "out_dir": str(out_dir)}
 
     districts = discovery["districts"]
     print(f"  found {discovery['districts_found']} {args.child_level} record(s) for cityId={city_id}", flush=True)
@@ -1404,9 +1448,17 @@ def run_city(args: argparse.Namespace) -> int:
                 exit_code=2,
             ),
         )
-        return 2
+        return {
+            "exit_code": 2,
+            "summary": None,
+            "label": label,
+            "city_id": city_id,
+            "out_dir": str(out_dir),
+            "districts_found": discovery["districts_found"],
+            "validation": validation,
+        }
 
-    print("\n[2/5] per-district raw downloads", flush=True)
+    print("[2/5] per-district raw downloads", flush=True)
     scrape = scrape_areas(client, out_dir, districts, months=args.months)
     for item in scrape["results"]:
         for name, record in item["endpoints"].items():
@@ -1420,7 +1472,7 @@ def run_city(args: argparse.Namespace) -> int:
                     }
                 )
 
-    print("\n[3/5] normalization (raw JSON -> convenience CSVs)", flush=True)
+    print("[3/5] normalization (raw JSON -> convenience CSVs)", flush=True)
     sale = normalize_sale_series(out_dir, districts, label)
     rent = normalize_rent(out_dir, districts, label)
     availability = build_availability(out_dir, districts, label)
@@ -1429,13 +1481,13 @@ def run_city(args: argparse.Namespace) -> int:
     print(f"  {rent['file']}  ({rent['rows']} rows)", flush=True)
     print(f"  {availability['file']}  ({availability['rows']} rows)", flush=True)
 
-    print("\n[4/5] validation", flush=True)
+    print("[4/5] validation", flush=True)
     validation = validate(out_dir, districts, expected_count=expected)
     for check in validation["checks"]:
         mark = {"pass": "ok  ", "warn": "WARN", "fail": "FAIL"}[check["status"]]
         print(f"  [{mark}] {check['check']}: {check['detail']}", flush=True)
 
-    print("\n[5/5] reports", flush=True)
+    print("[5/5] reports", flush=True)
     metadata = build_metadata(
         out_dir,
         label=label,
@@ -1448,6 +1500,7 @@ def run_city(args: argparse.Namespace) -> int:
         expected_count=expected,
         args=args,
         repo_root=repo_root,
+        selection=selection,
     )
     write_json(out_dir / "metadata.json", metadata)
 
@@ -1476,7 +1529,55 @@ def run_city(args: argparse.Namespace) -> int:
     print(f"\nvalidation: {validation['status'].upper()}", flush=True)
     print(f"districts with current asking-rent data: {len(rent['districts_with_current_rent'])}", flush=True)
 
-    return exit_code
+    return {
+        "exit_code": exit_code,
+        "summary": str(out_dir / "scrape_summary.json"),
+        "label": label,
+        "city_id": city_id,
+        "city_name": city_name,
+        "out_dir": str(out_dir),
+        "districts_found": discovery["districts_found"],
+        "sale_rows": sale["rows"],
+        "rent_rows": rent["rows"],
+        "districts_with_rent": len(rent["districts_with_current_rent"]),
+        "validation": validation,
+    }
+
+
+def run_city(args: argparse.Namespace) -> int:
+    """Single-city mode: ``--tehran`` or ``--city <ID>``."""
+    out_dir = Path(args.out).resolve()
+
+    if args.tehran:
+        city_id = TEHRAN_CITY_ID
+        label = "tehran"
+        city_name = "Tehran"
+        expected: Optional[int] = (
+            TEHRAN_EXPECTED_DISTRICTS if args.expect_districts is None else args.expect_districts
+        )
+    else:
+        city_id = int(args.city)
+        label = args.label or f"city-{city_id}"
+        city_name = args.label or f"city {city_id}"
+        expected = args.expect_districts
+
+    client = KilidClient(
+        delay=args.delay, timeout=args.timeout, retries=args.retries, force=args.force, verbose=not args.quiet
+    )
+
+    print(f"Kilid scraper v{SCRAPER_VERSION} — {city_name} (cityId={city_id}), level={args.child_level}", flush=True)
+    print(f"output: {out_dir}", flush=True)
+    print(f"cache: {'FORCE refresh' if args.force else 'reuse existing raw JSON'}, delay={args.delay}s", flush=True)
+
+    return process_city(
+        client,
+        out_dir,
+        city_id=city_id,
+        label=label,
+        city_name=city_name,
+        expected=expected,
+        args=args,
+    )["exit_code"]
 
 
 def run_discover_country(args: argparse.Namespace) -> int:
@@ -1502,6 +1603,640 @@ def run_province(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------------------
+# National city enumeration + multi-city runs
+# --------------------------------------------------------------------------------------
+
+RANKING_FIELDS: Tuple[str, ...] = ("stockN", "sampleSize", "pricePsmMedian", "census1395")
+
+RANKING_CSV_FIELDS: Tuple[str, ...] = (
+    "rank",
+    "city_id",
+    "native_key",
+    "name_fa",
+    "province_id",
+    "province_name_fa",
+    "have_region",
+    "census_rank_1395",
+    "population_1395",
+    "stockN",
+    "sampleSize",
+    "pricePsmMedian",
+    "trust",
+    "area_id",
+)
+
+
+def slugify_label(text: Optional[str], fallback: str) -> str:
+    """Filesystem-safe ASCII label derived from the API's own slug."""
+    slug = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+    return slug or fallback
+
+
+def enumerate_national_cities(client: KilidClient, out_dir: Path, *, rank_by: str) -> Dict[str, Any]:
+    """List every city the public API knows about, ranked by a Kilid field.
+
+    Two requests: ``/provinces`` (province membership + ``haveRegion``) and
+    ``/comparison?childLevel=CITY`` (city ``areaId`` + housing stock). Nothing is
+    inferred: cities that cannot be matched between the two responses are reported.
+    """
+    discovery_dir = out_dir / "discovery"
+    discovery_dir.mkdir(parents=True, exist_ok=True)
+
+    provinces_file = discovery_dir / "provinces.json"
+    provinces, _ = client.get_json("/provinces", None, provinces_file, "discovery:provinces")
+
+    national_file = discovery_dir / "national_city_children.json"
+    payload, _ = client.get_json(
+        "/comparison", {"childLevel": "CITY"}, national_file, "discovery:national-cities"
+    )
+    rows = payload.get("rows") or []
+
+    province_of: Dict[int, Dict[str, Any]] = {}
+    have_region: Dict[int, bool] = {}
+    for province in provinces or []:
+        if not isinstance(province, dict):
+            continue
+        for city in province.get("cities") or []:
+            if not isinstance(city, dict) or not isinstance(city.get("id"), int):
+                continue
+            province_of[city["id"]] = {
+                "province_id": province.get("id"),
+                "province_name_fa": province.get("name"),
+                "province_slug": province.get("slug"),
+            }
+            have_region[city["id"]] = bool(city.get("haveRegion"))
+
+    cities: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        city_id = parse_native_number(row.get("nativeKey"))
+        info = province_of.get(city_id, {}) if city_id is not None else {}
+        cities.append(
+            {
+                "city_id": city_id,
+                "native_key": row.get("nativeKey"),
+                "name_fa": row.get("name"),
+                "slug": row.get("slug"),
+                "area_id": row.get("areaId"),
+                "stockN": row.get("stockN"),
+                "sampleSize": row.get("sampleSize"),
+                "pricePsmMedian": row.get("pricePsmMedian"),
+                "trust": row.get("trust"),
+                "have_region": have_region.get(city_id) if city_id is not None else None,
+                "province_id": info.get("province_id"),
+                "province_name_fa": info.get("province_name_fa"),
+            }
+        )
+
+    def sort_value(city: Dict[str, Any]) -> float:
+        value = city.get(rank_by)
+        return float(value) if isinstance(value, (int, float)) else -1.0
+
+    census_by_name = {name: (rank, population) for rank, name, population in CENSUS_1395_TOP_CITIES}
+    for city in cities:
+        hit = census_by_name.get((city.get("name_fa") or "").strip())
+        city["census_rank_1395"] = hit[0] if hit else None
+        city["population_1395"] = hit[1] if hit else None
+
+    if rank_by == "census1395":
+        # external ranking: cities absent from the table sort last
+        cities.sort(
+            key=lambda c: (
+                c["census_rank_1395"] is None,
+                c["census_rank_1395"] or 0,
+                -(c["stockN"] or 0),
+            )
+        )
+    else:
+        cities.sort(key=sort_value, reverse=True)
+    for index, city in enumerate(cities, start=1):
+        city["rank"] = index
+
+    resolved_names = {c["name_fa"].strip() for c in cities if c.get("census_rank_1395") is not None}
+    census_unresolved = [name for _, name, _ in CENSUS_1395_TOP_CITIES if name not in resolved_names]
+
+    matched = {c["city_id"] for c in cities if c["city_id"] is not None}
+    expected_ids = set(province_of)
+    coverage = {
+        "cities_in_provinces_response": len(expected_ids),
+        "cities_in_national_comparison": len(cities),
+        "matched_by_city_id": len(expected_ids & matched),
+        "in_comparison_not_in_provinces": sorted(matched - expected_ids),
+        "in_provinces_not_in_comparison": sorted(expected_ids - matched),
+        "note": (
+            "The two endpoints do not agree exactly; both raw responses are stored so the "
+            "difference can be inspected later. No city was added or removed by hand."
+        ),
+    }
+
+    report = {
+        "generated_at": utc_now_iso(),
+        "rank_by": rank_by,
+        "rank_by_note": (
+            "Kilid fields (stockN/sampleSize/pricePsmMedian) are Kilid's own aggregates and are "
+            "proxies for city size only — NOT official census population. rank_by=census1395 uses "
+            "the hand-entered table below (selection aid only)."
+        ),
+        "source_endpoints": ["/provinces", "/comparison?childLevel=CITY"],
+        "national_comparison_period_code": payload.get("periodCode"),
+        "national_comparison_source": payload.get("source"),
+        "census_1395": {
+            "source": CENSUS_1395_SOURCE,
+            "table": [
+                {"rank": rank, "name_fa": name, "population": population}
+                for rank, name, population in CENSUS_1395_TOP_CITIES
+            ],
+            "names_not_found_in_enumeration": census_unresolved,
+        },
+        "coverage": coverage,
+        "cities": cities,
+    }
+    write_json(discovery_dir / "national_cities.json", report)
+
+    write_csv(
+        out_dir / "normalized" / "kilid_national_city_ranking.csv",
+        RANKING_CSV_FIELDS,
+        [
+            {
+                "rank": c["rank"],
+                "city_id": c["city_id"],
+                "native_key": c["native_key"],
+                "name_fa": c["name_fa"],
+                "province_id": c["province_id"],
+                "province_name_fa": c["province_name_fa"],
+                "have_region": c["have_region"],
+                "census_rank_1395": c.get("census_rank_1395"),
+                "population_1395": c.get("population_1395"),
+                "stockN": c["stockN"],
+                "sampleSize": c["sampleSize"],
+                "pricePsmMedian": c["pricePsmMedian"],
+                "trust": c["trust"],
+                "area_id": c["area_id"],
+            }
+            for c in cities
+        ],
+    )
+    return report
+
+
+def select_cities(
+    enumeration: Dict[str, Any], args: argparse.Namespace
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[int]]:
+    """Pick candidate cities (in selection order). Returns ``(candidates, excluded, unknown_ids)``.
+
+    For ``--rank-by census1395`` the order is the hand-entered census table; otherwise it is
+    Kilid's own field. Candidates are only *candidates* — ``verify_candidates`` then keeps the
+    ones that actually expose data at the requested level.
+    """
+    ranked = enumeration["cities"]
+    by_id = {c["city_id"]: c for c in ranked if c["city_id"] is not None}
+
+    if args.cities:
+        wanted = [int(part) for part in re.split(r"[,\s]+", args.cities.strip()) if part.strip().isdigit()]
+        unknown = [w for w in wanted if w not in by_id]
+        selected = [by_id[w] for w in wanted if w in by_id]
+        return selected, [], unknown
+
+    limit = args.top_cities if args.top_cities is not None else 10
+
+    if args.rank_by == "census1395":
+        # The census table itself is the criterion, so haveRegion=false is not used to filter
+        # (that flag is unreliable: Urmia reports false yet exposes 13 municipal areas).
+        candidates = [c for c in ranked if c.get("census_rank_1395") is not None]
+        excluded = [c for c in ranked if c.get("have_region") is False]
+        return candidates[: max(limit, len(candidates))], excluded, []
+
+    if args.include_no_region:
+        candidates, excluded = ranked, []
+    else:
+        candidates = [c for c in ranked if c.get("have_region") is not False]
+        excluded = [c for c in ranked if c.get("have_region") is False]
+    return candidates, excluded, []
+
+
+def verify_candidates(
+    client: KilidClient,
+    out_dir: Path,
+    candidates: List[Dict[str, Any]],
+    *,
+    limit: int,
+    args: argparse.Namespace,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    """Keep the first ``limit`` candidates that really expose areas at the requested level.
+
+    Each check is the same ``/comparison`` call the run would make anyway and is stored in the
+    city's own discovery directory, so a verified candidate is never downloaded twice.
+    Cities that return nothing are skipped and named — never silently replaced.
+    """
+    kept: List[Dict[str, Any]] = []
+    skipped: List[Dict[str, Any]] = []
+    examined = 0
+
+    for city in candidates:
+        if len(kept) >= limit:
+            break
+        examined += 1
+        label = slugify_label(city.get("slug"), f"city-{city['city_id']}")
+        out_path = (
+            out_dir
+            / "cities"
+            / label
+            / "discovery"
+            / f"{label}_{args.child_level.lower()}_children.json"
+        )
+        try:
+            payload, _ = client.get_json(
+                "/comparison",
+                {"childLevel": args.child_level, "cityId": city["city_id"]},
+                out_path,
+                f"{label}:discovery",
+            )
+            count = len(payload.get("rows") or [])
+        except FetchError as exc:
+            skipped.append(
+                {
+                    "city_id": city["city_id"],
+                    "name_fa": city.get("name_fa"),
+                    "reason": f"discovery request failed: {exc}",
+                }
+            )
+            print(f"  ! {city.get('name_fa')}: {exc}", flush=True)
+            continue
+
+        if count == 0:
+            skipped.append(
+                {
+                    "city_id": city["city_id"],
+                    "name_fa": city.get("name_fa"),
+                    "census_rank_1395": city.get("census_rank_1395"),
+                    "reason": f"no {args.child_level} children returned",
+                }
+            )
+            print(f"  - {city.get('name_fa')}: 0 {args.child_level} children — skipped", flush=True)
+            continue
+
+        entry = dict(city)
+        entry["discovered_children"] = count
+        kept.append(entry)
+        print(f"  + {city.get('name_fa')}: {count} {args.child_level} area(s)", flush=True)
+
+    return kept, skipped, examined
+
+
+NATIONAL_CITY_AVAILABILITY_FIELDS: Tuple[str, ...] = (
+    "city_id",
+    "city_label",
+    "city_name_fa",
+    "province_name_fa",
+    "census_rank_1395",
+    "population_1395",
+    "level",
+    "areas",
+    "sale_rows",
+    "areas_with_full_window",
+    "months_min",
+    "months_max",
+    "sale_first_period",
+    "sale_last_period",
+    "latest_sample_size_sum",
+    "areas_with_rent",
+    "rent_rows",
+    "rent_history",
+    "validation_status",
+    "warnings",
+)
+
+
+def build_national_reports(out_dir: Path, cities: List[Dict[str, Any]], *, months: int) -> Dict[str, Any]:
+    """Roll the per-city convenience files up into three national CSVs.
+
+    Reads only files already on disk (the per-city normalized CSVs), so it costs no requests
+    and can be regenerated on every run. The raw JSON stays authoritative.
+    """
+    city_rows: List[Dict[str, Any]] = []
+    area_rows: List[Dict[str, Any]] = []
+    sale_rows: List[Dict[str, Any]] = []
+
+    for city in cities:
+        label = city["label"]
+        city_dir = out_dir / "cities" / label
+        base = {
+            "city_id": city["city_id"],
+            "city_label": label,
+            "city_name_fa": city.get("name_fa"),
+            "province_name_fa": city.get("province_name_fa"),
+            "census_rank_1395": city.get("census_rank_1395"),
+            "population_1395": city.get("population_1395"),
+        }
+
+        sale = _read_csv(city_dir / "normalized" / f"kilid_{label}_sale_price_monthly.csv")
+        availability = _read_csv(city_dir / "normalized" / f"kilid_{label}_availability.csv")
+        city_summary_path = city_dir / "scrape_summary.json"
+        validation_status, warnings = "-", []
+        if city_summary_path.exists():
+            try:
+                summary = read_json(city_summary_path)
+                validation = summary.get("validation") or {}
+                validation_status = validation.get("status") or "-"
+                warnings = [c["check"] for c in validation.get("checks") or [] if c.get("status") == "warn"]
+            except Exception:
+                pass
+
+        counts = collections.Counter(row.get("native_key") for row in sale)
+        levels = {row.get("level") for row in availability if row.get("level")}
+
+        for row in availability:
+            area_rows.append({**base, **row})
+        for row in sale:
+            sale_rows.append({**base, **row})
+
+        latest_samples = [
+            int(row["sale_history_latest_sample_size"])
+            for row in availability
+            if str(row.get("sale_history_latest_sample_size") or "").strip().isdigit()
+        ]
+        city_rows.append(
+            {
+                **base,
+                "level": ",".join(sorted(levels)) or city.get("level"),
+                "areas": len(availability) or city.get("districts_found"),
+                "sale_rows": len(sale),
+                "areas_with_full_window": sum(1 for n in counts.values() if n >= months),
+                "months_min": min(counts.values()) if counts else None,
+                "months_max": max(counts.values()) if counts else None,
+                "sale_first_period": min((r["period_code"] for r in sale), default=None),
+                "sale_last_period": max((r["period_code"] for r in sale), default=None),
+                "latest_sample_size_sum": sum(latest_samples) if latest_samples else None,
+                "areas_with_rent": sum(1 for row in availability if row.get("rent_current") == "yes"),
+                "rent_rows": sum(1 for row in availability if row.get("rent_current") == "yes"),
+                "rent_history": "unknown",
+                "validation_status": validation_status,
+                "warnings": ";".join(warnings),
+            }
+        )
+
+    normalized_dir = out_dir / "normalized"
+    write_csv(normalized_dir / "kilid_national_city_availability.csv", NATIONAL_CITY_AVAILABILITY_FIELDS, city_rows)
+    write_csv(
+        normalized_dir / "kilid_national_area_availability.csv",
+        ("city_label", "city_id", "city_name_fa") + AVAILABILITY_FIELDS,
+        area_rows,
+    )
+    write_csv(
+        normalized_dir / "kilid_national_sale_price_monthly.csv",
+        ("city_label", "city_id", "city_name_fa") + SALE_FIELDS,
+        sale_rows,
+    )
+    return {
+        "city_availability": "normalized/kilid_national_city_availability.csv",
+        "area_availability": "normalized/kilid_national_area_availability.csv",
+        "sale_price_monthly": "normalized/kilid_national_sale_price_monthly.csv",
+        "cities": len(city_rows),
+        "areas": len(area_rows),
+        "sale_rows": len(sale_rows),
+    }
+
+
+def _read_csv(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        return []
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def run_top_cities(args: argparse.Namespace) -> int:
+    """Multi-city mode: enumerate the country, then scrape the selected cities."""
+    out_dir = Path(args.out).resolve()
+    client = KilidClient(
+        delay=args.delay, timeout=args.timeout, retries=args.retries, force=args.force, verbose=not args.quiet
+    )
+
+    print(f"Kilid scraper v{SCRAPER_VERSION} — national city selection", flush=True)
+    print(f"rank by: {args.rank_by} (Kilid's own field; not official population)", flush=True)
+    print(f"output: {out_dir}", flush=True)
+    print(f"cache: {'FORCE refresh' if args.force else 'reuse existing raw JSON'}, delay={args.delay}s", flush=True)
+
+    print("\n[0/5] national enumeration (/provinces + /comparison?childLevel=CITY)", flush=True)
+    try:
+        enumeration = enumerate_national_cities(client, out_dir, rank_by=args.rank_by)
+    except FetchError as exc:
+        print(f"  enumeration failed: {exc}", flush=True)
+        return 1
+
+    coverage = enumeration["coverage"]
+    print(
+        f"  {coverage['cities_in_national_comparison']} city rows; "
+        f"{coverage['cities_in_provinces_response']} cities in /provinces; "
+        f"{coverage['matched_by_city_id']} matched by city id",
+        flush=True,
+    )
+    if coverage["in_comparison_not_in_provinces"] or coverage["in_provinces_not_in_comparison"]:
+        print(
+            f"  ! coverage differs (unmatched: "
+            f"{len(coverage['in_comparison_not_in_provinces'])} city rows, "
+            f"{len(coverage['in_provinces_not_in_comparison'])} /provinces entries) — both raw files kept",
+            flush=True,
+        )
+
+    selected, excluded, unknown = select_cities(enumeration, args)
+    if unknown:
+        print(f"  ! requested city ids not present in the enumeration: {unknown}", flush=True)
+
+    limit = args.top_cities if args.top_cities is not None else len(selected)
+    verified_skipped: List[Dict[str, Any]] = []
+    examined = 0
+    if args.cities or args.national_only or not args.verify_availability:
+        selected = selected[:limit]
+    else:
+        print(
+            f"\nverifying which candidates expose {args.child_level} data "
+            "(results are reused as each city's discovery call):",
+            flush=True,
+        )
+        selected, verified_skipped, examined = verify_candidates(
+            client, out_dir, selected, limit=limit, args=args
+        )
+        if verified_skipped:
+            print(
+                "  skipped for lack of data: "
+                + ", ".join(
+                    f"{s['name_fa']} ({s['reason']})" for s in verified_skipped
+                ),
+                flush=True,
+            )
+
+    if not selected:
+        print("  no cities selected — nothing to do", flush=True)
+        return 2
+
+    selection = {
+        "mode": "cities" if args.cities else "top-cities",
+        "rank_by": args.rank_by,
+        "requested": args.cities or (args.top_cities if args.top_cities is not None else 10),
+        "verified_availability": bool(not args.national_only and args.verify_availability and not args.cities),
+        "candidates_examined": examined,
+        "skipped_no_data": verified_skipped,
+        "excluded_have_region_false_count": len(excluded),
+        "excluded_have_region_false_sample": [
+            {"rank": c["rank"], "city_id": c["city_id"], "name_fa": c["name_fa"]} for c in excluded[:20]
+        ],
+        "unknown_city_ids": unknown,
+        "enumeration_file": "discovery/national_cities.json",
+        "census_1395_source": CENSUS_1395_SOURCE if args.rank_by == "census1395" else None,
+        "selected": [
+            {
+                "rank": c["rank"],
+                "city_id": c["city_id"],
+                "name_fa": c["name_fa"],
+                "slug": c["slug"],
+                "have_region": c["have_region"],
+                "census_rank_1395": c.get("census_rank_1395"),
+                "population_1395": c.get("population_1395"),
+                "stockN": c["stockN"],
+                "discovered_children": c.get("discovered_children"),
+                "province_name_fa": c["province_name_fa"],
+            }
+            for c in selected
+        ],
+    }
+    write_json(out_dir / "discovery" / "selected_cities.json", selection)
+
+    print(f"\nselected {len(selected)} city/cities:", flush=True)
+    for c in selected:
+        flag = {True: "regions", False: "no-regions", None: "regions?"}[c.get("have_region")]
+        extra = f", census#{c['census_rank_1395']}" if c.get("census_rank_1395") else ""
+        print(
+            f"  #{c['rank']:<3} {c['name_fa']} ({c['native_key']}) — {flag}, "
+            f"{c.get('discovered_children', '?')} areas{extra}",
+            flush=True,
+        )
+    if excluded and not args.include_no_region and args.rank_by != "census1395":
+        print(
+            f"  ({len(excluded)} city/cities with haveRegion=false were skipped; "
+            "pass --include-no-region to attempt them anyway)",
+            flush=True,
+        )
+
+    if args.national_only:
+        print(
+            f"\nnational-only: stopping before per-city downloads.\n"
+            f"  ranking   : {out_dir / 'normalized' / 'kilid_national_city_ranking.csv'}\n"
+            f"  discovery : {out_dir / 'discovery' / 'national_cities.json'}\n"
+            f"  selection : {out_dir / 'discovery' / 'selected_cities.json'}",
+            flush=True,
+        )
+        return 0
+
+    results: List[Dict[str, Any]] = []
+    errors: List[Dict[str, Any]] = []
+    total = len(selected)
+    for position, city in enumerate(selected, start=1):
+        label = slugify_label(city.get("slug"), f"city-{city['city_id']}")
+        city_out = out_dir / "cities" / label
+        print(f"\n########## city {position}/{total}: {city['name_fa']} (label={label}) ##########", flush=True)
+        result = process_city(
+            client,
+            city_out,
+            city_id=city["city_id"],
+            label=label,
+            city_name=city["name_fa"] or label,
+            expected=args.expect_districts,
+            args=args,
+            selection={
+                "mode": selection["mode"],
+                "rank_by": args.rank_by,
+                "national_rank": city["rank"],
+                "stockN": city["stockN"],
+                "have_region": city.get("have_region"),
+                "province_name_fa": city.get("province_name_fa"),
+                "enumeration_file": selection["enumeration_file"],
+                "selection_file": "discovery/selected_cities.json",
+                "note": (
+                    "Ranking is by Kilid stockN (housing stock), not official census population."
+                ),
+            },
+        )
+        results.append(
+            {
+                "rank": city["rank"],
+                "city_id": city["city_id"],
+                "label": label,
+                "name_fa": city["name_fa"],
+                "province_name_fa": city.get("province_name_fa"),
+                "stockN": city["stockN"],
+                "have_region": city.get("have_region"),
+                "census_rank_1395": city.get("census_rank_1395"),
+                "population_1395": city.get("population_1395"),
+                "level": args.child_level,
+                "districts_found": result.get("districts_found"),
+                "sale_rows": result.get("sale_rows"),
+                "rent_rows": result.get("rent_rows"),
+                "districts_with_rent": result.get("districts_with_rent"),
+                "validation_status": (result.get("validation") or {}).get("status"),
+                "exit_code": result["exit_code"],
+                "out_dir": str(Path(result["out_dir"]).relative_to(out_dir)),
+            }
+        )
+        if result["exit_code"] != 0:
+            errors.append(
+                {
+                    "stage": "city",
+                    "label": label,
+                    "city_id": city["city_id"],
+                    "exit_code": result["exit_code"],
+                }
+            )
+
+    national_summary = {
+        "generated_at": utc_now_iso(),
+        "scraper_version": SCRAPER_VERSION,
+        "rank_by": args.rank_by,
+        "months_requested": args.months,
+        "selection": selection,
+        "enumeration_coverage": coverage,
+        "cities": results,
+        "skipped_no_data": selection["skipped_no_data"],
+        "national_reports": build_national_reports(out_dir, results, months=args.months),
+        "totals": {
+            "cities_selected": len(selected),
+            "cities_processed": len(results),
+            "districts_total": sum(r["districts_found"] or 0 for r in results),
+            "sale_rows_total": sum(r["sale_rows"] or 0 for r in results),
+            "rent_rows_total": sum(r["rent_rows"] or 0 for r in results),
+            "cities_with_current_rent": sum(1 for r in results if r["districts_with_rent"]),
+            "requests": dict(client.counter),
+        },
+        "errors": errors,
+        "exit_code": 0 if not errors else 1,
+    }
+    write_json(out_dir / "national_summary.json", national_summary)
+
+    print("\n================ national recap ================", flush=True)
+    print(f"{'city':<22}{'districts':>10}{'sale rows':>11}{'rent districts':>16}{'validation':>12}", flush=True)
+    for row in results:
+        print(
+            f"{(row['name_fa'] or row['label'])[:21]:<22}{row['districts_found'] or 0:>10}"
+            f"{row['sale_rows'] or 0:>11}{row['districts_with_rent'] or 0:>16}"
+            f"{(row['validation_status'] or '-'):>12}",
+            flush=True,
+        )
+    print(
+        f"\ntotals: {len(results)} cities, {national_summary['totals']['districts_total']} areas, "
+        f"{national_summary['totals']['sale_rows_total']} sale rows, "
+        f"{national_summary['totals']['cities_with_current_rent']} cities with current rent data",
+        flush=True,
+    )
+    print(
+        f"requests: {client.counter['fetched']} fetched, {client.counter['cached']} cached, "
+        f"{client.counter['failed']} failed, {client.counter['retries']} retries",
+        flush=True,
+    )
+    print(f"summary: {out_dir / 'national_summary.json'}", flush=True)
+    return national_summary["exit_code"]
+
+
+# --------------------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------------------
 
@@ -1515,15 +2250,27 @@ def build_parser() -> argparse.ArgumentParser:
             "examples:\n"
             "  python3 kilid_scraper.py --tehran\n"
             "  python3 kilid_scraper.py --tehran --months 60 --force\n"
+            "  python3 kilid_scraper.py --top-cities 10 --rank-by census1395\n"
+            "  python3 kilid_scraper.py --top-cities 10 --national-only\n"
+            "  python3 kilid_scraper.py --cities 272905,272895\n"
             "  python3 kilid_scraper.py --discover-country\n"
             "  python3 kilid_scraper.py --province 242305\n"
-            "  python3 kilid_scraper.py --city 272905 --child-level NEIGHBORHOOD\n"
+            "  python3 kilid_scraper.py --city 272905\n"
         ),
     )
 
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tehran", action="store_true", help="scrape all Tehran municipal districts (cityId 272905)")
     mode.add_argument("--city", metavar="CITY_ID", help="scrape any city by its Kilid cityId")
+    mode.add_argument(
+        "--top-cities",
+        nargs="?",
+        const=10,
+        type=int,
+        metavar="N",
+        help="scrape the N largest cities (default 10) by Kilid's own city enumeration",
+    )
+    mode.add_argument("--cities", metavar="ID,ID,...", help="scrape an explicit list of city ids")
     mode.add_argument("--province", metavar="PROVINCE_ID", help="discovery only: list the cities of a province")
     mode.add_argument("--discover-country", action="store_true", help="save /provinces and report its schema")
 
@@ -1536,8 +2283,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--child-level",
         default="MUNICIPAL_AREA",
-        choices=["MUNICIPAL_AREA", "NEIGHBORHOOD", "CITY"],
-        help="level of the areas to collect for a city (default MUNICIPAL_AREA)",
+        choices=["MUNICIPAL_AREA", "CITY"],
+        help=(
+            "level of the areas to collect for a city (default MUNICIPAL_AREA). "
+            "NEIGHBORHOOD is rejected by the API ('childLevel is not a market level')."
+        ),
     )
     parser.add_argument(
         "--expect-districts",
@@ -1546,6 +2296,38 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"fail if the discovery count differs (default {TEHRAN_EXPECTED_DISTRICTS} with --tehran, else no check)",
     )
     parser.add_argument("--label", default=None, help="override the label used in file names (e.g. 'tehran')")
+    parser.add_argument(
+        "--rank-by",
+        default="stockN",
+        choices=list(RANKING_FIELDS),
+        help=(
+            "ranking for --top-cities: a Kilid field (stockN/sampleSize/pricePsmMedian) or "
+            "census1395 (hand-entered 1395 census population; selection aid only). Default stockN."
+        ),
+    )
+    parser.add_argument(
+        "--verify-availability",
+        dest="verify_availability",
+        action="store_true",
+        default=True,
+        help="before downloading, check each candidate city exposes areas and substitute the next one (default)",
+    )
+    parser.add_argument(
+        "--no-verify",
+        dest="verify_availability",
+        action="store_false",
+        help="skip the availability check and just take the first N candidates",
+    )
+    parser.add_argument(
+        "--national-only",
+        action="store_true",
+        help="with --top-cities/--cities: enumerate and select only, do not download per-city data",
+    )
+    parser.add_argument(
+        "--include-no-region",
+        action="store_true",
+        help="also consider cities whose /provinces record has haveRegion=false",
+    )
     parser.add_argument("--quiet", action="store_true", help="less progress output")
     parser.add_argument("--version", action="version", version=f"kilid_scraper {SCRAPER_VERSION}")
     return parser
@@ -1558,6 +2340,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     try:
         if args.tehran or args.city:
             return run_city(args)
+        if args.top_cities is not None or args.cities:
+            return run_top_cities(args)
         if args.discover_country:
             return run_discover_country(args)
         return run_province(args)

@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 11,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "78a46ed6-4109-5285-6362-6dff361af0c0",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "272896:1",
+      "district_number": 1,
+      "slug": "shiraz-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "0905c12c-19e5-25a1-f4ef-b7bdf6ae5361",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "272896:2",
+      "district_number": 2,
+      "slug": "shiraz-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "fab15df3-1406-a20b-55a6-2a2366095034",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "272896:3",
+      "district_number": 3,
+      "slug": "shiraz-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "a8f96ea2-d343-77b6-d068-576fc8e6a562",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "272896:4",
+      "district_number": 4,
+      "slug": "shiraz-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "aedd8b8b-d0a4-8ff9-07c9-2668d51c112e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "272896:5",
+      "district_number": 5,
+      "slug": "shiraz-region5"
+    },
+    {
+      "index": 6,
+      "dir": "region-06",
+      "area_id": "78b8f708-ef29-8205-f77a-1e76243fc72c",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 6",
+      "native_key": "272896:6",
+      "district_number": 6,
+      "slug": "shiraz-region6"
+    },
+    {
+      "index": 7,
+      "dir": "region-07",
+      "area_id": "e23f4698-e027-681f-989c-0526ac32a968",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 7",
+      "native_key": "272896:7",
+      "district_number": 7,
+      "slug": "shiraz-region7"
+    },
+    {
+      "index": 8,
+      "dir": "region-08",
+      "area_id": "12d36366-a798-320f-299b-b05b285b3cd5",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 8",
+      "native_key": "272896:8",
+      "district_number": 8,
+      "slug": "shiraz-region8"
+    },
+    {
+      "index": 9,
+      "dir": "region-09",
+      "area_id": "a939a0ee-0fc0-5598-8873-7b6e9d105317",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 9",
+      "native_key": "272896:9",
+      "district_number": 9,
+      "slug": "shiraz-region9"
+    },
+    {
+      "index": 10,
+      "dir": "region-10",
+      "area_id": "deb2ba03-c9df-18e4-a3b2-17afcacb4dea",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 10",
+      "native_key": "272896:10",
+      "district_number": 10,
+      "slug": "shiraz-region10"
+    },
+    {
+      "index": 11,
+      "dir": "region-11",
+      "area_id": "c9550dc4-fa84-aa1e-d974-b906a425603e",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 11",
+      "native_key": "272896:11",
+      "district_number": 11,
+      "slug": "shiraz-region11"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}

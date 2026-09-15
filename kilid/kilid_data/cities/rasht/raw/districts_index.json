@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-09-15T13:04:18Z",
+  "months_requested": 60,
+  "district_count": 5,
+  "districts": [
+    {
+      "index": 1,
+      "dir": "region-01",
+      "area_id": "1893408d-ca96-979b-c24c-2915e158283a",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 1",
+      "native_key": "242556:1",
+      "district_number": 1,
+      "slug": "rasht-region1"
+    },
+    {
+      "index": 2,
+      "dir": "region-02",
+      "area_id": "8b4e344f-d9de-2d81-1292-78ceef313c4a",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 2",
+      "native_key": "242556:2",
+      "district_number": 2,
+      "slug": "rasht-region2"
+    },
+    {
+      "index": 3,
+      "dir": "region-03",
+      "area_id": "c36bce22-5446-9cfb-fdc1-70dfaf56d510",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 3",
+      "native_key": "242556:3",
+      "district_number": 3,
+      "slug": "rasht-region3"
+    },
+    {
+      "index": 4,
+      "dir": "region-04",
+      "area_id": "424ad42e-a515-1f5e-03f5-9c982ea89c67",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 4",
+      "native_key": "242556:4",
+      "district_number": 4,
+      "slug": "rasht-region4"
+    },
+    {
+      "index": 5,
+      "dir": "region-05",
+      "area_id": "079c15c8-a6ef-734f-c4fd-181466ee1048",
+      "level": "MUNICIPAL_AREA",
+      "name_fa": "منطقه 5",
+      "native_key": "242556:5",
+      "district_number": 5,
+      "slug": "rasht-region5"
+    }
+  ],
+  "note": "Directory names come from the API's own district number (nativeKey suffix), never from request ordering."
+}
