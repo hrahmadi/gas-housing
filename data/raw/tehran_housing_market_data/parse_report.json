@@ -265,16 +265,6 @@
       "evidence_tier": "C",
       "verification": "unverified_transcription"
     },
-    "rent_asking_undated_tehran_districts_8_13_14": {
-      "file": "datasets/rent_asking_undated_tehran_districts_8_13_14.csv",
-      "rows": 53,
-      "kind": "rent_observations",
-      "dataset_id": 2,
-      "title": "Rental Prices in Districts 8, 13, 14 (Medium Size, 10-25 Years Old)",
-      "date_jalali_ym": null,
-      "evidence_tier": "C",
-      "verification": "unverified_transcription"
-    },
     "rent_asking_1404-08_tehran_22_districts": {
       "file": "datasets/rent_asking_1404-08_tehran_22_districts.csv",
       "rows": 108,
@@ -327,6 +317,12 @@
     }
   },
   "excluded_files": {
+    "2": {
+      "dataset_id": 2,
+      "file": "excluded/rent_asking_undated_tehran_districts_8_13_14.csv",
+      "rows": 53,
+      "reason": "owner instruction: incomplete — the transcript states the image carried no date, and it covers only districts 8, 13 and 14"
+    },
     "7": {
       "dataset_id": 7,
       "file": "excluded/dataset_7_simulated.csv",
@@ -367,8 +363,7 @@
   },
   "issue_class_counts": {
     "notation": 13,
-    "source_ambiguity": 9,
-    "source_anomaly": 1
+    "source_ambiguity": 9
   },
   "parser_fixes": [
     {
@@ -406,7 +401,7 @@
     "no_sale_to_rent_conversion": "rent_* columns are observed asking rents only; sale_* columns are observed asking sale prices only. No value in this output is derived from the other.",
     "publication_naming": "Files are named measurement-kind + date (+ outlet only where the transcript names one). A file is never named after an outlet we cannot verify.",
     "external_outlets_absent": "No Donya-e-Eqtesad table exists in this archive. The expected 'rent_asking_donyaye_eghtesad_*' and 'sale_price_official_1402' files cannot be produced from this source; dataset 6 is a district average of unverified origin.",
-    "excluded_material": "Dataset 7 is removed from all production files and published separately under excluded/ with excluded_reason on every row."
+    "excluded_material": "Datasets 2 and 7 are removed from all production files and published separately under excluded/ with excluded_reason on every row: 2 = incomplete (undated, only districts 8/13/14, owner instruction), 7 = simulated provenance."
   },
   "unit_rules": {
     "money_output": "toman",
@@ -416,11 +411,11 @@
     "persian_decimal_slash": "'1/2 میلیارد' read as 1.2 billion; flagged for review"
   },
   "row_counts": {
-    "rent_observations": 210,
+    "rent_observations": 157,
     "sale_observations": 82,
     "district_sale_stats": 23,
-    "excluded": 29,
-    "publication_files": 7
+    "excluded": 82,
+    "publication_files": 6
   },
   "flag_counts": {
     "age_new_build": 8,
@@ -437,7 +432,7 @@
     "persian_decimal_slash:1/4": 1
   },
   "warnings": [
-    "EXCLUDED: dataset 7 ('Simulated web research from fardayeeghtesad.com') is out of every production file; it lives in excluded/ with excluded_reason per row.",
+    "EXCLUDED: dataset 2 (undated, districts 8/13/14 only) and dataset 7 (simulated Fardayeeghtesad block) are out of every production file; both live in excluded/ with excluded_reason per row.",
     "No Donya-e-Eqtesad table exists in this archive; the only outlet named is Fardayeeghtesad, and that block is the simulated one.",
     "Every remaining dataset is a transcription of images (evidence_tier=C, verification=unverified_transcription): values need checking against the original screenshots before publication.",
     "Datasets 1 and 2 carry no date; dataset 1 is also neighbourhood-level with no floor area.",

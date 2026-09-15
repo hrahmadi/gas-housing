@@ -1,0 +1,531 @@
+{
+  "input": {
+    "path": "data/raw/donya-e-eqtesad_rent-asking_tir-1404.txt",
+    "bytes": 4731,
+    "sha256": "e2bed3dbfeee8b5f48312272bcb483f2d52e24b26830845138452f3f11635f95",
+    "format": "chat paste: one long line, row and column boundaries lost"
+  },
+  "header_metadata": {
+    "title": "اجاره‌بهای پیشنهادی آپارتمان‌های میان‌متراژ در مناطق ۲۲گانه تهران - تیر ۱۴۰۴",
+    "outlet_raw": "دنیای اقتصاد (Donya-e-Eqtesad)",
+    "date_raw": "تیر ۱۴۰۴",
+    "note": "مقادیر ترکیبی (مانند 6 / 15.5) و خط تیره (-) دقیقاً مطابق با جدول اصلی درج شده‌اند."
+  },
+  "column_header_line": "منطقه | محله | سن بنا (سال) | متراژ (مترمربع) | اجاره بها (میلیون تومان) | ودیعه (میلیون تومان)",
+  "date_jalali_ym": null,
+  "outlet": "دنیای اقتصاد (Donya-e-Eqtesad)",
+  "outlet_evidence": "owner-supplied 'منبع' line; the file itself names no outlet",
+  "row_counts": {
+    "rows_detected": 110,
+    "fully_parsed": 91,
+    "ambiguous_split": 18,
+    "unparsed": 1,
+    "district_markers_corrupt": 42,
+    "district_inferred_by_gap_fill": 5
+  },
+  "split_constraints": {
+    "building_age_years": [
+      1,
+      45
+    ],
+    "floor_area_sqm": [
+      40,
+      260
+    ],
+    "rent_toman_millions": [
+      0,
+      120
+    ],
+    "deposit_toman_millions": [
+      100,
+      3000
+    ]
+  },
+  "split_rules": [
+    "a field written with a leading zero is rejected ('01500' is never written for 1500)",
+    "an 'a / b' rent range, a decimal rent (17.5) and a '-' are preserved tokens, not digits",
+    "a row is accepted only when exactly one admissible split exists"
+  ],
+  "ambiguous_rows": [
+    {
+      "source_row_index": 10,
+      "district_number": 2,
+      "area_name": "دریا نو - مقهری",
+      "row_raw": "۲دریا نو - مقهری87831300",
+      "tail": "87831300",
+      "candidates": [
+        {
+          "age": 8,
+          "area": 78,
+          "rent": 3.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1300
+        },
+        {
+          "age": 8,
+          "area": 78,
+          "rent": 31.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 25,
+      "district_number": 5,
+      "area_name": "آبشار - حاجی زاده",
+      "row_raw": "۵آبشار - حاجی زاده77711900",
+      "tail": "77711900",
+      "candidates": [
+        {
+          "age": 7,
+          "area": 77,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1900
+        },
+        {
+          "age": 7,
+          "area": 77,
+          "rent": 11.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 900
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 29,
+      "district_number": 6,
+      "area_name": "سنایی - نظری",
+      "row_raw": "۶سنایی - نظری98322700",
+      "tail": "98322700",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 83,
+          "rent": 2.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2700
+        },
+        {
+          "age": 9,
+          "area": 83,
+          "rent": 22.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 700
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 47,
+      "district_number": 10,
+      "area_name": "جیحون - قصرالدشت",
+      "row_raw": "۱۰جیحون - قصرالدشت98511600",
+      "tail": "98511600",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 85,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1600
+        },
+        {
+          "age": 9,
+          "area": 85,
+          "rent": 11.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 600
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 51,
+      "district_number": null,
+      "area_name": "امیریه - بشیری",
+      "row_raw": "۱*امیریه - بشیری89001300",
+      "tail": "89001300",
+      "candidates": [
+        {
+          "age": 8,
+          "area": 90,
+          "rent": 0.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1300
+        },
+        {
+          "age": 8,
+          "area": 90,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 59,
+      "district_number": 12,
+      "area_name": "مولوی",
+      "row_raw": "۱۲مولوی108012300",
+      "tail": "108012300",
+      "candidates": [
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2300
+        },
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 69,
+      "district_number": null,
+      "area_name": "صاحب الزمان - گمنام",
+      "row_raw": "۱*صاحب الزمان - گمنام99012500",
+      "tail": "99012500",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 90,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2500
+        },
+        {
+          "age": 9,
+          "area": 90,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 500
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 70,
+      "district_number": null,
+      "area_name": "صددستگاه - خیری",
+      "row_raw": "۱*صددستگاه - خیری109012900",
+      "tail": "109012900",
+      "candidates": [
+        {
+          "age": 10,
+          "area": 90,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2900
+        },
+        {
+          "age": 10,
+          "area": 90,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 900
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 75,
+      "district_number": 15,
+      "area_name": "مسعودیه",
+      "row_raw": "۱۵مسعودیه87512250",
+      "tail": "87512250",
+      "candidates": [
+        {
+          "age": 8,
+          "area": 75,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2250
+        },
+        {
+          "age": 8,
+          "area": 75,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 250
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 76,
+      "district_number": 16,
+      "area_name": "نازی آباد - رضوان",
+      "row_raw": "۱۶نازی آباد - رضوان78012800",
+      "tail": "78012800",
+      "candidates": [
+        {
+          "age": 7,
+          "area": 80,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2800
+        },
+        {
+          "age": 7,
+          "area": 80,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 800
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 81,
+      "district_number": null,
+      "area_name": "امامزاده حسن",
+      "row_raw": "۱*امامزاده حسن99012300",
+      "tail": "99012300",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 90,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2300
+        },
+        {
+          "age": 9,
+          "area": 90,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 87,
+      "district_number": null,
+      "area_name": "شهرک ولیعصر - بارزگان",
+      "row_raw": "۱*شهرک ولیعصر - بارزگان108012250",
+      "tail": "108012250",
+      "candidates": [
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2250
+        },
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 250
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 89,
+      "district_number": null,
+      "area_name": "شادآباد - الهر",
+      "row_raw": "۱*شادآباد - الهر108012300",
+      "tail": "108012300",
+      "candidates": [
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2300
+        },
+        {
+          "age": 10,
+          "area": 80,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 90,
+      "district_number": null,
+      "area_name": "خلیج فارس - غفاری",
+      "row_raw": "۱*خلیج فارس - غفاری107512300",
+      "tail": "107512300",
+      "candidates": [
+        {
+          "age": 10,
+          "area": 75,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2300
+        },
+        {
+          "age": 10,
+          "area": 75,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 93,
+      "district_number": 19,
+      "area_name": "عبدل آباد - هفدهم",
+      "row_raw": "۱۹عبدل آباد - هفدهم98512300",
+      "tail": "98512300",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 85,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2300
+        },
+        {
+          "age": 9,
+          "area": 85,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 300
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 102,
+      "district_number": null,
+      "area_name": "وردآورد - ولیعصر",
+      "row_raw": "۲*وردآورد - ولیعصر68911500",
+      "tail": "68911500",
+      "candidates": [
+        {
+          "age": 6,
+          "area": 89,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1500
+        },
+        {
+          "age": 6,
+          "area": 89,
+          "rent": 11.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 500
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 103,
+      "district_number": null,
+      "area_name": "چیتگر - جهاد",
+      "row_raw": "۲*چیتگر - جهاد69012400",
+      "tail": "69012400",
+      "candidates": [
+        {
+          "age": 6,
+          "area": 90,
+          "rent": 1.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 2400
+        },
+        {
+          "age": 6,
+          "area": 90,
+          "rent": 12.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 400
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    },
+    {
+      "source_row_index": 109,
+      "district_number": null,
+      "area_name": "شهرک راه آهن - بنفشه ها",
+      "row_raw": "۲*شهرک راه آهن - بنفشه ها910521400",
+      "tail": "910521400",
+      "candidates": [
+        {
+          "age": 9,
+          "area": 105,
+          "rent": 2.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 1400
+        },
+        {
+          "age": 9,
+          "area": 105,
+          "rent": 21.0,
+          "rent_min": null,
+          "rent_max": null,
+          "deposit": 400
+        }
+      ],
+      "note": "the rent/deposit (or area/rent) boundary is not recoverable from the paste"
+    }
+  ],
+  "unparsed_rows": [
+    {
+      "source_row_index": 56,
+      "row_raw": "۱۲",
+      "reason": "no name+digits split"
+    }
+  ],
+  "known_defects_of_the_input": [
+    "the district marker is corrupted for 42 rows ('۱*'/'۲*' where 11-20 should be); districts were gap-filled between clean anchors and flagged",
+    "the numeric columns are concatenated with no delimiter, so the rent/deposit boundary is arithmetically ambiguous in many rows",
+    "re-exporting the table with delimiters (or supplying the original PDF/Excel) would make every row unambiguous"
+  ]
+}

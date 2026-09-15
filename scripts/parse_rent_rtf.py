@@ -204,6 +204,10 @@ DISTRICT_STATS_FIELDS: Tuple[str, ...] = (
 
 #: Datasets that must never enter a production file. The reason travels with the rows.
 EXCLUDED_DATASETS: Dict[int, str] = {
+    2: (
+        "owner instruction: incomplete — the transcript states the image carried no date, and "
+        "it covers only districts 8, 13 and 14"
+    ),
     7: "simulated / unreliable provenance (the transcript labels it 'Simulated web research from fardayeeghtesad.com')",
 }
 
@@ -1134,8 +1138,9 @@ def main(argv: Optional[List[str]] = None) -> int:
                 "produced from this source; dataset 6 is a district average of unverified origin."
             ),
             "excluded_material": (
-                "Dataset 7 is removed from all production files and published separately under "
-                "excluded/ with excluded_reason on every row."
+                "Datasets 2 and 7 are removed from all production files and published separately "
+                "under excluded/ with excluded_reason on every row: 2 = incomplete (undated, only "
+                "districts 8/13/14, owner instruction), 7 = simulated provenance."
             ),
         },
         "unit_rules": {
@@ -1154,8 +1159,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         },
         "flag_counts": dict(sorted(flag_counts.items(), key=lambda item: -item[1])),
         "warnings": [
-            "EXCLUDED: dataset 7 ('Simulated web research from fardayeeghtesad.com') is out of every "
-            "production file; it lives in excluded/ with excluded_reason per row.",
+            "EXCLUDED: dataset 2 (undated, districts 8/13/14 only) and dataset 7 (simulated "
+            "Fardayeeghtesad block) are out of every production file; both live in excluded/ "
+            "with excluded_reason per row.",
             "No Donya-e-Eqtesad table exists in this archive; the only outlet named is "
             "Fardayeeghtesad, and that block is the simulated one.",
             "Every remaining dataset is a transcription of images (evidence_tier=C, "
