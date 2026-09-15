@@ -6,11 +6,12 @@ filled in, and everything doubtful is flagged rather than guessed.
 | Source | Format | Parser | Output |
 | --- | --- | --- | --- |
 | `../rent-data-donyaeghtesad.rtf` (mixed conversation transcript) | RTF | `scripts/parse_rent_rtf.py` | `observations/`, `datasets/`, `excluded/`, `parse_report.json` |
-| `../donya-e-eqtesad_rent-asking_tir-1404.txt` (owner chat paste) | plain text | `scripts/parse_donyae_eqtesad.py` | `sources/donya-e-eqtesad_1404-04/` |
+| `../donya-e-eqtesad_rent-asking_tir-1404.md` (Donya-e-Eqtesad table, delimited) | markdown | `scripts/parse_donyae_eqtesad.py` | `sources/donya-e-eqtesad_1404-04/` |
+| `../donya-e-eqtesad_rent-asking_tir-1404.corrupt-paste.txt` (superseded first paste) | plain text | same script (`--input`) | `sources/…/corrupt-paste/` |
 
 ```bash
 python3 scripts/parse_rent_rtf.py          # transcript archive
-python3 scripts/parse_donyae_eqtesad.py    # Donya-e-Eqtesad paste
+python3 scripts/parse_donyae_eqtesad.py    # Donya-e-Eqtesad table (canonical)
 ```
 
 Row conservation in the transcript archive is exact: 323 source table rows →
@@ -34,8 +35,9 @@ tehran_housing_market_data/
 │   └── sale_price_kilid_images_undated_tehran_neighbourhoods.csv   42
 ├── sources/
 │   └── donya-e-eqtesad_1404-04/        second source: Donya-e-Eqtesad, Tir 1404
-│       ├── rent_asking.csv             110 rows (see its README)
-│       └── parse_report.json
+│       ├── rent_asking.csv             109 rows, 109 fully parsed (see its README)
+│       ├── parse_report.json
+│       └── corrupt-paste/              the superseded first paste, kept for audit
 ├── excluded/                           not to be used — reason on every row
 │   ├── rent_asking_undated_tehran_districts_8_13_14.csv   53 rows
 │   └── dataset_7_simulated.csv                            29 rows

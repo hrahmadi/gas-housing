@@ -1,88 +1,101 @@
 # Donya-e-Eqtesad rent-asking table — Tir 1404
 
-Second source in this collection: **`data/raw/donya-e-eqtesad_rent-asking_tir-1404.txt`**
-(owner-supplied paste, `sha256` in `parse_report.json`), parsed by
-`scripts/parse_donyae_eqtesad.py`.
+Second source in this collection. Canonical input:
+**`data/raw/donya-e-eqtesad_rent-asking_tir-1404.md`** (delimited markdown table).
+Parser: `scripts/parse_donyae_eqtesad.py`.
 
 ```bash
-python3 scripts/parse_donyae_eqtesad.py        # rewrites rent_asking.csv + parse_report.json
+python3 scripts/parse_donyae_eqtesad.py                     # canonical (markdown) input
+python3 scripts/parse_donyae_eqtesad.py \
+  --input data/raw/donya-e-eqtesad_rent-asking_tir-1404.corrupt-paste.txt \
+  --out   sources/donya-e-eqtesad_1404-04/corrupt-paste     # the earlier paste, for audit
 ```
 
-**This is new data, not a duplicate of the archive.** Dataset 3 of the RTF archive is the *same
-Donya-e-Eqtesad series* (its English title in the transcript is *"Suggested rental prices for
-medium-sized apartments in the 22 districts of Tehran"*, the same six columns, the same
-`6 / 15.5`-style composite cells) but for **Aban 1404**, with different rows and values. This file
-covers **Tir 1404**. Together they give two months of the same series.
+The parser auto-detects the format. Both produce the same schema (with a `source_format` column),
+so the two transcriptions can be diffed — and they were:
 
-Provenance, exactly as supplied: `منبع: دنیای اقتصاد (Donya-e-Eqtesad)` ·
-`تاریخ: تیر ۱۴۰۴` → `date_jalali_ym = 1404-04`. The attribution is **owner-provided**; the file
-itself names no outlet beyond that header line.
+| input | rows | fully parsed | ambiguous | unparsed |
+| --- | --- | --- | --- | --- |
+| `…_tir-1404.md` (canonical, delimited) | 109 | **109** | 0 | 0 |
+| `…_tir-1404.corrupt-paste.txt` (superseded) | 110 | 91 | 18 | 1 |
 
-## Why this file needed a different parser
+Provenance, exactly as supplied: `منبع: دنیای اقتصاد (Donya-e-Eqtesad)` · `تاریخ: تیر ۱۴۰۴` →
+`date_jalali_ym = 1404-04`. The attribution is **owner-provided**; the file names no outlet beyond
+that header line. `evidence_tier = C`, `verification = unverified_owner_transcription`.
 
-It is a **chat paste**, so the table structure is gone in two ways:
+**Not a duplicate of the archive:** dataset 3 of the RTF archive is the same Donya-e-Eqtesad
+series (its English title in that transcript is *"Suggested rental prices for medium-sized
+apartments in the 22 districts of Tehran"*, same six columns, same composite cells) but for
+**Aban 1404**, with different rows and values. Two months of one series are now held.
 
-1. **No row boundaries** — all rows are concatenated into a single line. A row starts with a
-   district marker followed immediately by a Persian letter, which is the only reliable signal.
-2. **No column boundaries** — each row is `<district><name><age><area><rent><deposit>` with the
-   four numeric columns glued together. Only three tokens survive: an `a / b` rent range, a
-   decimal rent (`17.5`), and a `-` for a missing rent.
+## What the clean transcription fixed
 
-The parser therefore *enumerates* every arithmetically admissible split of each glued digit run
-and accepts a row only when exactly one split exists. Rules, all recorded in `parse_report.json`:
+The canonical input resolves everything the corrupted paste could not:
 
-* ranges for admissibility come from the observed values of this table plus its sibling Aban 1404
-  table: age 1–45, area 40–260 m², rent 0–120, deposit 100–3000 (million toman);
-* a field written with a leading zero is rejected (`01500` is never written for 1500);
-* a row whose split is not unique is **left empty and flagged with its candidate list** — never
-  guessed;
-* the verbatim row text is kept in `row_raw`, so any row can be finished by hand.
+* **18 rows** whose rent/deposit boundary was arithmetically undecidable (e.g. `87831300` =
+  rent 3 / deposit 1300 **or** rent 31 / deposit 300). All 18 are now read directly.
+* **1 row** (a stray `۱۲` fragment) that the paste could not parse at all.
+* **42 corrupted district markers** (`۱*`/`۲*` where 11–20 should be).
 
-## District markers are unreliable in the paste — and were cross-checked
+**The "leave it empty, flag it, list the candidates" policy was validated by this second
+transcription:** the true reading was present among the enumerated candidates in **18 of 18**
+cases — and in 17 of those the *other* candidate was the plausible-looking one (rent 1, deposit
+1900 versus the actual rent 11, deposit 900). Any plausibility heuristic would have guessed wrong
+on most rows; refusing to guess was the right call.
 
-42 rows carry a corrupted marker (`۱*`/`۲*` where 11–20 should be). Worse, the surviving markers
-**disagree with the earlier table for about a fifth of comparable rows** (e.g. the paste puts
-`تجریش` in 2 while the Aban 1404 table puts it in 1). District geography does not change month to
-month, so the parser resolves each row against the earlier tables in this repo and records where
-the answer came from:
+## Values preserved as written
 
-| `district_number_source` | Rows | Meaning |
+| pattern | rows | handling |
 | --- | --- | --- |
-| `sibling_table_name_match` | 65 | matched a neighbourhood that dataset 2/3 of the archive places in a known district — **this is the trustworthy column** |
-| `marker` | 25 | clean marker, no name match available (not cross-checked) |
-| `gap_fill` | 5 | corrupted marker resolved between clean anchors |
-| `unknown` | 15 | left empty, flagged `district_unresolved` |
+| rent range, e.g. `6 / 15.5` | 3 | `rent_toman` empty, `rent_toman_min`/`_max` filled, flag `rent_range_as_written` |
+| rent `0` | 2 | `rent_toman = 0`, flagged `zero_rent_as_written` (free? withheld? not told) |
+| rent `-` | 1 | rent empty, flag `rent_missing_as_written` |
+| decimal rent, e.g. `17.5`, `4.5`, `6.5` | 6 | parsed as written |
 
-Every disagreement is recorded per row as
-`district_marker_disagrees_with_sibling_table:<marker>_vs_<verified>`.
+## ⚠️ District cross-check: 7 rows disagree with the earlier table
+
+The district printed in the table is kept verbatim as `district_number` and is never overwritten.
+Each row is also compared with the neighbourhood→district mapping derived from the earlier tables
+in this repo (dataset 3 of the archive, Aban 1404); the result is in `district_cross_check`:
+
+| result | rows |
+| --- | --- |
+| `match` | 58 |
+| `conflict` | **7** |
+| `unchecked` (no counterpart name) | 44 |
+
+| row | neighbourhood | printed district | earlier table says |
+| --- | --- | --- | --- |
+| 4 | گیشا | 1 | 2 |
+| 5 | تجریش - فخارسر | 2 | 1 |
+| 6 | زعفرانیه - سمین | 2 | 1 |
+| 7 | ولنجک | 2 | 1 |
+| 20 | هروی - پناهی نیا | 4 | 5 |
+| 21 | پونک - کمالی | 4 | 5 |
+| 31 | شهرداری شمالی - موزه | 7 | 6 |
+
+All seven sit in the **first half** of the table, which is also the half affected by the
+side-by-side merge you performed. Two readings are possible and the file cannot settle them:
+either the source table genuinely groups these neighbourhoods differently from the Aban table, or
+the merge shifted the district column for part of the first half. **This needs the original
+layout** — a screenshot or PDF of the Tir 1404 table would resolve it in one look.
+
+## Columns
+
+`district_number`, `district_number_source` (`print` | `marker` | `gap_fill` | `unknown`),
+`district_cross_check` (`match` | `conflict` | `unchecked`), `district_marker_raw`, `area_name`,
+`building_age_years`, `floor_area_sqm`, `rent_toman` (`_min`/`_max` for ranges), `deposit_toman`,
+`rent_raw`, `row_raw`, `source_format`, `flag_amount_ambiguous`, `issue_classes`, `notes`,
+`source_row_index`, plus provenance (`outlet`, `outlet_evidence`, `evidence_tier`, `verification`,
+`date_jalali_raw`, `date_jalali_ym`, `source_file`).
 
 ## Result
 
 | | |
 | --- | --- |
-| rows detected | 110 |
-| **fully parsed** | **91** |
-| ambiguous split (values empty, candidates recorded) | 18 |
-| unparsed | 1 (a stray `۱۲` fragment left over from the paste) |
-| districts resolved | all 22 present, 2–7 rows each |
-| rows with a usable rent | 90 |
-| rows with a deposit | 91 |
-
-Columns: `district_number`, `district_number_source`, `district_marker_raw`, `area_name`,
-`building_age_years`, `floor_area_sqm`, `rent_toman` (or `_min`/`_max` for a range),
-`deposit_toman`, `rent_raw`, `row_raw`, `flag_amount_ambiguous`, `issue_classes`, `notes`,
-`source_row_index`, plus provenance (`outlet`, `outlet_evidence`, `evidence_tier=C`,
-`verification=unverified_owner_paste`, `date_jalali_raw`, `date_jalali_ym`).
-
-## What would finish this dataset
-
-The 18 ambiguous rows are ambiguous **in the paste**, not in the source table: their rent/deposit
-boundary is arithmetically undecidable (e.g. `87831300` is either rent 3 / deposit 1300 or rent 31
-/ deposit 300). Supplying any of the following makes every row unambiguous — and the parser will
-then re-run with identical rules:
-
-1. the original PDF/Excel export, or
-2. the same table pasted **with delimiters** (tabs or `|`, as the Aban 1404 table arrived), or
-3. just the rent and deposit for the 18 rows listed in `parse_report.json → ambiguous_rows`.
-
-Until then those 18 rows stay empty and flagged, which is the point: nothing here is guessed.
+| rows | 109 |
+| fully parsed | 109 |
+| districts covered | all 22 (2–7 rows each) |
+| rows with a usable rent | 106 (3 are ranges, 2 are literal zeros, 1 is a dash) |
+| rows with a deposit | 109 |
+| ambiguous / unparsed | 0 / 0 |
