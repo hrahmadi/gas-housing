@@ -48,9 +48,9 @@ the answer came from:
 
 | `district_number_source` | Rows | Meaning |
 | --- | --- | --- |
-| `sibling_table_name_match` | 69 | matched a neighbourhood that dataset 2/3 of the archive places in a known district — **this is the trustworthy column** |
-| `marker` | 24 | clean marker, no name match available (not cross-checked) |
-| `gap_fill` | 2 | corrupted marker resolved between clean anchors |
+| `sibling_table_name_match` | 65 | matched a neighbourhood that dataset 2/3 of the archive places in a known district — **this is the trustworthy column** |
+| `marker` | 25 | clean marker, no name match available (not cross-checked) |
+| `gap_fill` | 5 | corrupted marker resolved between clean anchors |
 | `unknown` | 15 | left empty, flagged `district_unresolved` |
 
 Every disagreement is recorded per row as
