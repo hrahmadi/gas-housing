@@ -14,6 +14,11 @@
 Per area, five endpoints were archived: `/stats`, `/area-series` (60 months requested),
 `/supply`, `/floor-area`, `/forecast`. Nothing was smoothed, filled or converted.
 
+Archive on disk: **796 files, 8.73 MB**, including **695 byte-verbatim API responses**
+(5 per area × 139 area directories: 117 in `cities/`, plus the 22 Tehran areas kept at the
+root) and 30 discovery files. Normalized rows: 4,959 sale-price rows, 117 area-availability
+rows, 10 city-availability rows, 450 enumerated cities.
+
 Normalized convenience layers (raw JSON stays authoritative):
 
 ```
@@ -27,11 +32,12 @@ kilid/kilid_data/cities/<label>/…                                             
 ## 2. The headline finding: there is no rent data
 
 **0 of 117 areas — in all 10 cities — expose a populated `ASKING_RENT` section.** Every one
-returns `{"empty": true, "entries": []}`. Also:
+returns `{"empty": true, "entries": []}` (117 empty sections, 0 missing sections, 0 entries). Also:
 
 * `/area-series` accepts `metric` but ignores it (`metric=ASKING_RENT` returns the sale payload
   unchanged) — there is no rent *series* endpoint.
-* Rent history is therefore `unknown`, not `no`, and never `0`.
+* `kilid_*_rent_available.csv` files exist but are header-only. Rent history is `unknown`,
+  never `no`, and never `0`.
 * Consequence: **Kilid cannot be a rent source for this project.** Rent has to come from the
   existing SCI/Tayebi datasets (`data/tehran_rent_district.csv`), or the question has to be
   reframed around sale-price affordability.
@@ -65,13 +71,34 @@ returns `{"empty": true, "entries": []}`. Also:
 
 * `source: "listing"` everywhere — these are **asking prices from listings**, not transactions
   and not Statistical-Center statistics. `trust: "DIRECT"` only means "not modelled by Kilid".
-* Tehran district 20: 8 of its 60 months (`1404-08`…`1405-03`) are `trust: "MODELED"` with
-  `sampleSize` 1–19. Treat as model output, not observation.
+* **14.1% of all rows are model output, not observations** (`trust: "MODELED"`): 699 of 4,959.
+  Concentrated early (1400-06…1400-10 carry ~50 modeled rows per month) and very uneven by city:
+
+  | city | rows | modeled | share | rows with `sampleSize` < 10 |
+  | --- | --- | --- | --- | --- |
+  | Tehran | 1,320 | 8 | 0.6% | 2 |
+  | Mashhad | 678 | 114 | 16.8% | 94 |
+  | Isfahan | 769 | 131 | 17.0% | 116 |
+  | Karaj | 612 | 45 | 7.4% | 36 |
+  | Shiraz | 610 | 101 | 16.6% | 86 |
+  | Tabriz | 317 | 100 | 31.5% | 94 |
+  | Qom | 131 | 43 | 32.8% | 36 |
+  | Ahvaz | 182 | 73 | 40.1% | 70 |
+  | Urmia | 143 | 0 | 0.0% | 0 |
+  | Rasht | 197 | 84 | 42.6% | 64 |
+
+  Tehran district 20 is the only Tehran case (8 months, `1404-08`…`1405-03`, `sampleSize` 1–19);
+  every other Tehran row is `DIRECT`.
+* **Thin samples are common outside Tehran**: 598 rows (12%) have `sampleSize` < 10 and 740 (15%)
+  have < 50, against a median of 1,952 and a maximum of 82,446. Any city-level index built from
+  these series needs a sample-size floor, or the modeled and thin rows will dominate the movement.
 * `/stats` also carries a `TRANSACTION` group, stale at `1400-03` for every Tehran district —
   kept in raw, deliberately not merged into the sale CSV.
 * Karaj, Qom, Ahvaz: individual areas end 1+ months before their city's modal period.
 * `windowMonths: 3` — the last point is a smoothed 3-month window, and
   `lastObservedPeriodCode` runs one month ahead of `series.lastPeriodCode` (`1405-06` vs `1405-05`).
+* `supply` series length varies (12 monthly points for 86 of 117 areas, but 4–11 points for the
+  rest), while `floor-area` (6 buckets) and `forecast` (`available: true`) are present everywhere.
 
 ## 5. Reproduce / extend
 
