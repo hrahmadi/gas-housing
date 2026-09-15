@@ -122,6 +122,13 @@ exists in the archive; the larger-apartment rent table in it is dataset 3, dated
 
 * **Rent and sale are never interconverted.** `rent_*` columns are observed asking rents;
   `sale_*`/`price_psm_*` are observed asking sale prices; no column is derived from the other.
+* **Owner corrections never overwrite a source value.** They live in their own file
+  (`../donya-e-eqtesad_rent-asking_tir-1404.corrections.csv`) and fill `district_number` while
+  `district_printed` keeps what the table said.
+* **Known cross-source discrepancy:** the Aban 1404 table's district labels (dataset 3 in
+  `observations/rent_observations.csv`) are themselves unverified and are wrong in at least one
+  case — it puts هروی in district 5, while the owner's geographic check confirms district 4 (as
+  printed in the Tir 1404 table). Treat dataset 3's `district_number` as unverified.
 * **Methodology is frozen.** New source problems get a new flag class, not a re-tuning that would
   move existing values.
 * **Raw + parsed are always kept side by side**: `deposit_raw`/`deposit_toman`,

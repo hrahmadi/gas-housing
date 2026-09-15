@@ -1,0 +1,8 @@
+source_row_index,area_name,district_printed,district_verified,basis,verified_by,note
+4,گیشا,1,2,geographic verification (northwest Tehran, bounded by Chamran / Hakim / Jalal Al-Ahmad),owner,printed district was wrong
+5,تجریش - فخارسر,2,1,geographic verification (centre of Shemiranat, northernmost Tehran),owner,printed district was wrong
+6,زعفرانیه - سمین,2,1,geographic verification (northern Shemiranat, Sa'dabad Palace),owner,printed district was wrong
+7,ولنجک,2,1,geographic verification (foothills of Tochal, northern Tehran),owner,printed district was wrong
+20,هروی - پناهی نیا,4,4,geographic verification (northeast Tehran),owner,printed district confirmed correct - the earlier Aban 1404 table's district 5 is the wrong one
+21,پونک - کمالی,4,5,geographic verification (Punak is mainly district 5; the Kamali sub-location falls there),owner,printed district was wrong
+31,شهرداری شمالی - موزه,7,6,geographic verification (Shahrdari and the Museum area are district 6),owner,printed district was wrong

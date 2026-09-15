@@ -56,6 +56,8 @@ FIELDS: Tuple[str, ...] = (
     "source_row_index",
     "source_format",
     "district_number",
+    "district_printed",
+    "district_correction",
     "district_number_source",
     "district_cross_check",
     "district_marker_raw",
@@ -84,6 +86,47 @@ JALALI_MONTHS = (
     ("فروردین", 1), ("اردیبهشت", 2), ("خرداد", 3), ("تیر", 4), ("مرداد", 5), ("شهریور", 6),
     ("مهر", 7), ("آبان", 8), ("آذر", 9), ("دی", 10), ("بهمن", 11), ("اسفند", 12),
 )
+
+
+def load_corrections(path: Optional[Path]) -> Dict[int, Dict[str, Any]]:
+    """Owner-supplied district corrections, keyed by source row index.
+
+    A correction never overwrites the printed value: it fills ``district_number`` (the value to
+    use) while ``district_printed`` keeps what the table said, and every correction carries its
+    basis and who verified it. Corrections live in their own file so the raw paste stays raw.
+    """
+    corrections: Dict[int, Dict[str, Any]] = {}
+    if not path or not path.exists():
+        return corrections
+    with open(path, encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            index = str(row.get("source_row_index") or "").strip()
+            if not index.isdigit():
+                continue
+            corrections[int(index)] = {
+                "area_name": str(row.get("area_name") or "").strip(),
+                "printed": int(row["district_printed"]) if str(row.get("district_printed") or "").strip().isdigit() else None,
+                "verified": int(row["district_verified"]) if str(row.get("district_verified") or "").strip().isdigit() else None,
+                "basis": str(row.get("basis") or "").strip(),
+                "verified_by": str(row.get("verified_by") or "").strip(),
+                "note": str(row.get("note") or "").strip(),
+            }
+    return corrections
+
+
+def apply_correction(record: Dict[str, Any], correction: Optional[Dict[str, Any]]) -> List[str]:
+    """Apply an owner correction if the printed district still matches what was verified."""
+    if not correction:
+        return []
+    printed = record.get("district_printed")
+    if correction["printed"] is not None and printed is not None and correction["printed"] != printed:
+        return [f"correction_not_applied_row_mismatch:printed_{printed}_expected_{correction['printed']}"]
+    record["district_number"] = correction["verified"]
+    if correction["verified"] == printed:
+        record["district_correction"] = "confirmed"
+        return ["district_confirmed_by_owner_geographic_check"]
+    record["district_correction"] = "corrected"
+    return [f"district_corrected_by_owner:{printed}_to_{correction['verified']}"]
 
 
 def display_path(path: Path) -> str:
@@ -339,6 +382,8 @@ def base_record(meta: Dict[str, str], date_ym: Optional[str], input_path: Path, 
     return {
         "source_format": source_format,
         "district_number": None,
+        "district_printed": None,
+        "district_correction": "",
         "district_number_source": "",
         "district_cross_check": "",
         "district_marker_raw": "",
@@ -361,6 +406,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", default=str(DEFAULT_INPUT))
     parser.add_argument("--out", default=str(DEFAULT_OUT))
+    parser.add_argument("--corrections", default=str(DEFAULT_INPUT.with_suffix(".corrections.csv")),
+                        help="owner corrections applied to district_number (printed value is kept)")
     args = parser.parse_args(argv)
 
     input_path = Path(args.input).resolve()
@@ -378,6 +425,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             break
 
     sibling_index = load_sibling_district_index(REPO_ROOT)
+    corrections = load_corrections(Path(args.corrections))
     records: List[Dict[str, Any]] = []
     ambiguous: List[Dict[str, Any]] = []
     unparsed: List[Dict[str, Any]] = []
@@ -422,7 +470,14 @@ def main(argv: Optional[List[str]] = None) -> int:
 
             record["district_number"] = cells["district"]
             record["district_number_source"] = "print"
-            check, detail = cross_check_district(cells["name"], cells["district"], sibling_index)
+            record["district_printed"] = cells["district"]
+            record["district_correction"] = ""
+            for note in apply_correction(record, corrections.get(index)):
+                notes.append(note)
+                classes.append("notation")
+            if record["district_correction"]:
+                record["district_number_source"] = "owner_geographic_verification"
+            check, detail = cross_check_district(cells["name"], record["district_number"], sibling_index)
             record["district_cross_check"] = check
             if detail:
                 notes.append(detail)
@@ -433,6 +488,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                         "source_row_index": index,
                         "area_name": cells["name"],
                         "district_printed": cells["district"],
+                        "district_used": record["district_number"],
                         "sibling_table_district": sibling_index[re.split(r"[،,\-–]", cells["name"])[0].strip()],
                     }
                 )
@@ -521,8 +577,15 @@ def main(argv: Optional[List[str]] = None) -> int:
 
                 record["rent_raw"] = row["tail"]
                 record["district_number"] = block["district"]
+                record["district_printed"] = block["district"]
+                record["district_correction"] = ""
                 record["district_number_source"] = "marker" if block["clean"] else ("gap_fill" if block["district"] else "unknown")
-                check, detail = cross_check_district(record["area_name"], block["district"], sibling_index)
+                for note in apply_correction(record, corrections.get(index)):
+                    notes.append(note)
+                    classes.append("notation")
+                if record["district_correction"]:
+                    record["district_number_source"] = "owner_geographic_verification"
+                check, detail = cross_check_district(record["area_name"], record["district_number"], sibling_index)
                 record["district_cross_check"] = check
                 if detail:
                     notes.append(detail)
@@ -530,6 +593,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                     classes.append("source_ambiguity")
                     cross_conflicts.append({"source_row_index": index, "area_name": record["area_name"],
                                             "district_printed": block["district"],
+                                            "district_used": record["district_number"],
                                             "sibling_table_district": sibling_index[re.split(r"[،,\-–]", record["area_name"])[0].strip()]})
                 record["notes"] = "; ".join(dict.fromkeys(notes))
                 record["issue_classes"] = ";".join(sorted({c for c in classes if c}))
@@ -573,11 +637,22 @@ def main(argv: Optional[List[str]] = None) -> int:
             "conflict": sum(1 for r in records if r["district_cross_check"] == "conflict"),
             "unchecked": sum(1 for r in records if r["district_cross_check"] == "unchecked"),
             "note": (
-                "The printed district is never overwritten. A conflict means the Donya-e-Eqtesad "
-                "month groups that neighbourhood differently from the earlier table in this repo; "
-                "both are recorded so an analyst can decide."
+                "The printed district is never overwritten; district_number carries the value to "
+                "use (printed, or owner-corrected where a correction file exists) and "
+                "district_printed carries what the table said. A conflict is measured against "
+                "district_number."
             ),
             "conflicting_rows": cross_conflicts,
+        },
+        "district_corrections": {
+            "file": display_path(Path(args.corrections)) if Path(args.corrections).exists() else None,
+            "applied": sum(1 for r in records if r["district_correction"] == "corrected"),
+            "confirmed": sum(1 for r in records if r["district_correction"] == "confirmed"),
+            "note": (
+                "Corrections come from the owner (geographic verification) and live in their own "
+                "file, so the raw transcription stays untouched. Both the printed and the "
+                "corrected value are kept on every row."
+            ),
         },
         "split_constraints": ({k: list(v) for k, v in COLUMN_RANGES.items()} if source_format == "corrupt_paste" else {}),
         "ambiguous_rows": ambiguous,
@@ -604,6 +679,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     print(f"ambiguous     : {counts['ambiguous_split']} | unparsed: {counts['unparsed']}")
     print(f"district check: {report['district_cross_check']['match']} match, "
           f"{report['district_cross_check']['conflict']} conflict, {report['district_cross_check']['unchecked']} unchecked")
+    print(f"corrections   : {report['district_corrections']['applied']} applied, "
+          f"{report['district_corrections']['confirmed']} confirmed from {report['district_corrections']['file']}")
     print(f"output        : {out_dir}")
     return 0
 

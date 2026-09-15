@@ -52,42 +52,49 @@ on most rows; refusing to guess was the right call.
 | rent `-` | 1 | rent empty, flag `rent_missing_as_written` |
 | decimal rent, e.g. `17.5`, `4.5`, `6.5` | 6 | parsed as written |
 
-## ⚠️ District cross-check: 7 rows disagree with the earlier table
+## ✅ District corrections applied (owner geographic verification)
 
-The district printed in the table is kept verbatim as `district_number` and is never overwritten.
-Each row is also compared with the neighbourhood→district mapping derived from the earlier tables
-in this repo (dataset 3 of the archive, Aban 1404); the result is in `district_cross_check`:
+Seven rows disagreed with the neighbourhood→district mapping derived from the earlier tables in
+this repo. The owner verified each neighbourhood geographically; that verification lives in
+**`data/raw/donya-e-eqtesad_rent-asking_tir-1404.corrections.csv`** (its own file, so the raw
+transcription stays untouched) and the parser applies it:
 
-| result | rows |
-| --- | --- |
-| `match` | 58 |
-| `conflict` | **7** |
-| `unchecked` (no counterpart name) | 44 |
+| row | neighbourhood | printed | district_number (used) | correction | cross-check after |
+| --- | --- | --- | --- | --- | --- |
+| 4 | گیشا | 1 | **2** | corrected | match |
+| 5 | تجریش - فخارسر | 2 | **1** | corrected | match |
+| 6 | زعفرانیه - سمین | 2 | **1** | corrected | match |
+| 7 | ولنجک | 2 | **1** | corrected | match |
+| 20 | هروی - پناهی نیا | 4 | 4 | **confirmed correct** | conflict → see below |
+| 21 | پونک - کمالی | 4 | **5** | corrected | match |
+| 31 | شهرداری شمالی - موزه | 7 | **6** | corrected | match |
 
-| row | neighbourhood | printed district | earlier table says |
-| --- | --- | --- | --- |
-| 4 | گیشا | 1 | 2 |
-| 5 | تجریش - فخارسر | 2 | 1 |
-| 6 | زعفرانیه - سمین | 2 | 1 |
-| 7 | ولنجک | 2 | 1 |
-| 20 | هروی - پناهی نیا | 4 | 5 |
-| 21 | پونک - کمالی | 4 | 5 |
-| 31 | شهرداری شمالی - موزه | 7 | 6 |
+Nothing was overwritten: `district_printed` keeps what the table said, `district_number` carries
+the value to use, `district_correction` is `corrected` / `confirmed`, and
+`district_number_source` becomes `owner_geographic_verification`.
 
-All seven sit in the **first half** of the table, which is also the half affected by the
-side-by-side merge you performed. Two readings are possible and the file cannot settle them:
-either the source table genuinely groups these neighbourhoods differently from the Aban table, or
-the merge shifted the district column for part of the first half. **This needs the original
-layout** — a screenshot or PDF of the Tir 1404 table would resolve it in one look.
+### ⚠️ This exposed an error in the *earlier* table
+
+After correction the cross-check reads **64 match, 1 conflict, 44 unchecked** — and the one
+remaining conflict is not this table's fault. For **هروی - پناهی نیا** the Tir 1404 table prints
+district 4, the owner's geographic check confirms **4**, and the Aban 1404 table in the archive
+says 5. So the **archive's district labels need the same verification**: they come from that
+transcript's own printed markers, which are now known to be wrong in at least one case. Treat
+`district_number` in `observations/rent_observations.csv` (dataset 3) as unverified too.
+
+The 44 `unchecked` rows have no counterpart neighbourhood in the earlier table, so nothing could
+be cross-checked; they keep their printed district.
 
 ## Columns
 
-`district_number`, `district_number_source` (`print` | `marker` | `gap_fill` | `unknown`),
-`district_cross_check` (`match` | `conflict` | `unchecked`), `district_marker_raw`, `area_name`,
-`building_age_years`, `floor_area_sqm`, `rent_toman` (`_min`/`_max` for ranges), `deposit_toman`,
-`rent_raw`, `row_raw`, `source_format`, `flag_amount_ambiguous`, `issue_classes`, `notes`,
-`source_row_index`, plus provenance (`outlet`, `outlet_evidence`, `evidence_tier`, `verification`,
-`date_jalali_raw`, `date_jalali_ym`, `source_file`).
+`district_number` (value to use), `district_printed` (as in the table), `district_correction`
+(`corrected` | `confirmed` | empty), `district_number_source` (`print` | `marker` | `gap_fill` |
+`unknown` | `owner_geographic_verification`), `district_cross_check` (`match` | `conflict` |
+`unchecked`), `district_marker_raw`, `area_name`, `building_age_years`, `floor_area_sqm`,
+`rent_toman` (`_min`/`_max` for ranges), `deposit_toman`, `rent_raw`, `row_raw`, `source_format`,
+`flag_amount_ambiguous`, `issue_classes`, `notes`, `source_row_index`, plus provenance (`outlet`,
+`outlet_evidence`, `evidence_tier`, `verification`, `date_jalali_raw`, `date_jalali_ym`,
+`source_file`).
 
 ## Result
 

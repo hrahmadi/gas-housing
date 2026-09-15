@@ -25,60 +25,32 @@
     "district_markers_corrupt": 42
   },
   "district_cross_check": {
-    "match": 37,
-    "conflict": 8,
+    "match": 43,
+    "conflict": 2,
     "unchecked": 64,
-    "note": "The printed district is never overwritten. A conflict means the Donya-e-Eqtesad month groups that neighbourhood differently from the earlier table in this repo; both are recorded so an analyst can decide.",
+    "note": "The printed district is never overwritten; district_number carries the value to use (printed, or owner-corrected where a correction file exists) and district_printed carries what the table said. A conflict is measured against district_number.",
     "conflicting_rows": [
-      {
-        "source_row_index": 4,
-        "area_name": "گیشا",
-        "district_printed": 1,
-        "sibling_table_district": 2
-      },
-      {
-        "source_row_index": 5,
-        "area_name": "تجریش - فخارسر",
-        "district_printed": 2,
-        "sibling_table_district": 1
-      },
-      {
-        "source_row_index": 6,
-        "area_name": "زعفرانیه - سمین",
-        "district_printed": 2,
-        "sibling_table_district": 1
-      },
-      {
-        "source_row_index": 7,
-        "area_name": "ولنجک",
-        "district_printed": 2,
-        "sibling_table_district": 1
-      },
       {
         "source_row_index": 20,
         "area_name": "هروی - پناهی نیا",
         "district_printed": 4,
+        "district_used": 4,
         "sibling_table_district": 5
-      },
-      {
-        "source_row_index": 21,
-        "area_name": "پونک - کمالی",
-        "district_printed": 4,
-        "sibling_table_district": 5
-      },
-      {
-        "source_row_index": 31,
-        "area_name": "شهرداری شمالی - موزه",
-        "district_printed": 7,
-        "sibling_table_district": 6
       },
       {
         "source_row_index": 57,
         "area_name": "دروازه شمیران - کفایی امانی",
         "district_printed": 0,
+        "district_used": 0,
         "sibling_table_district": 12
       }
     ]
+  },
+  "district_corrections": {
+    "file": "data/raw/donya-e-eqtesad_rent-asking_tir-1404.corrections.csv",
+    "applied": 6,
+    "confirmed": 1,
+    "note": "Corrections come from the owner (geographic verification) and live in their own file, so the raw transcription stays untouched. Both the printed and the corrected value are kept on every row."
   },
   "split_constraints": {
     "building_age_years": [
