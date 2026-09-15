@@ -1,0 +1,58 @@
+{
+  "source": "Kilid",
+  "base_url": "https://kilid.com/api/map",
+  "source_kind": "listing-derived public map aggregates (not official government statistics)",
+  "city": "Tehran",
+  "city_id": "272905",
+  "city_area_id": "7a41f5f3-ce2e-ba00-d769-c35cfa000b6b",
+  "city_native_key": "272905",
+  "province_id": 242305,
+  "child_level": "MUNICIPAL_AREA",
+  "retrieved_at": "2026-09-15T12:35:32Z",
+  "months_requested": 60,
+  "endpoints": [
+    "/regions",
+    "/stats",
+    "/area-series",
+    "/supply",
+    "/floor-area",
+    "/forecast"
+  ],
+  "discovery_endpoints": [
+    "/provinces",
+    "/comparison?childLevel=<LEVEL>&cityId=<ID>"
+  ],
+  "scraper_version": "1.0.0",
+  "scraper_file": "/Users/hamidreza/Documents/AI-Projects/Gas-Housing/kilid/kilid_scraper.py",
+  "git_commit": "d282edb",
+  "invocation": {
+    "argv": [
+      "kilid_scraper.py",
+      "--tehran",
+      "--quiet"
+    ],
+    "force": false,
+    "delay_seconds": 0.75,
+    "timeout_seconds": 30.0,
+    "retries": 4
+  },
+  "cache_policy": "existing raw JSON is reused unless --force is given",
+  "raw_files_are_verbatim": true,
+  "districts_found": 22,
+  "districts_expected": 22,
+  "notes": [
+    "/comparison?childLevel=MUNICIPAL_AREA&cityId=<id> is what exposes the 22 Tehran district areaIds; /regions?cityId=<id> returns 373 neighbourhood records and no areaIds.",
+    "areaId values are geo UUIDs, not the numeric Kilid ids (cityId / nativeKey are numeric).",
+    "/area-series accepts a metric parameter but ignores it: metric=ASKING_RENT returns the sale-price payload unchanged. No rent *series* endpoint is exposed publicly as of 2026-09-15, so the availability report marks rent history as 'unknown'.",
+    "/stats carries four groups: AVM, ASKING_SALE, ASKING_RENT and TRANSACTION. ASKING_RENT is empty for Tehran district 2 (and must stay empty in our output)."
+  ],
+  "rules": [
+    "raw responses are never overwritten with cleaned values",
+    "missing values are never filled, interpolated or replaced with zero",
+    "rent is never inferred from sale prices",
+    "listing data is never relabelled as Statistical-Center/official data",
+    "district and neighbourhood observations are never mixed in one normalized file",
+    "trust=\"DIRECT\" is not treated as evidence of official government provenance"
+  ],
+  "disclaimer": "Kilid values are asking/listing-derived aggregates published for its own map UI. They are not official Statistical Center of Iran transaction statistics."
+}

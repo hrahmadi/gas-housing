@@ -1,0 +1,13 @@
+# No third-party runtime dependencies.
+#
+# kilid_scraper.py uses the Python standard library only
+# (urllib.request, json, csv, argparse, hashlib, subprocess),
+# so `python3 kilid_scraper.py --tehran` works in a bare environment:
+#
+#     python3 kilid_scraper.py --tehran
+#
+# Minimum interpreter: Python 3.9 (f-strings, pathlib, dict ordering, UTC datetimes).
+#
+# Optional, only if you want to lint or experiment locally:
+# black>=24.1
+# ruff>=0.5
