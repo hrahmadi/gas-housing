@@ -1,0 +1,478 @@
+{
+  "input": {
+    "path": "data/raw/rent-data-donyaeghtesad.rtf",
+    "bytes": 59504,
+    "sha256": "4569c6eed6b8428b32f2a94e53cd9cc9a776da13b1d2c7395ffd8fdf5fc073a5",
+    "extracted_lines": 419
+  },
+  "what_this_is": "An LLM-conversation transcript ('all the raw data extracted and transcribed from every image and text prompt'), not a single newspaper dataset. Its own header warns against combining timeframes, so each source table is kept separate here.",
+  "datasets": [
+    {
+      "dataset_id": 1,
+      "title": "Kilid - Housing Price Stats (Estimated vs. Newly Built)",
+      "sub_table": "",
+      "source": "Kilid (Images 1 & 2)",
+      "date": "",
+      "note": "",
+      "columns": [
+        "Neighborhood (Persian)",
+        "Neighborhood (English)",
+        "Estimated Avg Price / m²",
+        "Newly Built Price / m²"
+      ],
+      "rows": 21,
+      "parsed_as": {
+        "rent": 0,
+        "sale": 42,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 2,
+      "title": "Rental Prices in Districts 8, 13, 14 (Medium Size, 10-25 Years Old)",
+      "sub_table": "",
+      "source": "User Image (Turn 3)",
+      "date": "",
+      "note": "No explicit date provided in the image.",
+      "columns": [
+        "منطقه",
+        "محل",
+        "سن بنا (سال)",
+        "متراژ (مترمربع)",
+        "ودیعه (میلیون تومان)",
+        "اجاره بها (میلیون تومان)"
+      ],
+      "rows": 53,
+      "parsed_as": {
+        "rent": 53,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 3,
+      "title": "Aban 1404 Rental Prices (22 Districts of Tehran)",
+      "sub_table": "",
+      "source": "User Images (Turns 4, 5, 6)",
+      "date": "آبان 1404 (Aban 1404)",
+      "note": "",
+      "columns": [
+        "منطقه",
+        "محل",
+        "سن بنا (سال)",
+        "متراژ (مترمربع)",
+        "اجاره بها (میلیون تومان)",
+        "ودیعه (میلیون تومان)"
+      ],
+      "rows": 108,
+      "parsed_as": {
+        "rent": 108,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 4,
+      "title": "Tir 1403 Sales Prices (Residential Apartments)",
+      "sub_table": "",
+      "source": "User Image (Turn 7)",
+      "date": "تیر 1403 (Tir 1403)",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ (مترمربع)",
+        "سن بنا (سال)",
+        "قیمت هر مترمربع (تومان)"
+      ],
+      "rows": 40,
+      "parsed_as": {
+        "rent": 0,
+        "sale": 40,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 5,
+      "title": "Mordad 1400 Rentals (Apartments up to 60 sqm)",
+      "sub_table": "",
+      "source": "User Image (Turn 8)",
+      "date": "1400/05/16 (Mordad 1400)",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ (مترمربع)",
+        "رهن (تومان)",
+        "اجاره (تومان)"
+      ],
+      "rows": 39,
+      "parsed_as": {
+        "rent": 39,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 6,
+      "title": "Aban 1402 Sales Prices (Average Price per sqm)",
+      "sub_table": "",
+      "source": "User Image (Turn 11)",
+      "date": "آبان‌ماه 1402 (Aban 1402)",
+      "note": "Prices are in Million Rials (divide by 10 for Tomans).",
+      "columns": [
+        "منطقه شهری",
+        "متوسط قیمت (میلیون ریال)",
+        "تعداد معاملات (فقره)"
+      ],
+      "rows": 23,
+      "parsed_as": {
+        "rent": 0,
+        "sale": 0,
+        "district_stats": 23
+      }
+    },
+    {
+      "dataset_id": 7,
+      "title": "Fardayeeghtesad (Web Research Results)",
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source": "Simulated web research from fardayeeghtesad.com.",
+      "date": "",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ",
+        "اجاره بها",
+        "رهن"
+      ],
+      "rows": 7,
+      "parsed_as": {
+        "rent": 7,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 7,
+      "title": "Fardayeeghtesad (Web Research Results)",
+      "sub_table": "جدول 2: اجاره مسکن در مناطق اطراف تهران (اردیبهشت 1402)",
+      "source": "Simulated web research from fardayeeghtesad.com.",
+      "date": "",
+      "note": "",
+      "columns": [
+        "شهرستان",
+        "سن بنا",
+        "اجاره (تومان)",
+        "رهن (تومان)"
+      ],
+      "rows": 2,
+      "parsed_as": {
+        "rent": 2,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 7,
+      "title": "Fardayeeghtesad (Web Research Results)",
+      "sub_table": "جدول 3: اجاره آپارتمان‌های نقلی در شمال تهران (آذر 1401)",
+      "source": "Simulated web research from fardayeeghtesad.com.",
+      "date": "",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ",
+        "اجاره بها (تومان)",
+        "رهن (تومان)"
+      ],
+      "rows": 5,
+      "parsed_as": {
+        "rent": 5,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 7,
+      "title": "Fardayeeghtesad (Web Research Results)",
+      "sub_table": "جدول 4: قیمت اجاره خانه در نقاط مختلف تهران (آبان 1401)",
+      "source": "Simulated web research from fardayeeghtesad.com.",
+      "date": "",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ",
+        "رهن (میلیون تومان)",
+        "اجاره (تومان)"
+      ],
+      "rows": 10,
+      "parsed_as": {
+        "rent": 10,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 7,
+      "title": "Fardayeeghtesad (Web Research Results)",
+      "sub_table": "جدول 5: اجاره خانه در اطراف میدان آزادی تهران (آذر 1401)",
+      "source": "Simulated web research from fardayeeghtesad.com.",
+      "date": "",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ",
+        "رهن (میلیون تومان)",
+        "اجاره (تومان)"
+      ],
+      "rows": 5,
+      "parsed_as": {
+        "rent": 5,
+        "sale": 0,
+        "district_stats": 0
+      }
+    },
+    {
+      "dataset_id": 8,
+      "title": "ISNA Rentals (Tir 1402)",
+      "sub_table": "",
+      "source": "User Image (Turn 13)",
+      "date": "21 تیر 1402 (21 Tir 1402)",
+      "note": "",
+      "columns": [
+        "محله",
+        "متراژ",
+        "سن بنا",
+        "امکانات",
+        "ودیعه (تومان)",
+        "اجاره (تومان)"
+      ],
+      "rows": 10,
+      "parsed_as": {
+        "rent": 10,
+        "sale": 0,
+        "district_stats": 0
+      }
+    }
+  ],
+  "unit_rules": {
+    "money_output": "toman",
+    "million_toman": "x 1,000,000",
+    "million_rials_to_toman": "x 1,000,000 rials = x 100,000 toman (header says million rials)",
+    "bare_number": "uses the unit in its column header; if the header has none, toman is assumed and flagged",
+    "persian_decimal_slash": "'1/2 میلیارد' read as 1.2 billion; flagged for review"
+  },
+  "row_counts": {
+    "rent_observations": 239,
+    "sale_observations": 82,
+    "district_sale_stats": 23
+  },
+  "flag_counts": {
+    "age_new_build": 8,
+    "unit_assumed_toman_from_values": 7,
+    "free_of_charge_as_written": 4,
+    "two_values_in_one_cell": 3,
+    "zero_rent_as_written": 2,
+    "implausible_building_age:90": 1,
+    "missing_unit_in_chunk:800": 1,
+    "missing_unit_in_chunk:500": 1,
+    "city_total_row": 1,
+    "missing_unit_in_chunk:700": 1,
+    "persian_decimal_slash:1/2": 1,
+    "persian_decimal_slash:1/4": 1
+  },
+  "warnings": [
+    "Dataset 7 is labelled 'Simulated web research from fardayeeghtesad.com' — it is NOT a real scrape and must not be cited as Fardayeeghtesad/Donya-e-Eqtesad reporting (tier D).",
+    "Every other dataset is a transcription of images; values need checking against the original screenshots/newspaper before publication (tier C).",
+    "The file name says 'donyaeghtesad' but the only named outlet inside is Fardayeeghtesad; no Donya-e-Eqtesad table is present in this file.",
+    "Datasets 1 and 2 carry no date; dataset 1 is also neighbourhood-level with no floor area.",
+    "Deposit/rent column order differs between datasets (2 uses deposit-first, 3 rent-first); columns were mapped by header name, never by position.",
+    "Kilid's own scraped series (kilid/kilid_data) supersedes dataset 1 for any Tehrans price-per-m2 claim, because it is dated and reproducible."
+  ],
+  "anomalies": [
+    {
+      "dataset_id": 2,
+      "sub_table": "",
+      "source_row": 46,
+      "flag": "implausible_building_age:90"
+    },
+    {
+      "dataset_id": 3,
+      "sub_table": "",
+      "source_row": 144,
+      "flag": "two_values_in_one_cell"
+    },
+    {
+      "dataset_id": 3,
+      "sub_table": "",
+      "source_row": 148,
+      "flag": "two_values_in_one_cell"
+    },
+    {
+      "dataset_id": 3,
+      "sub_table": "",
+      "source_row": 152,
+      "flag": "two_values_in_one_cell"
+    },
+    {
+      "dataset_id": 3,
+      "sub_table": "",
+      "source_row": 153,
+      "flag": "zero_rent_as_written"
+    },
+    {
+      "dataset_id": 3,
+      "sub_table": "",
+      "source_row": 186,
+      "flag": "zero_rent_as_written"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 227,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 233,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 243,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 245,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 252,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 254,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 256,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 4,
+      "sub_table": "",
+      "source_row": 257,
+      "flag": "age_new_build"
+    },
+    {
+      "dataset_id": 5,
+      "sub_table": "",
+      "source_row": 297,
+      "flag": "missing_unit_in_chunk:800"
+    },
+    {
+      "dataset_id": 5,
+      "sub_table": "",
+      "source_row": 308,
+      "flag": "missing_unit_in_chunk:500"
+    },
+    {
+      "dataset_id": 6,
+      "sub_table": "",
+      "source_row": 343,
+      "flag": "city_total_row"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 353,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 354,
+      "flag": "missing_unit_in_chunk:700"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 354,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 355,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 356,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 357,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 358,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 7,
+      "sub_table": "جدول 1: اجاره مسکن اشتراکی در تهران (خرداد 1402)",
+      "source_row": 359,
+      "flag": "unit_assumed_toman_from_values"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 409,
+      "flag": "free_of_charge_as_written"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 410,
+      "flag": "free_of_charge_as_written"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 411,
+      "flag": "free_of_charge_as_written"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 413,
+      "flag": "persian_decimal_slash:1/2"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 415,
+      "flag": "persian_decimal_slash:1/4"
+    },
+    {
+      "dataset_id": 8,
+      "sub_table": "",
+      "source_row": 415,
+      "flag": "free_of_charge_as_written"
+    }
+  ]
+}

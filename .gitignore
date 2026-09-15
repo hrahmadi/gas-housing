@@ -9,6 +9,10 @@ Thumbs.db
 # If you ever install a static-server dependency locally
 node_modules/
 
+# Python caches
+__pycache__/
+*.pyc
+
 # Local screenshots (used for review/feedback, not part of the published site)
 /Screenshot*.png
 /Screenshot*.jpg

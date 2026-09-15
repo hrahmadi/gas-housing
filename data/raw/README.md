@@ -7,6 +7,7 @@ reproduce `data/data.js` and `assets/geo/tehran_districts.js` with a single comm
 |---|---|---|
 | `regions8800.geojson` | Ali Tayebi — «تغییر توان اجاره‌نشینی در تهران» · https://github.com/alitayebi/maps/tree/master/rent (raw file: `rent/data/regions8800.geojson`) | GeoJSON of Tehran's 22 municipal districts; each feature carries quarterly average rent per m² (rials) by quarter key `1..50` (Spring 1388 → Summer 1400), plus `region` id 1–22. Underlying rent data: Iran Statistics Center (مرکز آمار ایران). |
 | `infl.json` | Same project (raw file: `rent/data/infl.json`) | Per-quarter wage-calibration factors (Rate1/Rate2) used by the source project to convert income across years; vendored for provenance/reproducibility. |
+| `rent-data-donyaeghtesad.rtf` | Pasted conversation transcript (images of listings, newspaper tables, one simulated web-research block) | **Not a single dataset.** Eight tables (rent listings, sale listings, district averages) in mixed units/timeframes. Cleaned by `scripts/parse_rent_rtf.py` into `rent-data-donyaeghtesad/` — read that folder's `README.md` first: one dataset in it is explicitly *simulated* and must not be cited. |
 
 ## Attribution / license note
 
