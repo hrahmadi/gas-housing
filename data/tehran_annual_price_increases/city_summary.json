@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-09-16T07:25:09Z",
+  "input": {
+    "path": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+    "sha256": "5d74007569fdab97c7724b91e3e0cde0574688d1a053805da44622d980916b5b",
+    "rows": 1320,
+    "districts": 22,
+    "period_span": [
+      "1400-06",
+      "1405-05"
+    ]
+  },
+  "method": {
+    "windows": [
+      "1401: 1400-06..1401-05",
+      "1402: 1401-06..1402-05",
+      "1403: 1402-06..1403-05",
+      "1404: 1403-06..1404-05",
+      "1405: 1404-06..1405-05"
+    ],
+    "window_level": "median of the 12 monthly district medians (price_psm_median_toman)",
+    "annual_change": "window(n) / window(n-1) - 1",
+    "cumulative_change": "window1405 / window1401 - 1",
+    "endpoint_change": "1405-05 / 1400-06 - 1 (two specific months, not annual levels)",
+    "why_month_06_to_05": "keeps every window seasonally identical"
+  },
+  "city_summary": {
+    "change_1402_vs_1401_pct": {
+      "districts": 22,
+      "median_pct": 77.85390227539858,
+      "min_pct": 29.14897052027301,
+      "max_pct": 141.41126159420293
+    },
+    "change_1403_vs_1402_pct": {
+      "districts": 22,
+      "median_pct": 48.10787804052802,
+      "min_pct": 20.066922541085177,
+      "max_pct": 87.04078593233655
+    },
+    "change_1404_vs_1403_pct": {
+      "districts": 22,
+      "median_pct": 11.5639410399462,
+      "min_pct": 3.2726989480519553,
+      "max_pct": 22.852103391133618
+    },
+    "change_1405_vs_1404_pct": {
+      "districts": 22,
+      "median_pct": 30.083731700766535,
+      "min_pct": 16.034272567084184,
+      "max_pct": 59.76510549308707
+    },
+    "cumulative_1401_to_1405_pct": {
+      "districts": 22,
+      "median_pct": 280.379079044963,
+      "min_pct": 194.01087482284493,
+      "max_pct": 348.3048728014224
+    },
+    "endpoint_1400_06_to_1405_05_pct": {
+      "districts": 22,
+      "median_pct": 596.5648666800189,
+      "min_pct": 357.80013941331595,
+      "max_pct": 707.6923077544379
+    }
+  },
+  "caveats": [
+    "Asking (listing) prices per m2 from Kilid, not registered transactions and not the Statistical Center's transaction series: the level is OBSERVED, every change is CALCULATED.",
+    "All changes are nominal toman. data/annual.csv (the repo's inflation series) stops at 1401, so real (inflation-adjusted) changes for 1402-1405 cannot be computed without adding a CPI series.",
+    "Kilid's own methodology (3-month smoothing window, sample thresholds, model infilling) could change over five years; a coverage change would look like a price change.",
+    "District 20 contains 8 trust=MODELED months (1404-08..1405-03) inside its 1405 window, so its 1405 change is the least reliable of the 22.",
+    "The final month is provisional (windowMonths=3; lastObservedPeriodCode is one month ahead of series.lastPeriodCode), which is why the endpoint variant is shipped next to the window-median variant instead of being merged into it."
+  ],
+  "cross_check": {
+    "against": "dataset 6 of the RTF archive: Aban 1402 district average price (image, origin unverified)",
+    "result": "median ratio Kilid/district-table = 1.06 across 22 districts at 1402-08",
+    "note": "independent support for the level; not for the change"
+  },
+  "outputs": {
+    "district_window_prices": "district_window_prices.csv",
+    "district_annual_changes": "district_annual_changes.csv"
+  }
+}
