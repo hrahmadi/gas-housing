@@ -1,0 +1,162 @@
+{
+  "input": "data/raw/donya-e-eqtesad_rent-asking_khordad-1402_tehran.md",
+  "title": "تازه‌ترین قیمت اجاره خانه در تهران",
+  "what_this_is": "One Donya-e-Eqtesad rent table, 33 listing rows. No sale prices.",
+  "scope": "scattered listing sample across 11 of 22 districts — NOT a district-by-district report",
+  "supersedes": null,
+  "outlet": "خوان روزنامه دنیای اقتصاد (khan.donya-e-eqtesad.com)",
+  "outlet_evidence": "owner-supplied header: source and publication date ۱۴۰۲/۰۳/۲۸",
+  "date_jalali_raw": "۱۴۰۲/۰۳/۲۸ (۲۸ خرداد ۱۴۰۲)",
+  "date_jalali_ym": "1402-03",
+  "coverage": {
+    "districts_present": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      11,
+      12,
+      13,
+      21,
+      22
+    ],
+    "districts_expected": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      11,
+      12,
+      13,
+      21,
+      22
+    ],
+    "districts_missing": [],
+    "rows": 33
+  },
+  "row_counts": {
+    "table_rows": 33,
+    "with_rent": 14,
+    "rent_not_listed": 18,
+    "zero_rent_as_written": 1,
+    "zero_deposit_as_written": 1,
+    "with_deposit": 32,
+    "deposit_ambiguous": 0,
+    "no_district_attributable": 1
+  },
+  "medians": {
+    "rent_toman": 11500000.0,
+    "rent_per_sqm_toman": 166538.46153846153,
+    "deposit_toman": 490000000.0,
+    "floor_area_sqm": 90
+  },
+  "ranges": {
+    "rent_toman": [
+      3000000.0,
+      40000000.0
+    ],
+    "deposit_toman": [
+      9000000.0,
+      2500000000.0
+    ],
+    "floor_area_sqm": [
+      41,
+      280
+    ]
+  },
+  "per_district": {
+    "1": {
+      "rows": 4,
+      "with_rent": 2,
+      "rent_per_sqm_toman": 134920.6349206349
+    },
+    "2": {
+      "rows": 2,
+      "with_rent": 1,
+      "rent_per_sqm_toman": 312500.0
+    },
+    "4": {
+      "rows": 2,
+      "with_rent": 0,
+      "rent_per_sqm_toman": null
+    },
+    "5": {
+      "rows": 5,
+      "with_rent": 4,
+      "rent_per_sqm_toman": 121428.57142857143
+    },
+    "6": {
+      "rows": 4,
+      "with_rent": 3,
+      "rent_per_sqm_toman": 187500.0
+    },
+    "7": {
+      "rows": 3,
+      "with_rent": 1,
+      "rent_per_sqm_toman": 200000.0
+    },
+    "11": {
+      "rows": 1,
+      "with_rent": 0,
+      "rent_per_sqm_toman": null
+    },
+    "12": {
+      "rows": 4,
+      "with_rent": 2,
+      "rent_per_sqm_toman": 86718.75
+    },
+    "13": {
+      "rows": 4,
+      "with_rent": 0,
+      "rent_per_sqm_toman": null
+    },
+    "21": {
+      "rows": 1,
+      "with_rent": 1,
+      "rent_per_sqm_toman": 173076.92307692306
+    },
+    "22": {
+      "rows": 2,
+      "with_rent": 0,
+      "rent_per_sqm_toman": null
+    }
+  },
+  "withheld_values": [],
+  "ambiguous_deposits": [],
+  "rows_without_district": [
+    {
+      "source_row_index": 32,
+      "district_printed": "21/22",
+      "candidates": [
+        21,
+        22
+      ],
+      "area_name": "قائم مقام، نرسیده به ۲۲",
+      "row_raw": "| **21/22** | قائم مقام، نرسیده به ۲۲ | 148 | - | 2 میلیارد و ۵۰۰ میلیون |"
+    }
+  ],
+  "reconciliation": null,
+  "flag_classes_added_here": {
+    "rent_not_listed_in_source": "source_ambiguity",
+    "zero_rent_as_written": "source_ambiguity",
+    "zero_deposit_as_written": "source_ambiguity",
+    "amount_ambiguous_doubled_digit": "source_ambiguity",
+    "dual_district_stated": "source_ambiguity",
+    "rent_equals_deposit_suspected_duplication": "source_ambiguity",
+    "deposit_only_listing": "notation",
+    "neighbourhood_name_unverified": "notation"
+  },
+  "policies": [
+    "A dash in the rent column is missing data, not zero: the value stays empty so it cannot enter a median as 0. The row is kept for its area and deposit.",
+    "A literal «0» is preserved in the raw column but left empty as a value: a 0 rent beside a deposit, or a 0 deposit beside a rent, is not a price.",
+    "Ambiguous amounts are never guessed: the value stays empty and every candidate reading is listed.",
+    "A district cell naming two districts leaves the district empty and flags it.",
+    "A row present in an earlier version but absent from a later one is never silently dropped: it is written to excluded/ with its reason.",
+    "No rent figure here is ever converted into a sale figure, or the reverse."
+  ],
+  "caveat_deposit_mix": "Monthly rent in these tables is not quoted at a constant deposit, and the share of rows carrying no monthly rent at all is high, so a median rent/m2 from one table is not directly comparable to another table's without saying so."
+}

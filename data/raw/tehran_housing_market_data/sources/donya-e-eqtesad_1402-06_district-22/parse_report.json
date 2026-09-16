@@ -1,0 +1,527 @@
+{
+  "input": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22_cleaned.md",
+  "title": "قیمت اجاره آپارتمان در منطقه ۲۲ تهران",
+  "what_this_is": "One Donya-e-Eqtesad rent table, 43 listing rows. No sale prices.",
+  "scope": "single district (22) only",
+  "supersedes": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22.md",
+  "outlet": "خوان روزنامه دنیای اقتصاد (khan.donya-e-eqtesad.com)",
+  "outlet_evidence": "owner-supplied header: source, news number 3997831, publication date ۸ شهریور ۱۴۰۲",
+  "date_jalali_raw": "۱۴۰۲/۰۶/۸ (۸ شهریور ۱۴۰۲)",
+  "date_jalali_ym": "1402-06",
+  "coverage": {
+    "districts_present": [
+      22
+    ],
+    "districts_expected": [
+      22
+    ],
+    "districts_missing": [],
+    "rows": 43
+  },
+  "row_counts": {
+    "table_rows": 43,
+    "with_rent": 17,
+    "rent_not_listed": 25,
+    "zero_rent_as_written": 0,
+    "zero_deposit_as_written": 0,
+    "with_deposit": 39,
+    "deposit_ambiguous": 4,
+    "no_district_attributable": 0
+  },
+  "medians": {
+    "rent_toman": 15000000.0,
+    "rent_per_sqm_toman": 88888.88888888889,
+    "deposit_toman": 800000000.0,
+    "floor_area_sqm": 133
+  },
+  "ranges": {
+    "rent_toman": [
+      1000000.0,
+      35000000.0
+    ],
+    "deposit_toman": [
+      150000000.0,
+      2200000000.0
+    ],
+    "floor_area_sqm": [
+      70,
+      280
+    ]
+  },
+  "per_district": {
+    "22": {
+      "rows": 43,
+      "with_rent": 17,
+      "rent_per_sqm_toman": 88888.88888888889
+    }
+  },
+  "withheld_values": [
+    {
+      "source_row_index": 19,
+      "area_name": "شهرک راه آهن - بلوار کوهک",
+      "rent_toman": 1000000000.0,
+      "deposit_toman": 1000000000.0,
+      "table_median_rent_toman": 15000000.0,
+      "reasons": [
+        "rent_equals_deposit",
+        "rent_above_20x_median"
+      ],
+      "reading": "suspected duplicate of the deposit column; row kept, rent emptied"
+    }
+  ],
+  "ambiguous_deposits": [
+    {
+      "source_row_index": 5,
+      "raw": "| **22** | دهکده المپیک | 125 | - | یک میلیارد و ۱۲۰۰ میلیون |",
+      "candidates": [
+        2200000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "source_row_index": 16,
+      "raw": "| **22** | شهرک راه آهن - بلوار کوهک | 177 | - | یک میلیارد و ۱۲۰۰ میلیون |",
+      "candidates": [
+        2200000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "source_row_index": 25,
+      "raw": "| **22** | شهرک راه آهن - هفت آسیاب | 130 | - | یک میلیارد و ۱۱۰۰ میلیون |",
+      "candidates": [
+        2100000000.0,
+        1100000000.0
+      ]
+    },
+    {
+      "source_row_index": 38,
+      "raw": "| **22** | همت غرب - دریاچه | 133 | - | یک میلیارد و ۱۱۰۰ میلیون |",
+      "candidates": [
+        2100000000.0,
+        1100000000.0
+      ]
+    }
+  ],
+  "rows_without_district": [],
+  "reconciliation": {
+    "superseded_input": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22.md",
+    "method": "rows matched on (area, rent as written, deposit as written); neighbourhood names are compared separately because the cleaning pass legitimately rewrote them",
+    "counts": {
+      "superseded_rows": 45,
+      "cleaned_rows": 43,
+      "matched": 42,
+      "renamed": 41,
+      "only_in_cleaned": 1,
+      "only_in_superseded": 3,
+      "value_changes": 0
+    },
+    "rows_only_in_cleaned": [
+      {
+        "source_row_index": 8,
+        "row_raw": "| **22** | سرو آزاد | 110 | 4 میلیون | 550 میلیون |"
+      }
+    ],
+    "rows_only_in_superseded": [
+      {
+        "source_row_index": 16,
+        "area_name": "شهرک راه آهن، کوهسار",
+        "floor_area_sqm": 125,
+        "rent_raw": "4 میلیون",
+        "deposit_raw": "400 میلیون",
+        "source_format": "markdown_table",
+        "district_number": 22,
+        "district_printed": "",
+        "district_correction": "",
+        "district_number_source": "stated_in_source",
+        "district_cross_check": "not_applicable_owner_assigned",
+        "district_marker_raw": "",
+        "building_age_years": "",
+        "rent_toman": 4000000.0,
+        "rent_toman_min": null,
+        "rent_toman_max": null,
+        "deposit_toman": 400000000.0,
+        "row_raw": "| شهرک راه آهن، کوهسار | 125 | 4 میلیون | 400 میلیون |",
+        "flag_amount_ambiguous": false,
+        "issue_classes": "",
+        "notes": "",
+        "source_file": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22.md",
+        "outlet": "خوان روزنامه دنیای اقتصاد (khan.donya-e-eqtesad.com)",
+        "outlet_evidence": "owner-supplied header: source, news number 3997831, publication date ۸ شهریور ۱۴۰۲",
+        "evidence_tier": "C",
+        "verification": "unverified_owner_transcription",
+        "date_jalali_raw": "۱۴۰۲/۰۶/۸ (۸ شهریور ۱۴۰۲)",
+        "date_jalali_ym": "1402-06"
+      },
+      {
+        "source_row_index": 24,
+        "area_name": "انتهای همت غرب، بلوار درسا",
+        "floor_area_sqm": 120,
+        "rent_raw": "-",
+        "deposit_raw": "550 میلیون",
+        "source_format": "markdown_table",
+        "district_number": 22,
+        "district_printed": "",
+        "district_correction": "",
+        "district_number_source": "stated_in_source",
+        "district_cross_check": "not_applicable_owner_assigned",
+        "district_marker_raw": "",
+        "building_age_years": "",
+        "rent_toman": null,
+        "rent_toman_min": null,
+        "rent_toman_max": null,
+        "deposit_toman": 550000000.0,
+        "row_raw": "| انتهای همت غرب، بلوار درسا | 120 | - | 550 میلیون |",
+        "flag_amount_ambiguous": false,
+        "issue_classes": "rent_not_listed_in_source;deposit_only_listing",
+        "notes": "rent_not_listed_in_source:-",
+        "source_file": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22.md",
+        "outlet": "خوان روزنامه دنیای اقتصاد (khan.donya-e-eqtesad.com)",
+        "outlet_evidence": "owner-supplied header: source, news number 3997831, publication date ۸ شهریور ۱۴۰۲",
+        "evidence_tier": "C",
+        "verification": "unverified_owner_transcription",
+        "date_jalali_raw": "۱۴۰۲/۰۶/۸ (۸ شهریور ۱۴۰۲)",
+        "date_jalali_ym": "1402-06"
+      },
+      {
+        "source_row_index": 30,
+        "area_name": "شهرک راه آهن، افشین اردستانی",
+        "floor_area_sqm": 114,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد",
+        "source_format": "markdown_table",
+        "district_number": 22,
+        "district_printed": "",
+        "district_correction": "",
+        "district_number_source": "stated_in_source",
+        "district_cross_check": "not_applicable_owner_assigned",
+        "district_marker_raw": "",
+        "building_age_years": "",
+        "rent_toman": null,
+        "rent_toman_min": null,
+        "rent_toman_max": null,
+        "deposit_toman": 1000000000.0,
+        "row_raw": "| شهرک راه آهن، افشین اردستانی | 114 | - | یک میلیارد |",
+        "flag_amount_ambiguous": false,
+        "issue_classes": "rent_not_listed_in_source;deposit_only_listing",
+        "notes": "rent_not_listed_in_source:-",
+        "source_file": "data/raw/donya-e-eqtesad_rent-asking_shahrivar-1402_district-22.md",
+        "outlet": "خوان روزنامه دنیای اقتصاد (khan.donya-e-eqtesad.com)",
+        "outlet_evidence": "owner-supplied header: source, news number 3997831, publication date ۸ شهریور ۱۴۰۲",
+        "evidence_tier": "C",
+        "verification": "unverified_owner_transcription",
+        "date_jalali_raw": "۱۴۰۲/۰۶/۸ (۸ شهریور ۱۴۰۲)",
+        "date_jalali_ym": "1402-06"
+      }
+    ],
+    "renamed": [
+      {
+        "was": "انتهای همت غرب، سرو آزاد",
+        "now": "آبشار",
+        "area_sqm": 110,
+        "rent_raw": "4 میلیون",
+        "deposit_raw": "550 میلیون"
+      },
+      {
+        "was": "بزرگراه خرازی، بلوار درسا",
+        "now": "بزرگراه خرازی",
+        "area_sqm": 110,
+        "rent_raw": "-",
+        "deposit_raw": "550 میلیون"
+      },
+      {
+        "was": "چیذر، کوهک",
+        "now": "چیتگر",
+        "area_sqm": 200,
+        "rent_raw": "-",
+        "deposit_raw": "دو میلیارد و ۲۰۰ میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، دهکده المپیک",
+        "now": "دهکده المپیک",
+        "area_sqm": 180,
+        "rent_raw": "8 میلیون",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، دهکده المپیک",
+        "now": "دهکده المپیک",
+        "area_sqm": 127,
+        "rent_raw": "-",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، دهکده المپیک",
+        "now": "دهکده المپیک",
+        "area_sqm": 70,
+        "rent_raw": "-",
+        "deposit_raw": "750 میلیون"
+      },
+      {
+        "was": "شفق جنوبی، دریاچه جنگل",
+        "now": "شفق جنوبی",
+        "area_sqm": 160,
+        "rent_raw": "یک میلیون",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، شهرک امید، دریاچه",
+        "now": "شهرک امید",
+        "area_sqm": 130,
+        "rent_raw": "-",
+        "deposit_raw": "920 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار امیرکبیر",
+        "now": "شهرک راه آهن - بلوار امیرکبیر",
+        "area_sqm": 180,
+        "rent_raw": "10 میلیون",
+        "deposit_raw": "800 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، امیرکبیر",
+        "now": "شهرک راه آهن - بلوار امیرکبیر",
+        "area_sqm": 125,
+        "rent_raw": "-",
+        "deposit_raw": "800 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار امیرکبیر",
+        "now": "شهرک راه آهن - بلوار امیرکبیر",
+        "area_sqm": 99,
+        "rent_raw": "-",
+        "deposit_raw": "800 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کاج",
+        "now": "شهرک راه آهن - بلوار کاج",
+        "area_sqm": 150,
+        "rent_raw": "-",
+        "deposit_raw": "150 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کوهک",
+        "now": "شهرک راه آهن - بلوار کوهک",
+        "area_sqm": 220,
+        "rent_raw": "35 میلیون",
+        "deposit_raw": "500 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کوهک",
+        "now": "شهرک راه آهن - بلوار کوهک",
+        "area_sqm": 177,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد و ۱۲۰۰ میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کوهک",
+        "now": "شهرک راه آهن - بلوار کوهک",
+        "area_sqm": 175,
+        "rent_raw": "-",
+        "deposit_raw": "750 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کوهک",
+        "now": "شهرک راه آهن - بلوار کوهک",
+        "area_sqm": 152,
+        "rent_raw": "35 میلیون",
+        "deposit_raw": "900 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار کوهک",
+        "now": "شهرک راه آهن - بلوار کوهک",
+        "area_sqm": 107,
+        "rent_raw": "1 میلیارد (withheld)",
+        "deposit_raw": "یک میلیارد"
+      },
+      {
+        "was": "شهرک راه آهن، بلوار یاس",
+        "now": "شهرک راه آهن - بلوار یاس",
+        "area_sqm": 110,
+        "rent_raw": "-",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، خ نفت",
+        "now": "شهرک راه آهن - خ نفت",
+        "area_sqm": 125,
+        "rent_raw": "15 میلیون",
+        "deposit_raw": "400 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، شهرک فاطمی",
+        "now": "شهرک راه آهن - شهرک فاطمی",
+        "area_sqm": 105,
+        "rent_raw": "15 میلیون",
+        "deposit_raw": "500 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، کوی دانشگاه",
+        "now": "شهرک راه آهن - کوی دانشگاه",
+        "area_sqm": 280,
+        "rent_raw": "25 میلیون",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، هاشم زاده",
+        "now": "شهرک راه آهن - هاشم زاده",
+        "area_sqm": 170,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد"
+      },
+      {
+        "was": "شهرک راه آهن، هفت آسیاب",
+        "now": "شهرک راه آهن - هفت آسیاب",
+        "area_sqm": 130,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد و ۱۱۰۰ میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، ورزش شرقی",
+        "now": "شهرک راه آهن - ورزش شرقی",
+        "area_sqm": 75,
+        "rent_raw": "-",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، شهرک شهید باقری",
+        "now": "شهرک راه آهن - شهید باقری",
+        "area_sqm": 75,
+        "rent_raw": "-",
+        "deposit_raw": "350 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهدای اسلام آباد",
+        "now": "شهرک راه آهن - شهدای اسلام آباد",
+        "area_sqm": 185,
+        "rent_raw": "15 میلیون",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، شهدای اسلام آباد",
+        "now": "شهرک راه آهن - شهدای اسلام آباد",
+        "area_sqm": 173,
+        "rent_raw": "سه میلیون",
+        "deposit_raw": "یک میلیارد"
+      },
+      {
+        "was": "شهرک گلستان، بلوار هاشم زاده",
+        "now": "شهرک گلستان - هاشم زاده",
+        "area_sqm": 180,
+        "rent_raw": "16 میلیون",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهرک گلستان",
+        "now": "شهرک گلستان",
+        "area_sqm": 172,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد"
+      },
+      {
+        "was": "انتهای همت غرب، مروارید شهر",
+        "now": "مروارید شهر",
+        "area_sqm": 160,
+        "rent_raw": "15 میلیون",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "میدان ساحل، جزایری",
+        "now": "میدان ساحل",
+        "area_sqm": 140,
+        "rent_raw": "-",
+        "deposit_raw": "750 میلیون"
+      },
+      {
+        "was": "شهرک راه آهن، میدان ساحل",
+        "now": "میدان ساحل",
+        "area_sqm": 120,
+        "rent_raw": "12 میلیون",
+        "deposit_raw": "650 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، اردستانی",
+        "now": "همت غرب - اردستانی",
+        "area_sqm": 120,
+        "rent_raw": "-",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، دریاچه",
+        "now": "همت غرب - دریاچه",
+        "area_sqm": 158,
+        "rent_raw": "-",
+        "deposit_raw": "دو میلیارد"
+      },
+      {
+        "was": "انتهای همت غرب، دریاچه",
+        "now": "همت غرب - دریاچه",
+        "area_sqm": 140,
+        "rent_raw": "-",
+        "deposit_raw": "850 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، دریاچه",
+        "now": "همت غرب - دریاچه",
+        "area_sqm": 133,
+        "rent_raw": "-",
+        "deposit_raw": "یک میلیارد و ۱۱۰۰ میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، میدان دریاچه",
+        "now": "همت غرب - دریاچه",
+        "area_sqm": 120,
+        "rent_raw": "16 میلیون",
+        "deposit_raw": "800 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهرک دریاچه",
+        "now": "همت غرب - شهرک دریاچه",
+        "area_sqm": 160,
+        "rent_raw": "10 میلیون",
+        "deposit_raw": "700 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهرک دریاچه",
+        "now": "همت غرب - شهرک دریاچه",
+        "area_sqm": 143,
+        "rent_raw": "-",
+        "deposit_raw": "820 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهرک خرازی",
+        "now": "همت غرب - شهرک خرازی",
+        "area_sqm": 120,
+        "rent_raw": "-",
+        "deposit_raw": "900 میلیون"
+      },
+      {
+        "was": "انتهای همت غرب، شهرک خرازی",
+        "now": "همت غرب - شهرک خرازی",
+        "area_sqm": 110,
+        "rent_raw": "-",
+        "deposit_raw": "600 میلیون"
+      }
+    ],
+    "note": "No matched row changed its area, rent or deposit, so the cleaning pass moved names and dropped/added rows but rewrote no figures."
+  },
+  "flag_classes_added_here": {
+    "rent_not_listed_in_source": "source_ambiguity",
+    "zero_rent_as_written": "source_ambiguity",
+    "zero_deposit_as_written": "source_ambiguity",
+    "amount_ambiguous_doubled_digit": "source_ambiguity",
+    "dual_district_stated": "source_ambiguity",
+    "rent_equals_deposit_suspected_duplication": "source_ambiguity",
+    "deposit_only_listing": "notation",
+    "neighbourhood_name_unverified": "notation"
+  },
+  "policies": [
+    "A dash in the rent column is missing data, not zero: the value stays empty so it cannot enter a median as 0. The row is kept for its area and deposit.",
+    "A literal «0» is preserved in the raw column but left empty as a value: a 0 rent beside a deposit, or a 0 deposit beside a rent, is not a price.",
+    "Ambiguous amounts are never guessed: the value stays empty and every candidate reading is listed.",
+    "A district cell naming two districts leaves the district empty and flags it.",
+    "A row present in an earlier version but absent from a later one is never silently dropped: it is written to excluded/ with its reason.",
+    "No rent figure here is ever converted into a sale figure, or the reverse."
+  ],
+  "caveat_deposit_mix": "Monthly rent in these tables is not quoted at a constant deposit, and the share of rows carrying no monthly rent at all is high, so a median rent/m2 from one table is not directly comparable to another table's without saying so."
+}

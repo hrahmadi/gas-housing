@@ -5,21 +5,26 @@
 Inputs (both already in this repo):
 
 * **sales** — Kilid district series, 22 districts × 60 months (``1400-06``…``1405-05``),
-  asking price per m². Cut into five 12-month windows to give the sale side a time dimension;
-* **rents** — Donya-e-Eqtesad asking-rent tables, two snapshots at district level
-  (Tir 1404 and Aban 1404), each row an ordinary mid-size apartment with a monthly rent
-  and a deposit.
+  asking price per m². Cut into five 12-month windows to give the sale side a time
+  dimension, and also kept monthly so a rent month can be matched exactly;
+* **rents** — three Donya-e-Eqtesad tables, each a snapshot of ordinary apartments with a
+  monthly rent and a deposit: Aban 1404 and Tir 1404 (all 22 districts), and Shahrivar 1402
+  (**district 22 only**).
 
 What the switch can and cannot show:
 
 * sales: a level per year (five windows) and a five-year change per district;
-* rents: a level per snapshot per district — **two months, so no rent trend**;
+* rents: a level per snapshot per district — **three dates, so no continuous rent series**;
 * the payoff of the switch: the **rent-to-price ratio** (gross yield) per district, computed by
   *comparing two observed series*, never by converting one into the other.
 
+Two ratios are produced and kept apart on purpose: the ratio against the robust 1405 sale
+window, and the ratio against Kilid's price in the rent table's **own month**. The second is a
+same-month, same-district pairing with no window straddling.
+
 The ratio is a comparison, not a valuation: the rent side is asking rent for a mid-size
-apartment, the sale side is asking price per m² from a different set of months, and both are
-listing figures. It is shipped as indicative, with every input next to it.
+apartment, the sale side is asking price per m², and both are listing figures. It is shipped as
+indicative, with every input next to it.
 
 Outputs (``data/rent_vs_sale/``):
 
@@ -43,9 +48,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+ARCHIVE = REPO_ROOT / "data" / "raw" / "tehran_housing_market_data"
 KILID_MONTHLY = REPO_ROOT / "kilid" / "kilid_data" / "normalized" / "kilid_tehran_sale_price_monthly.csv"
-RENT_ABAN = REPO_ROOT / "data" / "raw" / "tehran_housing_market_data" / "observations" / "rent_observations.csv"
-RENT_TIR = REPO_ROOT / "data" / "raw" / "tehran_housing_market_data" / "sources" / "donya-e-eqtesad_1404-04" / "rent_asking.csv"
+RENT_ABAN = ARCHIVE / "observations" / "rent_observations.csv"
+RENT_TIR = ARCHIVE / "sources" / "donya-e-eqtesad_1404-04" / "rent_asking.csv"
+RENT_SHAHRIVAR = ARCHIVE / "sources" / "donya-e-eqtesad_1402-06_district-22" / "rent_asking.csv"
+RENT_KHORDAD = ARCHIVE / "sources" / "donya-e-eqtesad_1402-03_tehran" / "rent_asking.csv"
 DEFAULT_OUT = REPO_ROOT / "data" / "rent_vs_sale"
 
 SALE_WINDOWS: Tuple[Tuple[str, str], ...] = (
@@ -55,13 +63,45 @@ SALE_WINDOWS: Tuple[Tuple[str, str], ...] = (
     ("1404", "1403-06"),
     ("1405", "1404-06"),
 )
-SALE_LEVEL_WINDOW = "1405"          # the window used as "current" for the ratio
-RENT_SNAPSHOTS: Tuple[Tuple[str, str, str], ...] = (
-    ("1404-08", "آبان ۱۴۰۴", "جدول آرشیو، مجموعه‌دادهٔ ۳"),
-    ("1404-04", "تیر ۱۴۰۴", "جدول دنیای اقتصاد، بازنویسی مالک"),
+SALE_LEVEL_WINDOW = "1405"          # the window used as the robust "current" level
+
+#: Newest first. ``month`` is the Kilid month matched to this snapshot for the same-month ratio.
+RENT_SOURCES: Tuple[Dict[str, Any], ...] = (
+    {
+        "key": "1404_08",
+        "month": "1404-08",
+        "label_fa": "آبان ۱۴۰۴",
+        "note": "جدول آرشیو، مجموعه‌دادهٔ ۳ — هر ۲۲ منطقه",
+        "path": RENT_ABAN,
+        "dataset_id": "3",
+    },
+    {
+        "key": "1404_04",
+        "month": "1404-04",
+        "label_fa": "تیر ۱۴۰۴",
+        "note": "جدول دنیای اقتصاد، بازنویسی مالک — هر ۲۲ منطقه",
+        "path": RENT_TIR,
+        "dataset_id": None,
+    },
+    {
+        "key": "1402_06",
+        "month": "1402-06",
+        "label_fa": "شهریور ۱۴۰۲",
+        "note": "جدول دنیای اقتصاد — فقط منطقهٔ ۲۲",
+        "path": RENT_SHAHRIVAR,
+        "dataset_id": None,
+    },
+    {
+        "key": "1402_03",
+        "month": "1402-03",
+        "label_fa": "خرداد ۱۴۰۲",
+        "note": "جدول دنیای اقتصاد — نمونهٔ پراکنده در ۱۱ منطقه، نه گزارش منطقه‌به‌منطقه",
+        "path": RENT_KHORDAD,
+        "dataset_id": None,
+    },
 )
 
-PANEL_FIELDS: Tuple[str, ...] = (
+BASE_FIELDS: Tuple[str, ...] = (
     "district_number",
     "area_name_fa",
     "sale_level_1405_toman_per_sqm",
@@ -72,22 +112,19 @@ PANEL_FIELDS: Tuple[str, ...] = (
     "sale_cumulative_1401_1405_pct",
     "sale_p25_1405_toman_per_sqm",
     "sale_p75_1405_toman_per_sqm",
-    "rent_snapshot_1404_08_listings",
-    "rent_snapshot_1404_08_monthly_toman",
-    "rent_snapshot_1404_08_per_sqm_toman",
-    "rent_snapshot_1404_08_deposit_toman",
-    "rent_snapshot_1404_08_median_area_sqm",
-    "rent_snapshot_1404_04_listings",
-    "rent_snapshot_1404_04_monthly_toman",
-    "rent_snapshot_1404_04_per_sqm_toman",
-    "rent_snapshot_1404_04_deposit_toman",
-    "rent_snapshot_1404_04_median_area_sqm",
-    "rent_change_1404_08_vs_1404_04_pct",
-    "gross_yield_1404_08_pct",
-    "gross_yield_1404_04_pct",
-    "deposit_to_value_1404_08_pct",
-    "rent_side_rows_conflicting_district",
 )
+
+
+def yield_pct(rent_per_sqm: Optional[float], sale_per_sqm: Optional[float]) -> Optional[float]:
+    if not rent_per_sqm or not sale_per_sqm:
+        return None
+    return 12 * rent_per_sqm / sale_per_sqm * 100
+
+
+def pct_change(before: Optional[float], after: Optional[float]) -> Optional[float]:
+    if not before or not after:
+        return None
+    return (after / before - 1) * 100
 
 
 def window_months(start: str) -> List[str]:
@@ -122,6 +159,8 @@ def load_sales() -> Dict[str, Dict[str, Any]]:
         out[district] = {
             "area_name_fa": area_name,
             "levels": levels,
+            # kept monthly so a rent table's own month can be matched exactly
+            "monthly": {month: float(row["price_psm_median_toman"]) for month, row in series.items()},
             "p25": median([float(r["price_psm_p25_toman"]) for r in current_months]),
             "p75": median([float(r["price_psm_p75_toman"]) for r in current_months]),
             "cumulative_pct": ((levels["1405"] / levels["1401"] - 1) * 100)
@@ -171,132 +210,168 @@ def load_rents(path: Path, dataset_id: Optional[str]) -> Dict[str, Dict[str, Any
     return out
 
 
-def main(argv: Optional[List[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--out", default=str(DEFAULT_OUT))
-    args = parser.parse_args(argv)
-
+def build_panel() -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     sales = load_sales()
-    rent_aban = load_rents(RENT_ABAN, "3")
-    rent_tir = load_rents(RENT_TIR, None)
-    districts = sorted(sales, key=int)
+    rents: Dict[str, Dict[str, Dict[str, Any]]] = {}
+    skipped = 0
+    for source in RENT_SOURCES:
+        rents[source["key"]] = load_rents(source["path"], source["dataset_id"])
+    keys = [s["key"] for s in RENT_SOURCES]
+    months = {s["key"]: s["month"] for s in RENT_SOURCES}
 
     panel: List[Dict[str, Any]] = []
-    for district in districts:
+    for district in sorted(sales, key=int):
         sale = sales[district]
         level = sale["levels"].get(SALE_LEVEL_WINDOW)
-        aban = rent_aban.get(district, {})
-        tir = rent_tir.get(district, {})
-
         row: Dict[str, Any] = {
             "district_number": district,
             "area_name_fa": sale["area_name_fa"],
             "sale_level_1405_toman_per_sqm": level,
-            "sale_1401_toman_per_sqm": sale["levels"].get("1401"),
-            "sale_1402_toman_per_sqm": sale["levels"].get("1402"),
-            "sale_1403_toman_per_sqm": sale["levels"].get("1403"),
-            "sale_1404_toman_per_sqm": sale["levels"].get("1404"),
             "sale_p25_1405_toman_per_sqm": sale["p25"],
             "sale_p75_1405_toman_per_sqm": sale["p75"],
             "sale_cumulative_1401_1405_pct": sale["cumulative_pct"],
-            "rent_side_rows_conflicting_district": aban.get("conflicts", 0) + tir.get("conflicts", 0),
         }
-        for label, snapshot in (("1404_08", aban), ("1404_04", tir)):
-            row[f"rent_snapshot_{label}_listings"] = snapshot.get("listings")
-            row[f"rent_snapshot_{label}_monthly_toman"] = snapshot.get("monthly")
-            row[f"rent_snapshot_{label}_per_sqm_toman"] = snapshot.get("per_sqm")
-            row[f"rent_snapshot_{label}_deposit_toman"] = snapshot.get("deposit")
-            row[f"rent_snapshot_{label}_median_area_sqm"] = snapshot.get("median_area")
+        for label, _ in SALE_WINDOWS:
+            row[f"sale_{label}_toman_per_sqm"] = sale["levels"].get(label)
 
-        for label, snapshot in (("1404_08", aban), ("1404_04", tir)):
-            per_sqm = snapshot.get("per_sqm")
-            row[f"gross_yield_{label}_pct"] = (12 * per_sqm / level * 100) if (per_sqm and level) else None
+        # which rent snapshots this district appears in, newest first
+        present: List[str] = []
+        for key in keys:
+            snapshot = rents[key].get(district)
+            if snapshot is None:
+                continue
+            present.append(key)
+            same_month = sale["monthly"].get(months[key])
+            row[f"rent_snapshot_{key}_listings"] = snapshot["listings"]
+            row[f"rent_snapshot_{key}_monthly_toman"] = snapshot["monthly"]
+            row[f"rent_snapshot_{key}_per_sqm_toman"] = snapshot["per_sqm"]
+            row[f"rent_snapshot_{key}_deposit_toman"] = snapshot["deposit"]
+            row[f"rent_snapshot_{key}_median_area_sqm"] = snapshot["median_area"]
+            row[f"rent_snapshot_{key}_excluded_rows"] = snapshot["excluded_rows"]
+            row[f"sale_same_month_{key}_toman_per_sqm"] = same_month
+            row[f"gross_yield_{key}_pct"] = yield_pct(snapshot["per_sqm"], level)
+            row[f"gross_yield_{key}_same_month_pct"] = yield_pct(snapshot["per_sqm"], same_month)
 
-        deposit = aban.get("deposit")
-        area = aban.get("median_area")
+        for newer, older in zip(present, present[1:]):
+            row[f"rent_change_{newer}_vs_{older}_pct"] = pct_change(
+                rents[older][district]["per_sqm"], rents[newer][district]["per_sqm"]
+            )
+
+        aban = rents["1404_08"].get(district, {})
+        deposit, area = aban.get("deposit"), aban.get("median_area")
         row["deposit_to_value_1404_08_pct"] = (
             deposit / (level * area) * 100 if (deposit and level and area) else None
         )
-        row["rent_change_1404_08_vs_1404_04_pct"] = (
-            (aban["per_sqm"] / tir["per_sqm"] - 1) * 100 if (aban.get("per_sqm") and tir.get("per_sqm")) else None
+        row["rent_side_rows_conflicting_district"] = sum(
+            rents[key].get(district, {}).get("conflicts", 0) for key in keys
         )
         panel.append(row)
 
-    out_dir = Path(args.out)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    with open(out_dir / "district_sale_rent_panel.csv", "w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(PANEL_FIELDS), lineterminator="\n")
-        writer.writeheader()
-        for row in panel:
-            writer.writerow({key: ("" if row.get(key) is None else row.get(key)) for key in PANEL_FIELDS})
+    meta = {
+        "sale_windows": [label for label, _ in SALE_WINDOWS],
+        "rent_keys": keys,
+        "rent_months": months,
+        "excluded_rent_rows": {
+            key: sum(s["excluded_rows"] for s in rents[key].values()) for key in keys
+        },
+    }
+    return panel, meta
 
-    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    payload = {
-        "generated_at": generated_at,
+
+def panel_fields(panel: List[Dict[str, Any]]) -> List[str]:
+    fields = list(BASE_FIELDS)
+    seen = set(fields)
+    for row in panel:
+        for key in row:
+            if key not in seen:
+                fields.append(key)
+                seen.add(key)
+    return fields
+
+
+def build_payload(panel: List[Dict[str, Any]], meta: Dict[str, Any]) -> Dict[str, Any]:
+    keys = meta["rent_keys"]
+    months = meta["rent_months"]
+    snapshots = []
+    for source in RENT_SOURCES:
+        key = source["key"]
+        snapshots.append(
+            {
+                "id": key.replace("_", "-"),
+                "key": key,
+                "month": source["month"],
+                "label_fa": source["label_fa"],
+                "note": source["note"],
+                "district_count": sum(
+                    1 for row in panel if row.get(f"rent_snapshot_{key}_per_sqm_toman") is not None
+                ),
+            }
+        )
+
+    districts = []
+    for row in panel:
+        rent: Dict[str, Any] = {}
+        for key in keys:
+            if row.get(f"rent_snapshot_{key}_per_sqm_toman") is None:
+                continue
+            deposit = row.get(f"rent_snapshot_{key}_deposit_toman")
+            area = row.get(f"rent_snapshot_{key}_median_area_sqm")
+            level = row.get("sale_level_1405_toman_per_sqm")
+            rent[key] = {
+                "monthly": row.get(f"rent_snapshot_{key}_monthly_toman"),
+                "per_sqm": row.get(f"rent_snapshot_{key}_per_sqm_toman"),
+                "deposit": deposit,
+                "area": area,
+                "listings": row.get(f"rent_snapshot_{key}_listings"),
+                "yield_pct": row.get(f"gross_yield_{key}_pct"),
+                "yield_same_month_pct": row.get(f"gross_yield_{key}_same_month_pct"),
+                "sale_same_month": row.get(f"sale_same_month_{key}_toman_per_sqm"),
+                "deposit_to_value_pct": deposit / (level * area) * 100 if (deposit and level and area) else None,
+            }
+        changes = {}
+        for newer, older in zip(keys, keys[1:]):
+            value = row.get(f"rent_change_{newer}_vs_{older}_pct")
+            if value is not None:
+                changes[f"{newer}_vs_{older}"] = value
+        districts.append(
+            {
+                "d": int(row["district_number"]),
+                "name_fa": row["area_name_fa"],
+                "sale": {label: row.get(f"sale_{label}_toman_per_sqm") for label, _ in SALE_WINDOWS},
+                "sale_cum_pct": row["sale_cumulative_1401_1405_pct"],
+                "sale_p25": row["sale_p25_1405_toman_per_sqm"],
+                "sale_p75": row["sale_p75_1405_toman_per_sqm"],
+                "rent": rent,
+                "rent_changes": changes,
+                "rent_district_conflicts": row["rent_side_rows_conflicting_district"],
+            }
+        )
+
+    return {
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "district_count": len(panel),
         "sale": {
             "label": "فروش — قیمت پیشنهادی هر متر مربع",
             "unit": "تومان/م²",
-            "source": "Kilid — 22 districts × 60 months (1400-06…1405-05), W1405 window = 1404-06…1405-05",
-            "windows": [label for label, _ in SALE_WINDOWS],
+            "source": "Kilid — ۲۲ منطقه × ۶۰ ماه (۱۴۰۰-۰۶ تا ۱۴۰۵-۰۵)؛ پنجرهٔ ۱۴۰۵ = ۱۴۰۴-۰۶ تا ۱۴۰۵-۰۵",
+            "windows": meta["sale_windows"],
             "level_window": SALE_LEVEL_WINDOW,
             "confidence": "OBSERVED (Kilid asking prices) · CALCULATED (window medians)",
         },
         "rent": {
             "label": "اجاره — اجاره‌بهای پیشنهادی آپارتمان میان‌متراژ",
             "unit": "تومان بر متر مربع در ماه",
-            "snapshots": [
-                {"id": label, "label_fa": label_fa, "note": note}
-                for label, label_fa, note in RENT_SNAPSHOTS
-            ],
-            "source": "دنیای اقتصاد (Donya-e-Eqtesad) asking-rent tables, transcribed by the owner",
-            "confidence": "OBSERVED (asking rents, listing-based) · two months only",
+            "snapshots": snapshots,
+            "source": "دنیای اقتصاد — چهار جدول اجاره: خرداد ۱۴۰۲، شهریور ۱۴۰۲، تیر ۱۴۰۴، آبان ۱۴۰۴",
+            "confidence": "OBSERVED (asking rents, listing-based) · four dates only",
         },
         "ratio": {
             "label": "نسبت اجاره به قیمت (بازده ناخالص)",
             "unit": "% در سال",
             "definition": "۱۲ × اجارهٔ ماهانهٔ هر متر مربع ÷ قیمت فروش هر متر مربع",
-            "note": "comparison of two observed series — never a conversion of one into the other",
+            "note": "مقایسهٔ دو سری مشاهده‌شده، نه تبدیل یکی به دیگری. «هم‌ماه» یعنی قیمت فروش Kilid در همان ماهِ جدول اجاره.",
         },
-        "districts": [
-            {
-                "d": int(row["district_number"]),
-                "name_fa": row["area_name_fa"],
-                "sale": {label: sales[row["district_number"]]["levels"].get(label) for label, _ in SALE_WINDOWS},
-                "sale_cum_pct": row["sale_cumulative_1401_1405_pct"],
-                "sale_p25": row["sale_p25_1405_toman_per_sqm"],
-                "sale_p75": row["sale_p75_1405_toman_per_sqm"],
-                "rent": {
-                    "1404_08": {
-                        "monthly": row["rent_snapshot_1404_08_monthly_toman"],
-                        "per_sqm": row["rent_snapshot_1404_08_per_sqm_toman"],
-                        "deposit": row["rent_snapshot_1404_08_deposit_toman"],
-                        "area": row["rent_snapshot_1404_08_median_area_sqm"],
-                        "listings": row["rent_snapshot_1404_08_listings"],
-                        "yield_pct": row["gross_yield_1404_08_pct"],
-                        "deposit_to_value_pct": row["deposit_to_value_1404_08_pct"],
-                    },
-                    "1404_04": {
-                        "monthly": row["rent_snapshot_1404_04_monthly_toman"],
-                        "per_sqm": row["rent_snapshot_1404_04_per_sqm_toman"],
-                        "deposit": row["rent_snapshot_1404_04_deposit_toman"],
-                        "area": row["rent_snapshot_1404_04_median_area_sqm"],
-                        "listings": row["rent_snapshot_1404_04_listings"],
-                        "yield_pct": row["gross_yield_1404_04_pct"],
-                        "deposit_to_value_pct": (
-                            row["rent_snapshot_1404_04_deposit_toman"]
-                            / (level * row["rent_snapshot_1404_04_median_area_sqm"])
-                            * 100
-                        )
-                        if (row["rent_snapshot_1404_04_deposit_toman"] and level and row["rent_snapshot_1404_04_median_area_sqm"])
-                        else None,
-                    },
-                },
-                "rent_change_pct": row["rent_change_1404_08_vs_1404_04_pct"],
-                "rent_district_conflicts": row["rent_side_rows_conflicting_district"],
-            }
-            for row in panel
-        ],
+        "districts": districts,
         "caveats": {
             "sale": [
                 "قیمت‌های پیشنهادی آگهی‌ها (Kilid)، نه معاملات ثبت‌شده.",
@@ -304,39 +379,68 @@ def main(argv: Optional[List[str]] = None) -> int:
                 "منطقه ۲۰ هشت ماه مدل‌سازی‌شده در پنجرهٔ ۱۴۰۵ دارد.",
             ],
             "rent": [
-                "اجاره‌بهای پیشنهادی از جدول‌های دنیای اقتصاد — فقط دو ماه (تیر و آبان ۱۴۰۴)، پس روند اجاره نداریم.",
-                "آپارتمان‌های میان‌متراژ؛ رقم اجاره جدای از ودیعه است.",
+                "اجاره‌بها چهار تاریخ دارد: آبان ۱۴۰۴ و تیر ۱۴۰۴ برای هر ۲۲ منطقه، و دو جدول پراکنده در خرداد و شهریور ۱۴۰۲ که به‌ترتیب ۱۱ و ۱ منطقه را پوشش می‌دهند. روند پیوسته نیست — اتصال نقطه‌به‌نقطه نکنید.",
+                "در جدول شهریور ۱۴۰۲، ۲۷ ردیف از ۴۵ ردیف اصلا اجاره نداشتند؛ میانهٔ اجارهٔ آن جدول روی ۱۷ ردیف است.",
+                "در جدول خرداد ۱۴۰۲، ۱۸ ردیف از ۳۳ ردیف اجاره نداشتند و ردیف‌ها آگهی‌های پراکنده‌اند، نه میانگین منطقه.",
+                "آپارتمان‌های میان‌متراژ؛ اجاره جدای از ودیعه است و سطح ودیعه بین جدول‌ها یکسان نیست.",
             ],
             "ratio": [
                 "از مقایسهٔ دو سری مشاهده‌شده ساخته شده، نه تبدیل یکی به دیگری.",
-                "سمت اجاره (تیر/آبان ۱۴۰۴) و سمت فروش (پنجرهٔ ۱۴۰۴-۰۶ تا ۱۴۰۵-۰۵) ماه‌های متفاوتی دارند.",
+                "دو جدول ۱۴۰۲ پراکنده‌اند و نسبت آن‌ها فقط روی همان مناطق محاسبه می‌شود: شهریور ۱۴۰۲ فقط منطقهٔ ۲۲، خرداد ۱۴۰۲ فقط ۷ منطقه از ۱۱ منطقه‌ای که در آن جدول آمده‌اند.",
                 "هر دو سمت «پیشنهادی» هستند؛ این نسبت بازده واقعی بازار نیست.",
             ],
         },
         "inputs": {
             "kilid_monthly": str(KILID_MONTHLY.relative_to(REPO_ROOT)),
-            "rent_aban_1404": str(RENT_ABAN.relative_to(REPO_ROOT)),
-            "rent_tir_1404": str(RENT_TIR.relative_to(REPO_ROOT)),
+            "rent_snapshots": {s["key"]: str(s["path"].relative_to(REPO_ROOT)) for s in RENT_SOURCES},
             "hashes": {
                 str(path.relative_to(REPO_ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()[:16]
-                for path in (KILID_MONTHLY, RENT_ABAN, RENT_TIR)
+                for path in (KILID_MONTHLY, *[s["path"] for s in RENT_SOURCES])
             },
         },
     }
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--out", default=str(DEFAULT_OUT))
+    args = parser.parse_args(argv)
+
+    panel, meta = build_panel()
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    fields = panel_fields(panel)
+    with open(out_dir / "district_sale_rent_panel.csv", "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        for row in panel:
+            writer.writerow({key: ("" if row.get(key) is None else row.get(key)) for key in fields})
+
+    payload = build_payload(panel, meta)
     with open(out_dir / "switch_data.json", "w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
 
     template = (Path(__file__).resolve().parent / "rent_vs_sale_template.html").read_text(encoding="utf-8")
-    html = template.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False))
     with open(out_dir / "explorer.html", "w", encoding="utf-8") as handle:
-        handle.write(html)
+        handle.write(template.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False)))
 
-    yields = [row["gross_yield_1404_08_pct"] for row in panel if row["gross_yield_1404_08_pct"]]
-    print(f"districts      : {len(panel)} (sale levels + rent snapshots)")
-    print(f"gross yield    : median {st.median(yields):.2f}%  range {min(yields):.2f}..{max(yields):.2f}%")
-    print(f"sale 1401→1405 : median {st.median([r['sale_cumulative_1401_1405_pct'] for r in panel]):.0f}%")
-    print(f"outputs        : {out_dir}/district_sale_rent_panel.csv, switch_data.json, explorer.html")
+    for snapshot in payload["rent"]["snapshots"]:
+        key = snapshot["key"]
+        window = [row[f"gross_yield_{key}_pct"] for row in panel if row.get(f"gross_yield_{key}_pct")]
+        same = [
+            row[f"gross_yield_{key}_same_month_pct"]
+            for row in panel
+            if row.get(f"gross_yield_{key}_same_month_pct")
+        ]
+        if same:
+            print(
+                f"  {snapshot['label_fa']:12} {snapshot['district_count']:2} districts"
+                f"  same-month ratio {st.median(same):.2f}%"
+                + (f"  (1405-window {st.median(window):.2f}%)" if window else "")
+            )
+    print(f"  panel columns: {len(fields)}")
+    print(f"  outputs: {out_dir}/district_sale_rent_panel.csv, switch_data.json, explorer.html")
     return 0
 
 

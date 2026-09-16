@@ -102,19 +102,23 @@ let saleWindow = DATA.sale.level_window;   // 1401..1405
 let rentSnapshot = "1404_08";              // 1404_08 | 1404_04
 let selected = String(DATA.districts[0].d);
 
-const snaps = Object.fromEntries(DATA.rent.snapshots.map(s => [s.id.replace("-", "_"), s]));
+const snaps = Object.fromEntries(DATA.rent.snapshots.map(s => [s.key, s]));
 
 /* ---------- value extraction per mode ---------- */
+function snapshotOf(district) {
+  return district.rent ? district.rent[rentSnapshot] : undefined;
+}
 function metric(district) {
   if (mode === "sale") return district.sale[saleWindow];
-  if (mode === "rent") return district.rent[rentSnapshot].per_sqm;
-  const y = district.rent[rentSnapshot].yield_pct;
-  return y;
+  const r = snapshotOf(district);
+  if (!r) return null;
+  if (mode === "rent") return r.per_sqm;
+  return r.yield_same_month_pct;
 }
 function label(district) {
   if (mode === "sale") return fmt(metric(district) / 1e6, 1) + " م/م²";
   if (mode === "rent") {
-    const r = district.rent[rentSnapshot];
+    const r = snapshotOf(district);
     return rtl(`${fmt(r.per_sqm / 1e3, 0)} هزار/م² · ${fmt(r.monthly / 1e6, 1)} م/ماه (${fmt(r.area, 0)} م²)`);
   }
   return fmt(metric(district), 2) + "٪";
@@ -122,7 +126,7 @@ function label(district) {
 function unitLabel() {
   if (mode === "sale") return "میلیون تومان در هر متر مربع — قیمت پیشنهادی (نوار بر پایهٔ همین مقدار)";
   if (mode === "rent") return "هزار تومان اجارهٔ ماهانه در هر متر مربع — نوار بر پایهٔ اجارهٔ هر متر مربع است تا متراژ واحدها اثر نگذارد";
-  return "بازده ناخالص سالانه = ۱۲ × اجارهٔ متر مربع ÷ قیمت متر مربع";
+  return "بازده ناخالص سالانه = ۱۲ × اجارهٔ متر مربع ÷ قیمت فروش متر مربع در همان ماه";
 }
 function barValue(district) {
   if (mode === "sale") return metric(district) / 1e6;
@@ -156,7 +160,9 @@ function render() {
     ctlLabel.textContent = "ماه جدول اجاره:";
     for (const id of Object.keys(snaps)) {
       const b = document.createElement("button");
-      b.textContent = snaps[id].label_fa;
+      b.textContent = snaps[id].district_count < DATA.district_count
+        ? `${snaps[id].label_fa} (${toFa(snaps[id].district_count)} منطقه)`
+        : snaps[id].label_fa;
       b.title = snaps[id].note;
       b.setAttribute("aria-pressed", String(id === rentSnapshot));
       b.onclick = () => { rentSnapshot = id; render(); };
@@ -165,9 +171,11 @@ function render() {
   }
 
   document.getElementById("note").textContent = mode === "ratio"
-    ? "این نسبت از مقایسهٔ دو سری مشاهده‌شده ساخته می‌شود، نه تبدیل یکی به دیگری. دو سمت ماه‌های متفاوتی دارند."
+    ? "این نسبت از مقایسهٔ دو سری مشاهده‌شده ساخته می‌شود، نه تبدیل یکی به دیگری. قیمت فروش از همان ماهِ جدول اجاره گرفته شده است."
     : (mode === "rent"
-        ? "اجاره فقط دو ماه دارد (تیر و آبان ۱۴۰۴)؛ پس سمت اجاره روند زمانی ندارد."
+        ? (snaps[rentSnapshot].district_count < DATA.district_count
+            ? `این جدول اجاره فقط ${toFa(snaps[rentSnapshot].district_count)} منطقه را دارد؛ بقیه در این تاریخ دادهٔ اجاره ندارند.`
+            : "اجاره فقط سه تاریخ دارد (شهریور ۱۴۰۲، تیر ۱۴۰۴، آبان ۱۴۰۴)؛ پس سمت اجاره روند پیوسته ندارد.")
         : "فروش پنج سطح سالانه دارد (۱۴۰۱ تا ۱۴۰۵) از سری ماهانهٔ ۶۰ماههٔ Kilid.");
 
   const rows = [...DATA.districts].filter(d => metric(d) !== null && metric(d) !== undefined)
@@ -191,26 +199,40 @@ function render() {
     `<span>${toFa(rows.length)} منطقه</span>`;
 
   const d = DATA.districts.find(x => String(x.d) === selected);
-  const r = d.rent[rentSnapshot];
+  const r = snapshotOf(d);
   const snapName = snaps[rentSnapshot].label_fa;
   const cells = [
     ["قیمت فروش (پنجرهٔ ۱۴۰۵)", fmt(d.sale["1405"] / 1e6, 1), "م/م²"],
     ["تغییر قیمت ۱۴۰۱→۱۴۰۵", fmt(d.sale_cum_pct, 0), "٪"],
-    [`اجارهٔ ماهانه (${snapName})`, fmt(r.monthly / 1e6, 1), "م تومان"],
-    [`متراژ میانهٔ واحد (${snapName})`, fmt(r.area, 0), "م²"],
-    [`ودیعه (${snapName})`, fmt(r.deposit / 1e6, 0), "م تومان"],
-    ["اجاره بر متر مربع", fmt(r.per_sqm / 1e3, 0), "هزار تومان"],
-    ["بازده ناخالص", fmt(r.yield_pct, 2), "٪ در سال"],
-    ["ودیعه ÷ ارزش واحد", fmt(r.deposit_to_value_pct, 0), "٪"],
-    ["تعداد آگهی در جدول", fmt(r.listings, 0), ""],
+    [`اجارهٔ ماهانه (${snapName})`, r ? fmt(r.monthly / 1e6, 1) : "—", "م تومان"],
+    [`متراژ میانهٔ واحد (${snapName})`, r ? fmt(r.area, 0) : "—", "م²"],
+    [`ودیعه (${snapName})`, r ? fmt(r.deposit / 1e6, 0) : "—", "م تومان"],
+    [`اجاره بر متر مربع (${snapName})`, r ? fmt(r.per_sqm / 1e3, 0) : "—", "هزار تومان"],
+    [`قیمت فروش در همان ماه`, r ? fmt(r.sale_same_month / 1e6, 1) : "—", "م/م²"],
+    ["بازده ناخالص (هم‌ماه)", r ? fmt(r.yield_same_month_pct, 2) : "—", "٪ در سال"],
+    ["بازده ناخالص (پنجرهٔ ۱۴۰۵)", r ? fmt(r.yield_pct, 2) : "—", "٪ در سال"],
+    [`ودیعه ÷ ارزش واحد`, r ? fmt(r.deposit_to_value_pct, 0) : "—", "٪"],
+    [`تعداد آگهی در جدول`, r ? fmt(r.listings, 0) : "—", ""],
   ];
+  const changes = Object.entries(d.rent_changes || {});
+  const snapshotLabel = id => (snaps[id] ? snaps[id].label_fa : id);
+  const changeNote = changes.length
+    ? `<div class="note" style="margin:12px 0 0">تغییر اجارهٔ متر مربع: ` +
+      changes.map(([k, v]) => {
+        const [newer, older] = k.split("_vs_");
+        return `${snapshotLabel(newer)} نسبت به ${snapshotLabel(older)} ${fmt(v, 0)}٪`;
+      }).join(" — ") + `</div>`
+    : "";
+  const crossNote = mode === "ratio" && r
+    ? `<div class="note" style="margin:12px 0 0">نسبت با قیمت هم‌ماه (${fmt(r.sale_same_month / 1e6, 1)} م/م²) ساخته شده است؛ نسبت با پنجرهٔ ۱۴۰۵ برای مقایسه کنار آن آمده.</div>`
+    : "";
   const conflict = d.rent_district_conflicts
     ? `<div class="note" style="margin:12px 0 0">⚠ در جدول اجاره، ${toFa(d.rent_district_conflicts)} ردیف این منطقه برچسبی دارد که با بررسی جغرافیایی نمی‌خواند. ردیف‌ها حذف نشده‌اند؛ فقط علامت خورده‌اند.</div>`
     : "";
   document.getElementById("detail").innerHTML =
     `<h2>${toFa(d.name_fa)} — جزئیات</h2><div class="grid">` +
-    cells.map(([k, v, u]) => `<div class="cell"><div class="k">${k}</div><div class="v">${v}<span class="u">${u}</span></div></div>`).join("") +
-    `</div>` + conflict;
+    cells.map(([k, v, u]) => `<div class="cell"><div class="k">${k}</div><div class="v">${v}${v === "—" || !u ? "" : `<span class="u">${u}</span>`}</div></div>`).join("") +
+    `</div>` + changeNote + crossNote + conflict;
 
   document.getElementById("footer").innerHTML = `
     <h3>منابع</h3>

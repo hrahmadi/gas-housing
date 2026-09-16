@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-09-16T07:33:47Z",
+  "generated_at": "2026-09-16T08:13:03Z",
   "district_count": 22,
   "sale": {
     "label": "فروش — قیمت پیشنهادی هر متر مربع",
     "unit": "تومان/م²",
-    "source": "Kilid — 22 districts × 60 months (1400-06…1405-05), W1405 window = 1404-06…1405-05",
+    "source": "Kilid — ۲۲ منطقه × ۶۰ ماه (۱۴۰۰-۰۶ تا ۱۴۰۵-۰۵)؛ پنجرهٔ ۱۴۰۵ = ۱۴۰۴-۰۶ تا ۱۴۰۵-۰۵",
     "windows": [
       "1401",
       "1402",
@@ -21,23 +21,45 @@
     "snapshots": [
       {
         "id": "1404-08",
+        "key": "1404_08",
+        "month": "1404-08",
         "label_fa": "آبان ۱۴۰۴",
-        "note": "جدول آرشیو، مجموعه‌دادهٔ ۳"
+        "note": "جدول آرشیو، مجموعه‌دادهٔ ۳ — هر ۲۲ منطقه",
+        "district_count": 22
       },
       {
         "id": "1404-04",
+        "key": "1404_04",
+        "month": "1404-04",
         "label_fa": "تیر ۱۴۰۴",
-        "note": "جدول دنیای اقتصاد، بازنویسی مالک"
+        "note": "جدول دنیای اقتصاد، بازنویسی مالک — هر ۲۲ منطقه",
+        "district_count": 22
+      },
+      {
+        "id": "1402-06",
+        "key": "1402_06",
+        "month": "1402-06",
+        "label_fa": "شهریور ۱۴۰۲",
+        "note": "جدول دنیای اقتصاد — فقط منطقهٔ ۲۲",
+        "district_count": 1
+      },
+      {
+        "id": "1402-03",
+        "key": "1402_03",
+        "month": "1402-03",
+        "label_fa": "خرداد ۱۴۰۲",
+        "note": "جدول دنیای اقتصاد — نمونهٔ پراکنده در ۱۱ منطقه، نه گزارش منطقه‌به‌منطقه",
+        "district_count": 7
       }
     ],
-    "source": "دنیای اقتصاد (Donya-e-Eqtesad) asking-rent tables, transcribed by the owner",
-    "confidence": "OBSERVED (asking rents, listing-based) · two months only"
+    "source": "دنیای اقتصاد — چهار جدول اجاره: خرداد ۱۴۰۲، شهریور ۱۴۰۲، تیر ۱۴۰۴، آبان ۱۴۰۴",
+    "confidence": "OBSERVED (asking rents, listing-based) · four dates only"
   },
   "ratio": {
     "label": "نسبت اجاره به قیمت (بازده ناخالص)",
     "unit": "% در سال",
     "definition": "۱۲ × اجارهٔ ماهانهٔ هر متر مربع ÷ قیمت فروش هر متر مربع",
-    "note": "comparison of two observed series — never a conversion of one into the other"
+    "note": "مقایسهٔ دو سری مشاهده‌شده، نه تبدیل یکی به دیگری. «هم‌ماه» یعنی قیمت فروش Kilid در همان ماهِ جدول اجاره."
   },
   "districts": [
     {
@@ -61,6 +83,8 @@
           "area": 130.0,
           "listings": 5,
           "yield_pct": 1.9768047337266406,
+          "yield_same_month_pct": 2.38628571433344,
+          "sale_same_month": 241379310.34,
           "deposit_to_value_pct": 2.6399635867075864
         },
         "1404_04": {
@@ -70,10 +94,25 @@
           "area": 112.5,
           "listings": 6,
           "yield_pct": 2.0101437024502053,
-          "deposit_to_value_pct": 11.11061992504803
+          "yield_same_month_pct": 2.553113553067728,
+          "sale_same_month": 229411764.71,
+          "deposit_to_value_pct": 3.8132807363554027
+        },
+        "1402_03": {
+          "monthly": 13500000.0,
+          "per_sqm": 134920.6349206349,
+          "deposit": 400000000.0,
+          "area": 185.0,
+          "listings": 2,
+          "yield_pct": 0.555649478726073,
+          "yield_same_month_pct": 0.9251700680272108,
+          "sale_same_month": 175000000.0,
+          "deposit_to_value_pct": 0.7420438189664568
         }
       },
-      "rent_change_pct": -1.6585365853658551,
+      "rent_changes": {
+        "1404_08_vs_1404_04": -1.6585365853658551
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -97,6 +136,8 @@
           "area": 87.5,
           "listings": 6,
           "yield_pct": 2.273150587387293,
+          "yield_same_month_pct": 2.7226883277464933,
+          "sale_same_month": 156765475.16,
           "deposit_to_value_pct": 4.108426994844728
         },
         "1404_04": {
@@ -106,10 +147,25 @@
           "area": 80.0,
           "listings": 5,
           "yield_pct": 1.292538829838791,
-          "deposit_to_value_pct": 12.499447415679034
+          "yield_same_month_pct": 1.57539917212898,
+          "sale_same_month": 154054054.05,
+          "deposit_to_value_pct": 6.657173371276179
+        },
+        "1402_03": {
+          "monthly": 40000000.0,
+          "per_sqm": 312500.0,
+          "deposit": 300000000.0,
+          "area": 128.0,
+          "listings": 1,
+          "yield_pct": 1.9971520113828536,
+          "yield_same_month_pct": 2.9464285714917096,
+          "sale_same_month": 127272727.27,
+          "deposit_to_value_pct": 1.2482200071142835
         }
       },
-      "rent_change_pct": 75.86710239651417,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 75.86710239651417
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -133,6 +189,8 @@
           "area": 121.0,
           "listings": 4,
           "yield_pct": 2.4861564296629446,
+          "yield_same_month_pct": 3.1388024104772967,
+          "sale_same_month": 186718750.0,
           "deposit_to_value_pct": 3.50583257493952
         },
         "1404_04": {
@@ -142,10 +200,14 @@
           "area": 100.0,
           "listings": 5,
           "yield_pct": 1.9796267939825154,
-          "deposit_to_value_pct": 7.999646346034582
+          "yield_same_month_pct": 2.572503639841188,
+          "sale_same_month": 181405639.02,
+          "deposit_to_value_pct": 3.393645932541455
         }
       },
-      "rent_change_pct": 25.587127695994518,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 25.587127695994518
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -169,6 +231,8 @@
           "area": 76.5,
           "listings": 4,
           "yield_pct": 1.8921079326490082,
+          "yield_same_month_pct": 2.33572710292267,
+          "sale_same_month": 120447860.96,
           "deposit_to_value_pct": 6.15405423684744
         },
         "1404_04": {
@@ -178,10 +242,14 @@
           "area": 85.0,
           "listings": 4,
           "yield_pct": 1.5735832381506072,
-          "deposit_to_value_pct": 4.705674321196813
+          "yield_same_month_pct": 1.9741438355917618,
+          "sale_same_month": 118518518.52,
+          "deposit_to_value_pct": 3.1649421789501115
         }
       },
-      "rent_change_pct": 20.241998438719744,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 20.241998438719744
+      },
       "rent_district_conflicts": 1
     },
     {
@@ -205,6 +273,8 @@
           "area": 88.0,
           "listings": 7,
           "yield_pct": 2.492764455513765,
+          "yield_same_month_pct": 3.0613333333884376,
+          "sale_same_month": 121951219.51,
           "deposit_to_value_pct": 6.070043316997806
         },
         "1404_04": {
@@ -214,10 +284,25 @@
           "area": 86.5,
           "listings": 6,
           "yield_pct": 2.4786010211074365,
-          "deposit_to_value_pct": 7.514118677633638
+          "yield_same_month_pct": 3.0606417531131083,
+          "sale_same_month": 121285714.29,
+          "deposit_to_value_pct": 5.017434649310324
+        },
+        "1402_03": {
+          "monthly": 10000000.0,
+          "per_sqm": 121428.57142857143,
+          "deposit": 250000000.0,
+          "area": 86.5,
+          "listings": 4,
+          "yield_pct": 0.9729412288102196,
+          "yield_same_month_pct": 1.4353944562214227,
+          "sale_same_month": 101515151.52,
+          "deposit_to_value_pct": 1.929782557427048
         }
       },
-      "rent_change_pct": 0.5714285714286005,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.5714285714286005
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -241,6 +326,8 @@
           "area": 90.0,
           "listings": 5,
           "yield_pct": 1.7491590581705068,
+          "yield_same_month_pct": 2.1231422505307855,
+          "sale_same_month": 157000000.0,
           "deposit_to_value_pct": 4.664424155121352
         },
         "1404_04": {
@@ -250,10 +337,25 @@
           "area": 85.0,
           "listings": 5,
           "yield_pct": 1.6690770771940255,
-          "deposit_to_value_pct": 9.411348642393627
+          "yield_same_month_pct": 2.082616178964532,
+          "sale_same_month": 152727272.73,
+          "deposit_to_value_pct": 4.938802046599077
+        },
+        "1402_03": {
+          "monthly": 20000000.0,
+          "per_sqm": 187500.0,
+          "deposit": 250000000.0,
+          "area": 85.0,
+          "listings": 3,
+          "yield_pct": 1.180682364265092,
+          "yield_same_month_pct": 1.9419371739248303,
+          "sale_same_month": 115863686.54,
+          "deposit_to_value_pct": 1.5433756395622118
         }
       },
-      "rent_change_pct": 4.797979797979801,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 4.797979797979801
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -277,6 +379,8 @@
           "area": 80.5,
           "listings": 4,
           "yield_pct": 3.3748237667747745,
+          "yield_same_month_pct": 3.8951688386492913,
+          "sale_same_month": 102000000.0,
           "deposit_to_value_pct": 3.6931487817179547
         },
         "1404_04": {
@@ -286,10 +390,25 @@
           "area": 80.5,
           "listings": 4,
           "yield_pct": 3.390859408680619,
-          "deposit_to_value_pct": 4.347633883714446
+          "yield_same_month_pct": 3.991950464396284,
+          "sale_same_month": 100000000.0,
+          "deposit_to_value_pct": 3.6931487817179547
+        },
+        "1402_03": {
+          "monthly": 10000000.0,
+          "per_sqm": 200000.0,
+          "deposit": 400000000.0,
+          "area": 50.0,
+          "listings": 1,
+          "yield_pct": 2.038618127508311,
+          "yield_same_month_pct": 2.6968860106660606,
+          "sale_same_month": 88991525.43,
+          "deposit_to_value_pct": 6.795393758361038
         }
       },
-      "rent_change_pct": -0.4729078965879041,
+      "rent_changes": {
+        "1404_08_vs_1404_04": -0.4729078965879041
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -313,6 +432,8 @@
           "area": 80.0,
           "listings": 5,
           "yield_pct": 1.9793365959706926,
+          "yield_same_month_pct": 2.345864661654135,
+          "sale_same_month": 95000000.0,
           "deposit_to_value_pct": 5.551024107289602
         },
         "1404_04": {
@@ -322,10 +443,14 @@
           "area": 81.0,
           "listings": 5,
           "yield_pct": 1.9793365959706926,
-          "deposit_to_value_pct": 6.1725666250266835
+          "yield_same_month_pct": 2.425210084083544,
+          "sale_same_month": 91891891.89,
+          "deposit_to_value_pct": 5.482492945471212
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -349,6 +474,8 @@
           "area": 82.0,
           "listings": 4,
           "yield_pct": 2.262836002115191,
+          "yield_same_month_pct": 2.667921686746988,
+          "sale_same_month": 80000000.0,
           "deposit_to_value_pct": 5.171733701646279
         },
         "1404_04": {
@@ -358,10 +485,14 @@
           "area": 82.0,
           "listings": 4,
           "yield_pct": 1.8985530191589821,
-          "deposit_to_value_pct": 3.6583748533694735
+          "yield_same_month_pct": 2.3174291939815737,
+          "sale_same_month": 77272727.27,
+          "deposit_to_value_pct": 3.8788002762347102
         }
       },
-      "rent_change_pct": 19.187401103898516,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 19.187401103898516
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -385,6 +516,8 @@
           "area": 70.0,
           "listings": 3,
           "yield_pct": 3.0745341615408117,
+          "yield_same_month_pct": 3.5958188151789923,
+          "sale_same_month": 71511627.91,
           "deposit_to_value_pct": 10.24844720513604
         },
         "1404_04": {
@@ -394,10 +527,14 @@
           "area": 70.0,
           "listings": 3,
           "yield_pct": 3.0745341615408117,
-          "deposit_to_value_pct": 8.571049656465624
+          "yield_same_month_pct": 3.5604395605491126,
+          "sale_same_month": 72222222.22,
+          "deposit_to_value_pct": 10.24844720513604
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -421,6 +558,8 @@
           "area": 76.5,
           "listings": 4,
           "yield_pct": 1.9752801970541387,
+          "yield_same_month_pct": 2.225274725274725,
+          "sale_same_month": 70000000.0,
           "deposit_to_value_pct": 9.531328635829702
         },
         "1404_04": {
@@ -430,10 +569,14 @@
           "area": 76.5,
           "listings": 4,
           "yield_pct": 1.9752801970541387,
-          "deposit_to_value_pct": 7.516007596356021
+          "yield_same_month_pct": 2.234265734238652,
+          "sale_same_month": 69718309.86,
+          "deposit_to_value_pct": 9.531328635829702
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -457,6 +600,8 @@
           "area": 79.0,
           "listings": 4,
           "yield_pct": 2.777939278387378,
+          "yield_same_month_pct": 2.758021977888017,
+          "sale_same_month": 74468085.11,
           "deposit_to_value_pct": 6.848378252318002
         },
         "1404_04": {
@@ -466,10 +611,25 @@
           "area": 79.0,
           "listings": 4,
           "yield_pct": 2.777939278387378,
-          "deposit_to_value_pct": 5.063067307616824
+          "yield_same_month_pct": 3.3710574716947233,
+          "sale_same_month": 60925871.81,
+          "deposit_to_value_pct": 6.848378252318002
+        },
+        "1402_03": {
+          "monthly": 9000000.0,
+          "per_sqm": 86718.75,
+          "deposit": 575000000.0,
+          "area": 104.0,
+          "listings": 2,
+          "yield_pct": 1.4075022397166383,
+          "yield_same_month_pct": 1.9086077529759258,
+          "sale_same_month": 54522727.28,
+          "deposit_to_value_pct": 7.4780668776813775
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -493,6 +653,8 @@
           "area": 85.0,
           "listings": 5,
           "yield_pct": 1.9325775208734934,
+          "yield_same_month_pct": 2.249618113524687,
+          "sale_same_month": 91243556.7,
           "deposit_to_value_pct": 8.861290593447091
         },
         "1404_04": {
@@ -502,10 +664,14 @@
           "area": 85.0,
           "listings": 4,
           "yield_pct": 1.8039055850945864,
-          "deposit_to_value_pct": 8.823139352244024
+          "yield_same_month_pct": 2.2232866207981097,
+          "sale_same_month": 86177210.29,
+          "deposit_to_value_pct": 8.307459931356648
         }
       },
-      "rent_change_pct": 7.1329639889196494,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 7.1329639889196494
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -529,6 +695,8 @@
           "area": 78.5,
           "listings": 6,
           "yield_pct": 1.770450461272289,
+          "yield_same_month_pct": 2.075461578059759,
+          "sale_same_month": 77091284.99,
           "deposit_to_value_pct": 7.400370160572864
         },
         "1404_04": {
@@ -538,10 +706,14 @@
           "area": 76.0,
           "listings": 7,
           "yield_pct": 1.770450461272289,
-          "deposit_to_value_pct": 7.236522188024703
+          "yield_same_month_pct": 2.124625704457265,
+          "sale_same_month": 75307382.22,
+          "deposit_to_value_pct": 8.007794027136175
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -565,6 +737,8 @@
           "area": 75.0,
           "listings": 4,
           "yield_pct": 2.1209126672005327,
+          "yield_same_month_pct": 2.3850000000223592,
+          "sale_same_month": 60377358.49,
           "deposit_to_value_pct": 5.891424075557036
         },
         "1404_04": {
@@ -574,10 +748,14 @@
           "area": 75.0,
           "listings": 4,
           "yield_pct": 2.1209126672005327,
-          "deposit_to_value_pct": 3.999823173017291
+          "yield_same_month_pct": 2.46857142871249,
+          "sale_same_month": 58333333.33,
+          "deposit_to_value_pct": 5.891424075557036
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -601,6 +779,8 @@
           "area": 80.0,
           "listings": 5,
           "yield_pct": 1.82237288143624,
+          "yield_same_month_pct": 2.0604878049182536,
+          "sale_same_month": 62121212.12,
           "deposit_to_value_pct": 8.89830508513789
         },
         "1404_04": {
@@ -610,10 +790,14 @@
           "area": 80.0,
           "listings": 5,
           "yield_pct": 1.82237288143624,
-          "deposit_to_value_pct": 6.249723707839517
+          "yield_same_month_pct": 2.120000000019875,
+          "sale_same_month": 60377358.49,
+          "deposit_to_value_pct": 8.89830508513789
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -637,6 +821,8 @@
           "area": 75.0,
           "listings": 5,
           "yield_pct": 2.0408921932655573,
+          "yield_same_month_pct": 2.350000000026111,
+          "sale_same_month": 57446808.51,
           "deposit_to_value_pct": 7.054935976720446
         },
         "1404_04": {
@@ -646,10 +832,14 @@
           "area": 75.0,
           "listings": 5,
           "yield_pct": 2.0408921932655573,
-          "deposit_to_value_pct": 4.666460368520172
+          "yield_same_month_pct": 2.362500000118125,
+          "sale_same_month": 57142857.14,
+          "deposit_to_value_pct": 7.054935976720446
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -673,6 +863,8 @@
           "area": 75.0,
           "listings": 5,
           "yield_pct": 2.7885376660090455,
+          "yield_same_month_pct": 3.171428571247347,
+          "sale_same_month": 56756756.76,
           "deposit_to_value_pct": 6.19675036890899
         },
         "1404_04": {
@@ -682,10 +874,14 @@
           "area": 75.0,
           "listings": 5,
           "yield_pct": 2.7885376660090455,
-          "deposit_to_value_pct": 3.999823173017291
+          "yield_same_month_pct": 3.2287459574809114,
+          "sale_same_month": 55749198.72,
+          "deposit_to_value_pct": 6.19675036890899
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -709,6 +905,8 @@
           "area": 90.0,
           "listings": 4,
           "yield_pct": 2.075954947259931,
+          "yield_same_month_pct": 2.4327731093305824,
+          "sale_same_month": 62222222.22,
           "deposit_to_value_pct": 4.571403381271868
         },
         "1404_04": {
@@ -718,10 +916,14 @@
           "area": 90.0,
           "listings": 5,
           "yield_pct": 1.8285613525087472,
-          "deposit_to_value_pct": 3.333185977514409
+          "yield_same_month_pct": 2.1413744125011553,
+          "sale_same_month": 62265306.13,
+          "deposit_to_value_pct": 4.571403381271868
         }
       },
-      "rent_change_pct": 13.529411764705902,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 13.529411764705902
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -745,6 +947,8 @@
           "area": 79.5,
           "listings": 6,
           "yield_pct": 1.4658778080769936,
+          "yield_same_month_pct": 1.8860360361994926,
+          "sale_same_month": 56603773.58,
           "deposit_to_value_pct": 6.045097560575454
         },
         "1404_04": {
@@ -754,10 +958,14 @@
           "area": 75.0,
           "listings": 5,
           "yield_pct": 1.558654884537563,
-          "deposit_to_value_pct": 5.3330975640230545
+          "yield_same_month_pct": 1.8272907053751404,
+          "sale_same_month": 62121212.12,
+          "deposit_to_value_pct": 7.323203901954263
         }
       },
-      "rent_change_pct": -5.952380952380953,
+      "rent_changes": {
+        "1404_08_vs_1404_04": -5.952380952380953
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -781,6 +989,8 @@
           "area": 89.5,
           "listings": 4,
           "yield_pct": 2.0676658491353432,
+          "yield_same_month_pct": 2.166866568605307,
+          "sale_same_month": 71142960.81,
           "deposit_to_value_pct": 6.74381624980622
         },
         "1404_04": {
@@ -790,10 +1000,25 @@
           "area": 89.5,
           "listings": 4,
           "yield_pct": 2.0676658491353432,
-          "deposit_to_value_pct": 5.02771069234017
+          "yield_same_month_pct": 2.202247191011236,
+          "sale_same_month": 70000000.0,
+          "deposit_to_value_pct": 6.74381624980622
+        },
+        "1402_03": {
+          "monthly": 9000000.0,
+          "per_sqm": 173076.92307692306,
+          "deposit": 100000000.0,
+          "area": 52.0,
+          "listings": 1,
+          "yield_pct": 2.7857148662661078,
+          "yield_same_month_pct": 3.692307692307692,
+          "sale_same_month": 56250000.0,
+          "deposit_to_value_pct": 2.579365616913063
         }
       },
-      "rent_change_pct": 0.0,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 0.0
+      },
       "rent_district_conflicts": 0
     },
     {
@@ -817,6 +1042,8 @@
           "area": 110.0,
           "listings": 5,
           "yield_pct": 2.7776549812620077,
+          "yield_same_month_pct": 3.2004830917943976,
+          "sale_same_month": 86792452.83,
           "deposit_to_value_pct": 4.5452536057014665
         },
         "1404_04": {
@@ -826,10 +1053,26 @@
           "area": 109.0,
           "listings": 6,
           "yield_pct": 2.588774442536191,
+          "yield_same_month_pct": 3.0276836157063127,
+          "sale_same_month": 85507246.38,
           "deposit_to_value_pct": 5.504343816078841
+        },
+        "1402_06": {
+          "monthly": 15000000.0,
+          "per_sqm": 88888.88888888889,
+          "deposit": 700000000.0,
+          "area": 160.0,
+          "listings": 17,
+          "yield_pct": 1.066619512804611,
+          "yield_same_month_pct": 1.6897643282723713,
+          "sale_same_month": 63125173.66,
+          "deposit_to_value_pct": 4.374806595487661
         }
       },
-      "rent_change_pct": 7.296137339055808,
+      "rent_changes": {
+        "1404_08_vs_1404_04": 7.296137339055808,
+        "1404_04_vs_1402_06": 142.70833333333331
+      },
       "rent_district_conflicts": 0
     }
   ],
@@ -840,23 +1083,31 @@
       "منطقه ۲۰ هشت ماه مدل‌سازی‌شده در پنجرهٔ ۱۴۰۵ دارد."
     ],
     "rent": [
-      "اجاره‌بهای پیشنهادی از جدول‌های دنیای اقتصاد — فقط دو ماه (تیر و آبان ۱۴۰۴)، پس روند اجاره نداریم.",
-      "آپارتمان‌های میان‌متراژ؛ رقم اجاره جدای از ودیعه است."
+      "اجاره‌بها چهار تاریخ دارد: آبان ۱۴۰۴ و تیر ۱۴۰۴ برای هر ۲۲ منطقه، و دو جدول پراکنده در خرداد و شهریور ۱۴۰۲ که به‌ترتیب ۱۱ و ۱ منطقه را پوشش می‌دهند. روند پیوسته نیست — اتصال نقطه‌به‌نقطه نکنید.",
+      "در جدول شهریور ۱۴۰۲، ۲۷ ردیف از ۴۵ ردیف اصلا اجاره نداشتند؛ میانهٔ اجارهٔ آن جدول روی ۱۷ ردیف است.",
+      "در جدول خرداد ۱۴۰۲، ۱۸ ردیف از ۳۳ ردیف اجاره نداشتند و ردیف‌ها آگهی‌های پراکنده‌اند، نه میانگین منطقه.",
+      "آپارتمان‌های میان‌متراژ؛ اجاره جدای از ودیعه است و سطح ودیعه بین جدول‌ها یکسان نیست."
     ],
     "ratio": [
       "از مقایسهٔ دو سری مشاهده‌شده ساخته شده، نه تبدیل یکی به دیگری.",
-      "سمت اجاره (تیر/آبان ۱۴۰۴) و سمت فروش (پنجرهٔ ۱۴۰۴-۰۶ تا ۱۴۰۵-۰۵) ماه‌های متفاوتی دارند.",
+      "دو جدول ۱۴۰۲ پراکنده‌اند و نسبت آن‌ها فقط روی همان مناطق محاسبه می‌شود: شهریور ۱۴۰۲ فقط منطقهٔ ۲۲، خرداد ۱۴۰۲ فقط ۷ منطقه از ۱۱ منطقه‌ای که در آن جدول آمده‌اند.",
       "هر دو سمت «پیشنهادی» هستند؛ این نسبت بازده واقعی بازار نیست."
     ]
   },
   "inputs": {
     "kilid_monthly": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
-    "rent_aban_1404": "data/raw/tehran_housing_market_data/observations/rent_observations.csv",
-    "rent_tir_1404": "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv",
+    "rent_snapshots": {
+      "1404_08": "data/raw/tehran_housing_market_data/observations/rent_observations.csv",
+      "1404_04": "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv",
+      "1402_06": "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1402-06_district-22/rent_asking.csv",
+      "1402_03": "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1402-03_tehran/rent_asking.csv"
+    },
     "hashes": {
       "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv": "5d74007569fdab97",
       "data/raw/tehran_housing_market_data/observations/rent_observations.csv": "563cbe4c9541dac9",
-      "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv": "e72b05d21fb0b0eb"
+      "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv": "e72b05d21fb0b0eb",
+      "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1402-06_district-22/rent_asking.csv": "4b6ee7916d77c539",
+      "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1402-03_tehran/rent_asking.csv": "06302c640e656f25"
     }
   }
 }
