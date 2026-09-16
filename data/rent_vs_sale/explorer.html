@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فروش یا اجاره؟ ۲۲ منطقه تهران</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
+    --line:#2a313b; --sale:#e0a458; --rent:#5aa9e6; --ratio:#7fbf7f; --accent:#e0a458;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --ink:#1b1f24; --ink-dim:#5a6472;
+    --line:#dfe3e8; --sale:#b8792a; --rent:#2b6cb0; --ratio:#2f7d32;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
+       font-size:15px;line-height:1.7}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+  h1{font-size:24px;margin:0 0 6px;font-weight:700}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:22px}
+  .theme-btn{position:fixed;inset-inline-end:16px;top:16px;background:var(--panel);color:var(--ink);
+             border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;font-family:inherit}
+  .switch{display:flex;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:6px;width:fit-content}
+  .switch button{font-family:inherit;font-size:15px;background:transparent;color:var(--ink-dim);border:0;cursor:pointer;
+                 padding:9px 18px;border-radius:10px;font-weight:600;transition:.15s}
+  .switch button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .controls{display:flex;align-items:center;gap:10px;margin:16px 0 6px;flex-wrap:wrap}
+  .controls .label{color:var(--ink-dim);font-size:13px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{font-family:inherit;font-size:13px;background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);
+                border-radius:999px;padding:5px 12px;cursor:pointer}
+  .chips button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink)}
+  .note{color:var(--ink-dim);font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+        border-radius:10px;padding:10px 12px;margin:14px 0 18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+  .row{display:grid;grid-template-columns:120px 1fr 168px;align-items:center;gap:10px;padding:3px 4px;border-radius:8px;cursor:pointer}
+  .row:hover{background:var(--panel-2)}
+  .row[aria-selected="true"]{background:var(--panel-2);outline:1px solid var(--line)}
+  .dname{font-size:13.5px;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{background:var(--panel-2);border-radius:6px;height:22px;position:relative;overflow:hidden}
+  .fill{height:100%;border-radius:6px;transition:width .25s ease}
+  .value{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink);text-align:left;direction:ltr}
+  .legend{display:flex;gap:16px;color:var(--ink-dim);font-size:12.5px;margin-top:10px;flex-wrap:wrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px;vertical-align:middle}
+  .detail{margin-top:22px}
+  .detail h2{font-size:17px;margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+  .cell{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .cell .k{color:var(--ink-dim);font-size:12.5px}
+  .cell .v{font-size:17px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .cell .u{color:var(--ink-dim);font-size:12px;margin-inline-start:4px}
+  footer{margin-top:26px;color:var(--ink-dim);font-size:12.5px;line-height:1.9}
+  footer h3{font-size:13.5px;color:var(--ink);margin:16px 0 6px}
+  footer ul{margin:0;padding-inline-start:18px}
+  code{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">☀ / ☾</button>
+<div class="wrap">
+  <h1>فروش یا اجاره؟ — ۲۲ منطقه تهران</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="switch" role="tablist" id="mode">
+    <button role="tab" data-mode="sale">فروش</button>
+    <button role="tab" data-mode="rent">اجاره</button>
+    <button role="tab" data-mode="ratio">نسبت اجاره به قیمت</button>
+  </div>
+
+  <div class="controls">
+    <span class="label" id="ctl-label"></span>
+    <div class="chips" id="ctl-chips"></div>
+  </div>
+
+  <div class="note" id="note"></div>
+
+  <div class="panel">
+    <div class="bars" id="bars"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="panel detail" id="detail"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = {"generated_at": "2026-09-16T07:33:47Z", "district_count": 22, "sale": {"label": "فروش — قیمت پیشنهادی هر متر مربع", "unit": "تومان/م²", "source": "Kilid — 22 districts × 60 months (1400-06…1405-05), W1405 window = 1404-06…1405-05", "windows": ["1401", "1402", "1403", "1404", "1405"], "level_window": "1405", "confidence": "OBSERVED (Kilid asking prices) · CALCULATED (window medians)"}, "rent": {"label": "اجاره — اجاره‌بهای پیشنهادی آپارتمان میان‌متراژ", "unit": "تومان بر متر مربع در ماه", "snapshots": [{"id": "1404-08", "label_fa": "آبان ۱۴۰۴", "note": "جدول آرشیو، مجموعه‌دادهٔ ۳"}, {"id": "1404-04", "label_fa": "تیر ۱۴۰۴", "note": "جدول دنیای اقتصاد، بازنویسی مالک"}], "source": "دنیای اقتصاد (Donya-e-Eqtesad) asking-rent tables, transcribed by the owner", "confidence": "OBSERVED (asking rents, listing-based) · two months only"}, "ratio": {"label": "نسبت اجاره به قیمت (بازده ناخالص)", "unit": "% در سال", "definition": "۱۲ × اجارهٔ ماهانهٔ هر متر مربع ÷ قیمت فروش هر متر مربع", "note": "comparison of two observed series — never a conversion of one into the other"}, "districts": [{"d": 1, "name_fa": "منطقه 1", "sale": {"1401": 69803921.57, "1402": 96337209.3, "1403": 180189873.42000002, "1404": 206499999.745, "1405": 291379310.345}, "sale_cum_pct": 317.4254164972698, "sale_p25": 233731060.60500002, "sale_p75": 359649122.81, "rent": {"1404_08": {"monthly": 60000000.0, "per_sqm": 480000.0, "deposit": 1000000000.0, "area": 130.0, "listings": 5, "yield_pct": 1.9768047337266406, "deposit_to_value_pct": 2.6399635867075864}, "1404_04": {"monthly": 52500000.0, "per_sqm": 488095.2380952381, "deposit": 1250000000.0, "area": 112.5, "listings": 6, "yield_pct": 2.0101437024502053, "deposit_to_value_pct": 11.11061992504803}}, "rent_change_pct": -1.6585365853658551, "rent_district_conflicts": 0}, {"d": 2, "name_fa": "منطقه 2", "sale": {"1401": 47683535.285, "1402": 75000000.0, "1403": 123544375.35, "1404": 135683350.35000002, "1405": 187767379.68}, "sale_cum_pct": 293.7782267143828, "sale_p25": 142533333.33499998, "sale_p75": 245714285.715, "rent": {"1404_08": {"monthly": 30500000.0, "per_sqm": 355686.274509804, "deposit": 675000000.0, "area": 87.5, "listings": 6, "yield_pct": 2.273150587387293, "deposit_to_value_pct": 4.108426994844728}, "1404_04": {"monthly": 18000000.0, "per_sqm": 202247.19101123596, "deposit": 1000000000.0, "area": 80.0, "listings": 5, "yield_pct": 1.292538829838791, "deposit_to_value_pct": 12.499447415679034}}, "rent_change_pct": 75.86710239651417, "rent_district_conflicts": 0}, {"d": 3, "name_fa": "منطقه 3", "sale": {"1401": 64714260.44, "1402": 91346749.225, "1403": 138278388.28, "1404": 159806150.82999998, "1405": 235734668.82}, "sale_cum_pct": 264.2700499352257, "sale_p25": 191785714.285, "sale_p75": 291304347.825, "rent": {"1404_08": {"monthly": 59000000.0, "per_sqm": 488394.38548442314, "deposit": 1000000000.0, "area": 121.0, "listings": 4, "yield_pct": 2.4861564296629446, "deposit_to_value_pct": 3.50583257493952}, "1404_04": {"monthly": 40000000.0, "per_sqm": 388888.8888888889, "deposit": 800000000.0, "area": 100.0, "listings": 5, "yield_pct": 1.9796267939825154, "deposit_to_value_pct": 7.999646346034582}}, "rent_change_pct": 25.587127695994518, "rent_district_conflicts": 0}, {"d": 4, "name_fa": "منطقه 4", "sale": {"1401": 33166666.665, "1402": 75445205.47999999, "1403": 100000000.0, "1404": 105370543.31, "1405": 148687782.805}, "sale_cum_pct": 348.3048728014224, "sale_p25": 108555555.555, "sale_p75": 200822368.42000002, "rent": {"1404_08": {"monthly": 18000000.0, "per_sqm": 234444.44444444444, "deposit": 700000000.0, "area": 76.5, "listings": 4, "yield_pct": 1.8921079326490082, "deposit_to_value_pct": 6.15405423684744}, "1404_04": {"monthly": 16500000.0, "per_sqm": 194977.1689497717, "deposit": 400000000.0, "area": 85.0, "listings": 4, "yield_pct": 1.5735832381506072, "deposit_to_value_pct": 4.705674321196813}}, "rent_change_pct": 20.241998438719744, "rent_district_conflicts": 1}, {"d": 5, "name_fa": "منطقه 5", "sale": {"1401": 39087121.21, "1402": 69932795.695, "1403": 94852941.17500001, "1404": 104889704.28, "1405": 149766791.04500002}, "sale_cum_pct": 283.16147725579714, "sale_p25": 117456117.875, "sale_p75": 180110569.95999998, "rent": {"1404_08": {"monthly": 25000000.0, "per_sqm": 311111.1111111111, "deposit": 800000000.0, "area": 88.0, "listings": 7, "yield_pct": 2.492764455513765, "deposit_to_value_pct": 6.070043316997806}, "1404_04": {"monthly": 25000000.0, "per_sqm": 309343.4343434343, "deposit": 650000000.0, "area": 86.5, "listings": 6, "yield_pct": 2.4786010211074365, "deposit_to_value_pct": 7.514118677633638}}, "rent_change_pct": 0.5714285714286005, "rent_district_conflicts": 0}, {"d": 6, "name_fa": "منطقه 6", "sale": {"1401": 46091611.480000004, "1402": 70321100.91499999, "1403": 115500000.0, "1404": 119279967.285, "1405": 190567765.565}, "sale_cum_pct": 313.4543346302632, "sale_p25": 147690071.005, "sale_p75": 240842261.90499997, "rent": {"1404_08": {"monthly": 25000000.0, "per_sqm": 277777.77777777775, "deposit": 800000000.0, "area": 90.0, "listings": 5, "yield_pct": 1.7491590581705068, "deposit_to_value_pct": 4.664424155121352}, "1404_04": {"monthly": 23000000.0, "per_sqm": 265060.2409638554, "deposit": 800000000.0, "area": 85.0, "listings": 5, "yield_pct": 1.6690770771940255, "deposit_to_value_pct": 9.411348642393627}}, "rent_change_pct": 4.797979797979801, "rent_district_conflicts": 0}, {"d": 7, "name_fa": "منطقه 7", "sale": {"1401": 26428571.43, "1402": 54607046.075, "1403": 84574402.94, "1404": 89951701.475, "1405": 117726805.60499999}, "sale_cum_pct": 345.45277794078635, "sale_p25": 91597326.65, "sale_p75": 166087601.235, "rent": {"1404_08": {"monthly": 26500000.0, "per_sqm": 331089.35128518974, "deposit": 350000000.0, "area": 80.5, "listings": 4, "yield_pct": 3.3748237667747745, "deposit_to_value_pct": 3.6931487817179547}, "1404_04": {"monthly": 26500000.0, "per_sqm": 332662.53869969037, "deposit": 350000000.0, "area": 80.5, "listings": 4, "yield_pct": 3.390859408680619, "deposit_to_value_pct": 4.347633883714446}}, "rent_change_pct": -0.4729078965879041, "rent_district_conflicts": 0}, {"d": 8, "name_fa": "منطقه 8", "sale": {"1401": 29793233.08, "1402": 58906250.0, "1403": 79915966.38499999, "1404": 88432432.85, "1405": 112591836.735}, "sale_cum_pct": 277.9107706527566, "sale_p25": 91634382.57, "sale_p75": 139809738.135, "rent": {"1404_08": {"monthly": 15000000.0, "per_sqm": 185714.2857142857, "deposit": 500000000.0, "area": 80.0, "listings": 5, "yield_pct": 1.9793365959706926, "deposit_to_value_pct": 5.551024107289602}, "1404_04": {"monthly": 15000000.0, "per_sqm": 185714.2857142857, "deposit": 500000000.0, "area": 81.0, "listings": 5, "yield_pct": 1.9793365959706926, "deposit_to_value_pct": 6.1725666250266835}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 9, "name_fa": "منطقه 9", "sale": {"1401": 23100961.54, "1402": 45793699.19, "1403": 64202586.205, "1404": 72475962.34, "1405": 94321344.87}, "sale_cum_pct": 308.30051470662727, "sale_p25": 76580166.82, "sale_p75": 112647058.825, "rent": {"1404_08": {"monthly": 14500000.0, "per_sqm": 177861.4457831325, "deposit": 400000000.0, "area": 82.0, "listings": 4, "yield_pct": 2.262836002115191, "deposit_to_value_pct": 5.171733701646279}, "1404_04": {"monthly": 12000000.0, "per_sqm": 149228.3950617284, "deposit": 300000000.0, "area": 82.0, "listings": 4, "yield_pct": 1.8985530191589821, "deposit_to_value_pct": 3.6583748533694735}}, "rent_change_pct": 19.187401103898516, "rent_district_conflicts": 0}, {"d": 10, "name_fa": "منطقه 10", "sale": {"1401": 23113953.490000002, "1402": 41863636.364999995, "1403": 57650375.94, "1404": 64322845.415, "1405": 83636363.63499999}, "sale_cum_pct": 261.84360962387655, "sale_p25": 70764406.36000001, "sale_p75": 100266798.42, "rent": {"1404_08": {"monthly": 15000000.0, "per_sqm": 214285.7142857143, "deposit": 600000000.0, "area": 70.0, "listings": 3, "yield_pct": 3.0745341615408117, "deposit_to_value_pct": 10.24844720513604}, "1404_04": {"monthly": 15000000.0, "per_sqm": 214285.7142857143, "deposit": 600000000.0, "area": 70.0, "listings": 3, "yield_pct": 3.0745341615408117, "deposit_to_value_pct": 8.571049656465624}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 11, "name_fa": "منطقه 11", "sale": {"1401": 24331643.915, "1402": 39065906.425, "1403": 59166666.665, "1404": 64585650.72, "1405": 78859308.67}, "sale_cum_pct": 224.10185249088218, "sale_p25": 64087301.585, "sale_p75": 102000000.0, "rent": {"1404_08": {"monthly": 10000000.0, "per_sqm": 129807.6923076923, "deposit": 575000000.0, "area": 76.5, "listings": 4, "yield_pct": 1.9752801970541387, "deposit_to_value_pct": 9.531328635829702}, "1404_04": {"monthly": 10000000.0, "per_sqm": 129807.6923076923, "deposit": 575000000.0, "area": 76.5, "listings": 4, "yield_pct": 1.9752801970541387, "deposit_to_value_pct": 7.516007596356021}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 12, "name_fa": "منطقه 12", "sale": {"1401": 22111111.11, "1402": 35500000.0, "1403": 52589285.715, "1404": 55555555.56, "1405": 73934162.99000001}, "sale_cum_pct": 234.37561152936567, "sale_p25": 54877819.55, "sale_p75": 113722529.28, "rent": {"1404_08": {"monthly": 13500000.0, "per_sqm": 171153.84615384616, "deposit": 400000000.0, "area": 79.0, "listings": 4, "yield_pct": 2.777939278387378, "deposit_to_value_pct": 6.848378252318002}, "1404_04": {"monthly": 13500000.0, "per_sqm": 171153.84615384616, "deposit": 400000000.0, "area": 79.0, "listings": 4, "yield_pct": 2.777939278387378, "deposit_to_value_pct": 5.063067307616824}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 13, "name_fa": "منطقه 13", "sale": {"1401": 27284482.759999998, "1402": 39574987.555, "1403": 70211267.60499999, "1404": 78416897.965, "1405": 106212121.21000001}, "sale_cum_pct": 289.27665275630835, "sale_p25": 85166666.66499999, "sale_p75": 132722739.9, "rent": {"1404_08": {"monthly": 13000000.0, "per_sqm": 171052.63157894736, "deposit": 800000000.0, "area": 85.0, "listings": 5, "yield_pct": 1.9325775208734934, "deposit_to_value_pct": 8.861290593447091}, "1404_04": {"monthly": 12500000.0, "per_sqm": 159663.8655462185, "deposit": 750000000.0, "area": 85.0, "listings": 4, "yield_pct": 1.8039055850945864, "deposit_to_value_pct": 8.823139352244024}}, "rent_change_pct": 7.1329639889196494, "rent_district_conflicts": 0}, {"d": 14, "name_fa": "منطقه 14", "sale": {"1401": 23185963.2, "1402": 40991071.43, "1403": 60208333.335, "1404": 69848484.85, "1405": 90372480.62}, "sale_cum_pct": 289.77238012695545, "sale_p25": 73492909.68, "sale_p75": 113771393.82499999, "rent": {"1404_08": {"monthly": 12000000.0, "per_sqm": 133333.33333333334, "deposit": 525000000.0, "area": 78.5, "listings": 6, "yield_pct": 1.770450461272289, "deposit_to_value_pct": 7.400370160572864}, "1404_04": {"monthly": 12000000.0, "per_sqm": 133333.33333333334, "deposit": 550000000.0, "area": 76.0, "listings": 7, "yield_pct": 1.770450461272289, "deposit_to_value_pct": 7.236522188024703}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 15, "name_fa": "منطقه 15", "sale": {"1401": 18161787.965, "1402": 35178049.425, "1403": 48051459.535, "1404": 55430556.08, "1405": 67895299.145}, "sale_cum_pct": 273.8359861696579, "sale_p25": 54381720.43, "sale_p75": 87647058.825, "rent": {"1404_08": {"monthly": 9000000.0, "per_sqm": 120000.0, "deposit": 300000000.0, "area": 75.0, "listings": 4, "yield_pct": 2.1209126672005327, "deposit_to_value_pct": 5.891424075557036}, "1404_04": {"monthly": 9000000.0, "per_sqm": 120000.0, "deposit": 300000000.0, "area": 75.0, "listings": 4, "yield_pct": 2.1209126672005327, "deposit_to_value_pct": 3.999823173017291}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 16, "name_fa": "منطقه 16", "sale": {"1401": 19840291.75, "1402": 35921052.629999995, "1403": 52833333.335, "1404": 60155122.655, "1405": 70238095.235}, "sale_cum_pct": 254.01745155788848, "sale_p25": 58529282.67, "sale_p75": 85021801.275, "rent": {"1404_08": {"monthly": 8000000.0, "per_sqm": 106666.66666666667, "deposit": 500000000.0, "area": 80.0, "listings": 5, "yield_pct": 1.82237288143624, "deposit_to_value_pct": 8.89830508513789}, "1404_04": {"monthly": 8000000.0, "per_sqm": 106666.66666666667, "deposit": 500000000.0, "area": 80.0, "listings": 5, "yield_pct": 1.82237288143624, "deposit_to_value_pct": 6.249723707839517}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 17, "name_fa": "منطقه 17", "sale": {"1401": 18011363.64, "1402": 32571428.57, "1403": 48230769.230000004, "1404": 52215836.769999996, "1405": 66147540.985}, "sale_cum_pct": 267.2544861517215, "sale_p25": 57706552.705, "sale_p75": 76614082.88, "rent": {"1404_08": {"monthly": 9000000.0, "per_sqm": 112500.0, "deposit": 350000000.0, "area": 75.0, "listings": 5, "yield_pct": 2.0408921932655573, "deposit_to_value_pct": 7.054935976720446}, "1404_04": {"monthly": 9000000.0, "per_sqm": 112500.0, "deposit": 350000000.0, "area": 75.0, "listings": 5, "yield_pct": 2.0408921932655573, "deposit_to_value_pct": 4.666460368520172}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 18, "name_fa": "منطقه 18", "sale": {"1401": 17250000.0, "1402": 41643442.625, "1403": 50000000.0, "1404": 52000000.0, "1405": 64549961.865}, "sale_cum_pct": 274.20267747826085, "sale_p25": 53776106.935, "sale_p75": 78059701.495, "rent": {"1404_08": {"monthly": 12000000.0, "per_sqm": 150000.0, "deposit": 300000000.0, "area": 75.0, "listings": 5, "yield_pct": 2.7885376660090455, "deposit_to_value_pct": 6.19675036890899}, "1404_04": {"monthly": 12000000.0, "per_sqm": 150000.0, "deposit": 300000000.0, "area": 75.0, "listings": 5, "yield_pct": 2.7885376660090455, "deposit_to_value_pct": 3.999823173017291}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 19, "name_fa": "منطقه 19", "sale": {"1401": 19045988.259999998, "1402": 30192307.689999998, "1403": 50881701.635000005, "1404": 60726030.555, "1405": 72917068.465}, "sale_cum_pct": 282.84738743716946, "sale_p25": 52141173.39, "sale_p75": 95708128.08, "rent": {"1404_08": {"monthly": 11000000.0, "per_sqm": 126143.79084967321, "deposit": 300000000.0, "area": 90.0, "listings": 4, "yield_pct": 2.075954947259931, "deposit_to_value_pct": 4.571403381271868}, "1404_04": {"monthly": 10000000.0, "per_sqm": 111111.11111111111, "deposit": 300000000.0, "area": 90.0, "listings": 5, "yield_pct": 1.8285613525087472, "deposit_to_value_pct": 3.333185977514409}}, "rent_change_pct": 13.529411764705902, "rent_district_conflicts": 0}, {"d": 20, "name_fa": "منطقه 20", "sale": {"1401": 17500000.0, "1402": 31981302.69, "1403": 51192959.585, "1404": 58959863.695, "1405": 72827868.85}, "sale_cum_pct": 316.1592505714285, "sale_p25": 56593420.945, "sale_p75": 120528769.84, "rent": {"1404_08": {"monthly": 7000000.0, "per_sqm": 88963.96396396396, "deposit": 350000000.0, "area": 79.5, "listings": 6, "yield_pct": 1.4658778080769936, "deposit_to_value_pct": 6.045097560575454}, "1404_04": {"monthly": 7000000.0, "per_sqm": 94594.5945945946, "deposit": 400000000.0, "area": 75.0, "listings": 5, "yield_pct": 1.558654884537563, "deposit_to_value_pct": 5.3330975640230545}}, "rent_change_pct": -5.952380952380953, "rent_district_conflicts": 0}, {"d": 21, "name_fa": "منطقه 21", "sale": {"1401": 25358312.86, "1402": 32750000.0, "1403": 52301587.3, "1404": 64253600.105000004, "1405": 74556197.47999999}, "sale_cum_pct": 194.01087482284493, "sale_p25": 44521962.235, "sale_p75": 103632911.39, "rent": {"1404_08": {"monthly": 11500000.0, "per_sqm": 128464.41947565544, "deposit": 450000000.0, "area": 89.5, "listings": 4, "yield_pct": 2.0676658491353432, "deposit_to_value_pct": 6.74381624980622}, "1404_04": {"monthly": 11500000.0, "per_sqm": 128464.41947565544, "deposit": 450000000.0, "area": 89.5, "listings": 4, "yield_pct": 2.0676658491353432, "deposit_to_value_pct": 5.02771069234017}}, "rent_change_pct": 0.0, "rent_district_conflicts": 0}, {"d": 22, "name_fa": "منطقه 22", "sale": {"1401": 33184523.81, "1402": 46323496.765, "1403": 67739007.57499999, "1404": 75565475.05, "1405": 100004420.87}, "sale_cum_pct": 201.3586135590837, "sale_p25": 75000000.0, "sale_p75": 127406015.03999999, "rent": {"1404_08": {"monthly": 25000000.0, "per_sqm": 231481.4814814815, "deposit": 500000000.0, "area": 110.0, "listings": 5, "yield_pct": 2.7776549812620077, "deposit_to_value_pct": 4.5452536057014665}, "1404_04": {"monthly": 23000000.0, "per_sqm": 215740.74074074073, "deposit": 600000000.0, "area": 109.0, "listings": 6, "yield_pct": 2.588774442536191, "deposit_to_value_pct": 5.504343816078841}}, "rent_change_pct": 7.296137339055808, "rent_district_conflicts": 0}], "caveats": {"sale": ["قیمت‌های پیشنهادی آگهی‌ها (Kilid)، نه معاملات ثبت‌شده.", "همه ارقام اسمی‌اند؛ سری تورم مخزن تا ۱۴۰۱ است، پس تعدیل تورمی برای ۱۴۰۲–۱۴۰۵ محاسبه نشده.", "منطقه ۲۰ هشت ماه مدل‌سازی‌شده در پنجرهٔ ۱۴۰۵ دارد."], "rent": ["اجاره‌بهای پیشنهادی از جدول‌های دنیای اقتصاد — فقط دو ماه (تیر و آبان ۱۴۰۴)، پس روند اجاره نداریم.", "آپارتمان‌های میان‌متراژ؛ رقم اجاره جدای از ودیعه است."], "ratio": ["از مقایسهٔ دو سری مشاهده‌شده ساخته شده، نه تبدیل یکی به دیگری.", "سمت اجاره (تیر/آبان ۱۴۰۴) و سمت فروش (پنجرهٔ ۱۴۰۴-۰۶ تا ۱۴۰۵-۰۵) ماه‌های متفاوتی دارند.", "هر دو سمت «پیشنهادی» هستند؛ این نسبت بازده واقعی بازار نیست."]}, "inputs": {"kilid_monthly": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "rent_aban_1404": "data/raw/tehran_housing_market_data/observations/rent_observations.csv", "rent_tir_1404": "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv", "hashes": {"kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv": "5d74007569fdab97", "data/raw/tehran_housing_market_data/observations/rent_observations.csv": "563cbe4c9541dac9", "data/raw/tehran_housing_market_data/sources/donya-e-eqtesad_1404-04/rent_asking.csv": "e72b05d21fb0b0eb"}}};
+
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const toFa = s => String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]);
+const fmt = (v, digits = 0) => v === null || v === undefined || v === "" ? "—"
+  : Number(v).toLocaleString("fa-IR", {minimumFractionDigits: digits, maximumFractionDigits: digits});
+const rtl = s => "\u200f" + s;
+
+let mode = "sale";          // sale | rent | ratio
+let saleWindow = DATA.sale.level_window;   // 1401..1405
+let rentSnapshot = "1404_08";              // 1404_08 | 1404_04
+let selected = String(DATA.districts[0].d);
+
+const snaps = Object.fromEntries(DATA.rent.snapshots.map(s => [s.id.replace("-", "_"), s]));
+
+/* ---------- value extraction per mode ---------- */
+function metric(district) {
+  if (mode === "sale") return district.sale[saleWindow];
+  if (mode === "rent") return district.rent[rentSnapshot].per_sqm;
+  const y = district.rent[rentSnapshot].yield_pct;
+  return y;
+}
+function label(district) {
+  if (mode === "sale") return fmt(metric(district) / 1e6, 1) + " م/م²";
+  if (mode === "rent") {
+    const r = district.rent[rentSnapshot];
+    return rtl(`${fmt(r.per_sqm / 1e3, 0)} هزار/م² · ${fmt(r.monthly / 1e6, 1)} م/ماه (${fmt(r.area, 0)} م²)`);
+  }
+  return fmt(metric(district), 2) + "٪";
+}
+function unitLabel() {
+  if (mode === "sale") return "میلیون تومان در هر متر مربع — قیمت پیشنهادی (نوار بر پایهٔ همین مقدار)";
+  if (mode === "rent") return "هزار تومان اجارهٔ ماهانه در هر متر مربع — نوار بر پایهٔ اجارهٔ هر متر مربع است تا متراژ واحدها اثر نگذارد";
+  return "بازده ناخالص سالانه = ۱۲ × اجارهٔ متر مربع ÷ قیمت متر مربع";
+}
+function barValue(district) {
+  if (mode === "sale") return metric(district) / 1e6;
+  if (mode === "rent") return metric(district) / 1e3;
+  return metric(district);
+}
+function color() { return mode === "sale" ? "var(--sale)" : mode === "rent" ? "var(--rent)" : "var(--ratio)"; }
+
+/* ---------- render ---------- */
+function render() {
+  document.getElementById("sub").textContent =
+    `${toFa(DATA.district_count)} منطقه — ساخته‌شده در ${toFa(DATA.generated_at.slice(0, 10))}`;
+
+  for (const btn of document.querySelectorAll("#mode button"))
+    btn.setAttribute("aria-selected", String(btn.dataset.mode === mode));
+
+  // controls
+  const ctlLabel = document.getElementById("ctl-label");
+  const chips = document.getElementById("ctl-chips");
+  chips.innerHTML = "";
+  if (mode === "sale") {
+    ctlLabel.textContent = "سال (پنجرهٔ ۱۲ماهه، آغاز تیر):";
+    for (const w of DATA.sale.windows) {
+      const b = document.createElement("button");
+      b.textContent = toFa(w);
+      b.setAttribute("aria-pressed", String(w === saleWindow));
+      b.onclick = () => { saleWindow = w; render(); };
+      chips.appendChild(b);
+    }
+  } else {
+    ctlLabel.textContent = "ماه جدول اجاره:";
+    for (const id of Object.keys(snaps)) {
+      const b = document.createElement("button");
+      b.textContent = snaps[id].label_fa;
+      b.title = snaps[id].note;
+      b.setAttribute("aria-pressed", String(id === rentSnapshot));
+      b.onclick = () => { rentSnapshot = id; render(); };
+      chips.appendChild(b);
+    }
+  }
+
+  document.getElementById("note").textContent = mode === "ratio"
+    ? "این نسبت از مقایسهٔ دو سری مشاهده‌شده ساخته می‌شود، نه تبدیل یکی به دیگری. دو سمت ماه‌های متفاوتی دارند."
+    : (mode === "rent"
+        ? "اجاره فقط دو ماه دارد (تیر و آبان ۱۴۰۴)؛ پس سمت اجاره روند زمانی ندارد."
+        : "فروش پنج سطح سالانه دارد (۱۴۰۱ تا ۱۴۰۵) از سری ماهانهٔ ۶۰ماههٔ Kilid.");
+
+  const rows = [...DATA.districts].filter(d => metric(d) !== null && metric(d) !== undefined)
+                                  .sort((a, b) => barValue(b) - barValue(a));
+  const max = Math.max(...rows.map(barValue), 0.0001);
+  const bars = document.getElementById("bars");
+  bars.innerHTML = "";
+  for (const d of rows) {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.setAttribute("aria-selected", String(String(d.d) === selected));
+    row.onclick = () => { selected = String(d.d); render(); };
+    row.innerHTML = `
+      <div class="dname" title="${d.name_fa}${d.rent_district_conflicts ? " — برچسب منطقه در ردیف‌های اجاره با جغرافیا نمی‌خواند" : ""}">${toFa(d.name_fa)}${d.rent_district_conflicts ? " ⚠" : ""}</div>
+      <div class="track"><div class="fill" style="width:${(barValue(d) / max * 100).toFixed(1)}%;background:${color()}"></div></div>
+      <div class="value">${label(d)}</div>`;
+    bars.appendChild(row);
+  }
+  document.getElementById("legend").innerHTML =
+    `<span><span class="dot" style="background:${color()}"></span>${unitLabel()}</span>` +
+    `<span>${toFa(rows.length)} منطقه</span>`;
+
+  const d = DATA.districts.find(x => String(x.d) === selected);
+  const r = d.rent[rentSnapshot];
+  const snapName = snaps[rentSnapshot].label_fa;
+  const cells = [
+    ["قیمت فروش (پنجرهٔ ۱۴۰۵)", fmt(d.sale["1405"] / 1e6, 1), "م/م²"],
+    ["تغییر قیمت ۱۴۰۱→۱۴۰۵", fmt(d.sale_cum_pct, 0), "٪"],
+    [`اجارهٔ ماهانه (${snapName})`, fmt(r.monthly / 1e6, 1), "م تومان"],
+    [`متراژ میانهٔ واحد (${snapName})`, fmt(r.area, 0), "م²"],
+    [`ودیعه (${snapName})`, fmt(r.deposit / 1e6, 0), "م تومان"],
+    ["اجاره بر متر مربع", fmt(r.per_sqm / 1e3, 0), "هزار تومان"],
+    ["بازده ناخالص", fmt(r.yield_pct, 2), "٪ در سال"],
+    ["ودیعه ÷ ارزش واحد", fmt(r.deposit_to_value_pct, 0), "٪"],
+    ["تعداد آگهی در جدول", fmt(r.listings, 0), ""],
+  ];
+  const conflict = d.rent_district_conflicts
+    ? `<div class="note" style="margin:12px 0 0">⚠ در جدول اجاره، ${toFa(d.rent_district_conflicts)} ردیف این منطقه برچسبی دارد که با بررسی جغرافیایی نمی‌خواند. ردیف‌ها حذف نشده‌اند؛ فقط علامت خورده‌اند.</div>`
+    : "";
+  document.getElementById("detail").innerHTML =
+    `<h2>${toFa(d.name_fa)} — جزئیات</h2><div class="grid">` +
+    cells.map(([k, v, u]) => `<div class="cell"><div class="k">${k}</div><div class="v">${v}<span class="u">${u}</span></div></div>`).join("") +
+    `</div>` + conflict;
+
+  document.getElementById("footer").innerHTML = `
+    <h3>منابع</h3>
+    <ul>
+      <li>فروش: ${DATA.sale.source}</li>
+      <li>اجاره: ${DATA.rent.source}</li>
+    </ul>
+    <h3>این ارقام چه هستند و چه نیستند</h3>
+    <ul>
+      <li>${DATA.caveats.sale.join("</li><li>")}</li>
+      <li>${DATA.caveats.rent.join("</li><li>")}</li>
+      <li>${DATA.caveats.ratio.join("</li><li>")}</li>
+    </ul>
+    <p>ساخته‌شده با <code>scripts/build_rent_vs_sale.py</code> — دادهٔ درون‌صفحه از <code>switch_data.json</code> است.</p>`;
+}
+
+for (const btn of document.querySelectorAll("#mode button"))
+  btn.onclick = () => { mode = btn.dataset.mode; render(); };
+
+document.getElementById("theme").onclick = () => {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "dark" ? "light" : "dark";
+  html.dataset.theme = next;
+  try { localStorage.setItem("rv-theme", next); } catch (e) {}
+};
+try {
+  const saved = localStorage.getItem("rv-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فروش یا اجاره؟ ۲۲ منطقه تهران</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
+    --line:#2a313b; --sale:#e0a458; --rent:#5aa9e6; --ratio:#7fbf7f; --accent:#e0a458;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --ink:#1b1f24; --ink-dim:#5a6472;
+    --line:#dfe3e8; --sale:#b8792a; --rent:#2b6cb0; --ratio:#2f7d32;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
+       font-size:15px;line-height:1.7}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+  h1{font-size:24px;margin:0 0 6px;font-weight:700}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:22px}
+  .theme-btn{position:fixed;inset-inline-end:16px;top:16px;background:var(--panel);color:var(--ink);
+             border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;font-family:inherit}
+  .switch{display:flex;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:6px;width:fit-content}
+  .switch button{font-family:inherit;font-size:15px;background:transparent;color:var(--ink-dim);border:0;cursor:pointer;
+                 padding:9px 18px;border-radius:10px;font-weight:600;transition:.15s}
+  .switch button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .controls{display:flex;align-items:center;gap:10px;margin:16px 0 6px;flex-wrap:wrap}
+  .controls .label{color:var(--ink-dim);font-size:13px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{font-family:inherit;font-size:13px;background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);
+                border-radius:999px;padding:5px 12px;cursor:pointer}
+  .chips button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink)}
+  .note{color:var(--ink-dim);font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+        border-radius:10px;padding:10px 12px;margin:14px 0 18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+  .row{display:grid;grid-template-columns:120px 1fr 168px;align-items:center;gap:10px;padding:3px 4px;border-radius:8px;cursor:pointer}
+  .row:hover{background:var(--panel-2)}
+  .row[aria-selected="true"]{background:var(--panel-2);outline:1px solid var(--line)}
+  .dname{font-size:13.5px;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{background:var(--panel-2);border-radius:6px;height:22px;position:relative;overflow:hidden}
+  .fill{height:100%;border-radius:6px;transition:width .25s ease}
+  .value{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink);text-align:left;direction:ltr}
+  .legend{display:flex;gap:16px;color:var(--ink-dim);font-size:12.5px;margin-top:10px;flex-wrap:wrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px;vertical-align:middle}
+  .detail{margin-top:22px}
+  .detail h2{font-size:17px;margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+  .cell{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .cell .k{color:var(--ink-dim);font-size:12.5px}
+  .cell .v{font-size:17px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .cell .u{color:var(--ink-dim);font-size:12px;margin-inline-start:4px}
+  footer{margin-top:26px;color:var(--ink-dim);font-size:12.5px;line-height:1.9}
+  footer h3{font-size:13.5px;color:var(--ink);margin:16px 0 6px}
+  footer ul{margin:0;padding-inline-start:18px}
+  code{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">☀ / ☾</button>
+<div class="wrap">
+  <h1>فروش یا اجاره؟ — ۲۲ منطقه تهران</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="switch" role="tablist" id="mode">
+    <button role="tab" data-mode="sale">فروش</button>
+    <button role="tab" data-mode="rent">اجاره</button>
+    <button role="tab" data-mode="ratio">نسبت اجاره به قیمت</button>
+  </div>
+
+  <div class="controls">
+    <span class="label" id="ctl-label"></span>
+    <div class="chips" id="ctl-chips"></div>
+  </div>
+
+  <div class="note" id="note"></div>
+
+  <div class="panel">
+    <div class="bars" id="bars"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="panel detail" id="detail"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const toFa = s => String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]);
+const fmt = (v, digits = 0) => v === null || v === undefined || v === "" ? "—"
+  : Number(v).toLocaleString("fa-IR", {minimumFractionDigits: digits, maximumFractionDigits: digits});
+const rtl = s => "\u200f" + s;
+
+let mode = "sale";          // sale | rent | ratio
+let saleWindow = DATA.sale.level_window;   // 1401..1405
+let rentSnapshot = "1404_08";              // 1404_08 | 1404_04
+let selected = String(DATA.districts[0].d);
+
+const snaps = Object.fromEntries(DATA.rent.snapshots.map(s => [s.id.replace("-", "_"), s]));
+
+/* ---------- value extraction per mode ---------- */
+function metric(district) {
+  if (mode === "sale") return district.sale[saleWindow];
+  if (mode === "rent") return district.rent[rentSnapshot].per_sqm;
+  const y = district.rent[rentSnapshot].yield_pct;
+  return y;
+}
+function label(district) {
+  if (mode === "sale") return fmt(metric(district) / 1e6, 1) + " م/م²";
+  if (mode === "rent") {
+    const r = district.rent[rentSnapshot];
+    return rtl(`${fmt(r.per_sqm / 1e3, 0)} هزار/م² · ${fmt(r.monthly / 1e6, 1)} م/ماه (${fmt(r.area, 0)} م²)`);
+  }
+  return fmt(metric(district), 2) + "٪";
+}
+function unitLabel() {
+  if (mode === "sale") return "میلیون تومان در هر متر مربع — قیمت پیشنهادی (نوار بر پایهٔ همین مقدار)";
+  if (mode === "rent") return "هزار تومان اجارهٔ ماهانه در هر متر مربع — نوار بر پایهٔ اجارهٔ هر متر مربع است تا متراژ واحدها اثر نگذارد";
+  return "بازده ناخالص سالانه = ۱۲ × اجارهٔ متر مربع ÷ قیمت متر مربع";
+}
+function barValue(district) {
+  if (mode === "sale") return metric(district) / 1e6;
+  if (mode === "rent") return metric(district) / 1e3;
+  return metric(district);
+}
+function color() { return mode === "sale" ? "var(--sale)" : mode === "rent" ? "var(--rent)" : "var(--ratio)"; }
+
+/* ---------- render ---------- */
+function render() {
+  document.getElementById("sub").textContent =
+    `${toFa(DATA.district_count)} منطقه — ساخته‌شده در ${toFa(DATA.generated_at.slice(0, 10))}`;
+
+  for (const btn of document.querySelectorAll("#mode button"))
+    btn.setAttribute("aria-selected", String(btn.dataset.mode === mode));
+
+  // controls
+  const ctlLabel = document.getElementById("ctl-label");
+  const chips = document.getElementById("ctl-chips");
+  chips.innerHTML = "";
+  if (mode === "sale") {
+    ctlLabel.textContent = "سال (پنجرهٔ ۱۲ماهه، آغاز تیر):";
+    for (const w of DATA.sale.windows) {
+      const b = document.createElement("button");
+      b.textContent = toFa(w);
+      b.setAttribute("aria-pressed", String(w === saleWindow));
+      b.onclick = () => { saleWindow = w; render(); };
+      chips.appendChild(b);
+    }
+  } else {
+    ctlLabel.textContent = "ماه جدول اجاره:";
+    for (const id of Object.keys(snaps)) {
+      const b = document.createElement("button");
+      b.textContent = snaps[id].label_fa;
+      b.title = snaps[id].note;
+      b.setAttribute("aria-pressed", String(id === rentSnapshot));
+      b.onclick = () => { rentSnapshot = id; render(); };
+      chips.appendChild(b);
+    }
+  }
+
+  document.getElementById("note").textContent = mode === "ratio"
+    ? "این نسبت از مقایسهٔ دو سری مشاهده‌شده ساخته می‌شود، نه تبدیل یکی به دیگری. دو سمت ماه‌های متفاوتی دارند."
+    : (mode === "rent"
+        ? "اجاره فقط دو ماه دارد (تیر و آبان ۱۴۰۴)؛ پس سمت اجاره روند زمانی ندارد."
+        : "فروش پنج سطح سالانه دارد (۱۴۰۱ تا ۱۴۰۵) از سری ماهانهٔ ۶۰ماههٔ Kilid.");
+
+  const rows = [...DATA.districts].filter(d => metric(d) !== null && metric(d) !== undefined)
+                                  .sort((a, b) => barValue(b) - barValue(a));
+  const max = Math.max(...rows.map(barValue), 0.0001);
+  const bars = document.getElementById("bars");
+  bars.innerHTML = "";
+  for (const d of rows) {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.setAttribute("aria-selected", String(String(d.d) === selected));
+    row.onclick = () => { selected = String(d.d); render(); };
+    row.innerHTML = `
+      <div class="dname" title="${d.name_fa}${d.rent_district_conflicts ? " — برچسب منطقه در ردیف‌های اجاره با جغرافیا نمی‌خواند" : ""}">${toFa(d.name_fa)}${d.rent_district_conflicts ? " ⚠" : ""}</div>
+      <div class="track"><div class="fill" style="width:${(barValue(d) / max * 100).toFixed(1)}%;background:${color()}"></div></div>
+      <div class="value">${label(d)}</div>`;
+    bars.appendChild(row);
+  }
+  document.getElementById("legend").innerHTML =
+    `<span><span class="dot" style="background:${color()}"></span>${unitLabel()}</span>` +
+    `<span>${toFa(rows.length)} منطقه</span>`;
+
+  const d = DATA.districts.find(x => String(x.d) === selected);
+  const r = d.rent[rentSnapshot];
+  const snapName = snaps[rentSnapshot].label_fa;
+  const cells = [
+    ["قیمت فروش (پنجرهٔ ۱۴۰۵)", fmt(d.sale["1405"] / 1e6, 1), "م/م²"],
+    ["تغییر قیمت ۱۴۰۱→۱۴۰۵", fmt(d.sale_cum_pct, 0), "٪"],
+    [`اجارهٔ ماهانه (${snapName})`, fmt(r.monthly / 1e6, 1), "م تومان"],
+    [`متراژ میانهٔ واحد (${snapName})`, fmt(r.area, 0), "م²"],
+    [`ودیعه (${snapName})`, fmt(r.deposit / 1e6, 0), "م تومان"],
+    ["اجاره بر متر مربع", fmt(r.per_sqm / 1e3, 0), "هزار تومان"],
+    ["بازده ناخالص", fmt(r.yield_pct, 2), "٪ در سال"],
+    ["ودیعه ÷ ارزش واحد", fmt(r.deposit_to_value_pct, 0), "٪"],
+    ["تعداد آگهی در جدول", fmt(r.listings, 0), ""],
+  ];
+  const conflict = d.rent_district_conflicts
+    ? `<div class="note" style="margin:12px 0 0">⚠ در جدول اجاره، ${toFa(d.rent_district_conflicts)} ردیف این منطقه برچسبی دارد که با بررسی جغرافیایی نمی‌خواند. ردیف‌ها حذف نشده‌اند؛ فقط علامت خورده‌اند.</div>`
+    : "";
+  document.getElementById("detail").innerHTML =
+    `<h2>${toFa(d.name_fa)} — جزئیات</h2><div class="grid">` +
+    cells.map(([k, v, u]) => `<div class="cell"><div class="k">${k}</div><div class="v">${v}<span class="u">${u}</span></div></div>`).join("") +
+    `</div>` + conflict;
+
+  document.getElementById("footer").innerHTML = `
+    <h3>منابع</h3>
+    <ul>
+      <li>فروش: ${DATA.sale.source}</li>
+      <li>اجاره: ${DATA.rent.source}</li>
+    </ul>
+    <h3>این ارقام چه هستند و چه نیستند</h3>
+    <ul>
+      <li>${DATA.caveats.sale.join("</li><li>")}</li>
+      <li>${DATA.caveats.rent.join("</li><li>")}</li>
+      <li>${DATA.caveats.ratio.join("</li><li>")}</li>
+    </ul>
+    <p>ساخته‌شده با <code>scripts/build_rent_vs_sale.py</code> — دادهٔ درون‌صفحه از <code>switch_data.json</code> است.</p>`;
+}
+
+for (const btn of document.querySelectorAll("#mode button"))
+  btn.onclick = () => { mode = btn.dataset.mode; render(); };
+
+document.getElementById("theme").onclick = () => {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "dark" ? "light" : "dark";
+  html.dataset.theme = next;
+  try { localStorage.setItem("rv-theme", next); } catch (e) {}
+};
+try {
+  const saved = localStorage.getItem("rv-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+render();
+</script>
+</body>
+</html>
