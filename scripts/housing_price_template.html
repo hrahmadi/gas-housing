@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قیمت مسکن، ارز و تورم — تهران</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
+    --line:#2a313b; --housing:#e0a458; --fx:#5aa9e6; --cpi:#8fbf7f; --grid:#242a33; --danger:#e06c75;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --ink:#1b1f24; --ink-dim:#5a6472;
+    --line:#dfe3e8; --housing:#b8792a; --fx:#2b6cb0; --cpi:#2f7d32; --grid:#e8ebef; --danger:#b3383f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
+       font-size:15px;line-height:1.75}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 64px}
+  h1{font-size:24px;margin:0 0 6px;font-weight:700}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:20px}
+  h2{font-size:16px;margin:0 0 12px}
+  .theme-btn{position:fixed;inset-inline-end:16px;top:16px;background:var(--panel);color:var(--ink);
+             border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;font-family:inherit;z-index:20}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+  .chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .legend .item{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+                border:1px solid var(--line);border-radius:9px;padding:4px 9px;background:var(--panel-2)}
+  .legend .item[aria-pressed="false"]{opacity:.42;text-decoration:line-through}
+  .legend .item:hover{border-color:var(--ink-dim)}
+  .legend .item:focus-visible{outline:2px solid var(--housing);outline-offset:1px}
+  .legend .line{width:20px;height:3px;border-radius:2px;display:inline-block}
+  .legend .mul{color:var(--ink);font-variant-numeric:tabular-nums}
+  .badge{font-size:11px;border:1px solid var(--danger);color:var(--danger);border-radius:5px;
+         padding:0 5px;white-space:nowrap;text-decoration:none}
+  .card[data-hidden="true"]{opacity:.45}
+  .card .k .badge{margin-inline-start:2px}
+  .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .chips{display:flex;gap:6px}
+  .chips button{font-family:inherit;font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+                color:var(--ink-dim);border-radius:999px;padding:5px 12px;cursor:pointer}
+  .chips button[aria-pressed="true"]{border-color:var(--housing);color:var(--ink)}
+  .chart-wrap{position:relative}
+  svg#chart{width:100%;height:auto;display:block;touch-action:none;direction:ltr}
+  svg#chart text{font-family:Vazirmatn,system-ui,sans-serif;direction:ltr;unicode-bidi:isolate}
+  /* Persian phrases need an RTL base direction; their anchors are set for RTL below */
+  svg#chart text.axis-label,svg#chart text.base-label{unicode-bidi:isolate;direction:rtl}
+  .grid-line{stroke:var(--grid);stroke-width:1}
+  .axis-line{stroke:var(--line);stroke-width:1}
+  .tick{fill:var(--ink-dim);font-size:12px}
+  .axis-label{fill:var(--ink-dim);font-size:11.5px}
+  .s-housing{stroke:var(--housing)}.s-fx{stroke:var(--fx)}.s-cpi{stroke:var(--cpi)}
+  .line{fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .dot{stroke:var(--panel);stroke-width:1.4}
+  .d-housing{fill:var(--housing)}.d-fx{fill:var(--fx)}.d-cpi{fill:var(--cpi)}
+  .hit{fill:transparent;cursor:crosshair}
+  .hit:hover{fill:rgba(127,127,127,.08)}
+  .base-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:4 4;opacity:.7}
+  .base-label{fill:var(--ink-dim);font-size:12px}
+  .cursor-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:3 3}
+  .tip{position:absolute;display:none;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+       padding:9px 11px;font-size:12.5px;pointer-events:none;z-index:10;min-width:210px;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+  .tip .t-title{font-weight:700;margin-bottom:6px}
+  .tip .t-row{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+  .tip .t-row .k{color:var(--ink-dim)}
+  .tip .t-q{color:var(--ink-dim);font-size:11.5px;margin-top:6px;border-top:1px solid var(--line);padding-top:5px}
+  .hint{color:var(--ink-dim);font-size:12.5px;margin-top:10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .card .k{font-size:12.5px;color:var(--ink-dim);display:flex;align-items:center;gap:7px}
+  .card .v{font-size:22px;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+  .card .u{font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .table-wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right;white-space:nowrap}
+  th{color:var(--ink-dim);font-weight:600;position:sticky;top:0;background:var(--panel)}
+  tr.base td{background:var(--panel-2)}
+  tr:hover td{background:var(--panel-2)}
+  td.q{color:var(--ink-dim)}
+  td.warn{color:var(--housing)}
+  footer{color:var(--ink-dim);font-size:12.5px;line-height:1.95}
+  footer h3{font-size:13.5px;color:var(--ink);margin:18px 0 6px}
+  footer ul{margin:0;padding-inline-start:18px}
+  code{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">☀ / ☾</button>
+<div class="wrap">
+  <h1>قیمت مسکن، ارز و تورم — تهران</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="panel">
+    <div class="chart-head">
+      <div class="legend" id="legend"></div>
+      <div class="controls">
+        <span>روی هر سری بزنید تا خطش خاموش/روشن شود</span>
+        <div class="chips" id="scale">
+          <button data-scale="log" type="button">مقیاس لگاریتمی</button>
+          <button data-scale="linear" type="button">مقیاس خطی</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart-wrap">
+      <svg id="chart" viewBox="0 0 1000 470" preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="نمودار خطی شاخص قیمت مسکن، نرخ ارز و شاخص تورم"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel">
+    <h2>جدول فصل‌به‌فصل (شاخص با پایهٔ انتخابی)</h2>
+    <div class="table-wrap"><table id="table"></table></div>
+    <div class="hint" id="table-note"></div>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const toFa = s => String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]);
+const num = (v, d = 0) => (v === null || v === undefined || !isFinite(v)) ? "—"
+  : Number(v).toLocaleString("fa-IR", {minimumFractionDigits: d, maximumFractionDigits: d});
+const pct = v => (v === null || !isFinite(v)) ? "—" : (v > 0 ? "+" : "") + num(v, 0) + "٪";
+const mul = v => (v === null || !isFinite(v)) ? "—" : "×" + num(v, 2);
+
+const W = 1000, H = 470, M = {t: 26, r: 26, b: 48, l: 66};
+
+/* the base is fixed: the first quarter Kilid and the macro table both cover */
+const base = DATA.meta.base_default;
+let scale = "log";
+
+/* series are toggled from the legend; the low-trust housing line starts off */
+const hiddenSeries = new Set(DATA.series.filter(s => s.hidden_default).map(s => s.key));
+const isVisible = key => !hiddenSeries.has(key);
+const visibleSeries = () => DATA.series.filter(s => isVisible(s.key));
+
+const byCode = Object.fromEntries(DATA.quarters.map(q => [q.code, q]));
+const seriesOf = key => DATA.series.find(s => s.key === key);
+const badgeOf = s => s.trust_label_fa ? `<span class="badge" title="${s.trust_note_fa || ""}">${s.trust_label_fa}</span>` : "";
+
+/* ---------- index maths (base is fixed, so this is a plain division) ---------- */
+function baseValues() { return byCode[base]; }
+function indexed(quarter, key) {
+  const b = baseValues();
+  if (!quarter || quarter[key] === null || !b || b[key] === null || !b[key]) return null;
+  return quarter[key] / b[key] * 100;
+}
+function drawableQuarters() {
+  return DATA.quarters.filter(q => q.housing !== null || q.fx !== null || q.cpi !== null);
+}
+/* all three series span the same window, so the visible range is simply that window */
+function visibleQuarters() {
+  return drawableQuarters();
+}
+/* used only to keep the axes readable when every line is switched off */
+function allIndexValues(qs) {
+  return DATA.series.flatMap(s => qs.map(q => indexed(q, s.key))).filter(v => v !== null && isFinite(v));
+}
+/* the window the summary describes: from the chosen base to the last quarter that all
+   three series share inside the current view — so the three growth factors stay comparable */
+function summaryWindow() {
+  const shared = visibleQuarters().filter(q => q.housing !== null && q.fx !== null && q.cpi !== null);
+  const first = byCode[base];
+  const last = shared[shared.length - 1] || first;
+  const all = DATA.quarters;
+  const from = all.findIndex(q => q.code === base);
+  const to = all.findIndex(q => q.code === last.code);
+  return {first, last, count: Math.max(1, to - from + 1)};
+}
+
+/* ---------- chart ---------- */
+function niceTicks(lo, hi, logScale, count = 6) {
+  const out = [];
+  if (logScale) {
+    for (let e = 0; e <= 5; e++) for (const m of [1, 2, 5]) {
+      const v = m * Math.pow(10, e);
+      if (v >= lo && v <= hi) out.push(v);
+    }
+    return out;
+  }
+  const raw = (hi - lo) / count, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = ([1, 2, 2.5, 5, 10].find(s => s * mag >= raw) || 10) * mag;
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(6));
+  return out;
+}
+
+function draw() {
+  const svg = document.getElementById("chart");
+  const qs = visibleQuarters();
+  const plotW = W - M.l - M.r, plotH = H - M.t - M.b;
+  const log = scale === "log";
+
+  const lines = visibleSeries().map(s => ({
+    s,
+    pts: qs.map((q, i) => ({i, q, v: indexed(q, s.key)})).filter(p => p.v !== null && isFinite(p.v) && p.v > 0)
+  }));
+
+  let values = lines.flatMap(l => l.pts.map(p => p.v));
+  if (!values.length) values = allIndexValues(qs); // keep readable axes when everything is off
+  let lo = Math.min(...values), hi = Math.max(...values);
+  if (log) { lo /= 1.18; hi *= 1.12; } else { const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad; }
+  if (!(lo > 0)) lo = Math.min(...values) / 2;
+
+  const y = v => log
+    ? M.t + plotH * (1 - (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)))
+    : M.t + plotH * (1 - (v - lo) / (hi - lo));
+  const x = i => qs.length < 2 ? M.l + plotW / 2 : M.l + plotW * i / (qs.length - 1);
+
+  const parts = [];
+
+  // horizontal grid + y labels
+  for (const t of niceTicks(lo, hi, log)) {
+    const yy = y(t);
+    if (yy < M.t - 1 || yy > M.t + plotH + 1) continue;
+    parts.push(`<line class="grid-line" x1="${M.l}" y1="${yy.toFixed(1)}" x2="${M.l + plotW}" y2="${yy.toFixed(1)}"/>`);
+    parts.push(`<text class="tick" x="${M.l - 8}" y="${(yy + 4).toFixed(1)}" text-anchor="end">${toFa(num(t, t < 10 ? 1 : 0))}</text>`);
+  }
+  parts.push(`<line class="axis-line" x1="${M.l}" y1="${M.t + plotH}" x2="${M.l + plotW}" y2="${M.t + plotH}"/>`);
+  const cy = M.t + plotH / 2;
+  parts.push(
+    `<text class="axis-label" x="16" y="${(cy + 3).toFixed(1)}" text-anchor="middle" ` +
+    `transform="rotate(-90 16 ${(cy + 3).toFixed(1)})">شاخص (پایهٔ ۱۰۰)</text>`
+  );
+
+  // x labels: one per بهار, i.e. the first quarter of each Jalali year
+  qs.forEach((q, i) => {
+    if (q.quarter !== 1) return;
+    parts.push(`<text class="tick" x="${x(i).toFixed(1)}" y="${M.t + plotH + 20}" text-anchor="middle">${toFa(q.year)}</text>`);
+  });
+
+  // the base quarter: dashed marker
+  const baseIndex = qs.findIndex(q => q.code === base);
+  if (baseIndex >= 0) {
+    const bx = x(baseIndex);
+    parts.push(`<line class="base-line" x1="${bx.toFixed(1)}" y1="${M.t}" x2="${bx.toFixed(1)}" y2="${M.t + plotH}"/>`);
+    const anchor = bx < M.l + 60 ? "end" : (bx > M.l + plotW - 60 ? "start" : "middle");
+    parts.push(`<text class="base-label" x="${bx.toFixed(1)}" y="${M.t - 10}" text-anchor="${anchor}">پایه: ${byCode[base].label_fa} = ۱۰۰</text>`);
+  }
+
+  // series lines + dots
+  for (const {s, pts} of lines) {
+    let path = "", pen = false;
+    for (const p of pts) {
+      const cmd = pen ? "L" : "M";
+      path += `${cmd}${x(p.i).toFixed(1)} ${y(p.v).toFixed(1)} `;
+      pen = true;
+    }
+    if (path) parts.push(`<path class="line s-${s.key}" d="${path.trim()}"/>`);
+    for (const p of pts) {
+      parts.push(`<circle class="dot d-${s.key}" cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6"/>`);
+    }
+  }
+
+  parts.push(`<g class="cursor"></g>`);
+
+  // hit areas on top
+  qs.forEach((q, i) => {
+    const half = qs.length < 2 ? plotW / 2 : plotW / (qs.length - 1) / 2;
+    parts.push(`<rect class="hit" data-i="${i}" x="${(x(i) - half).toFixed(1)}" y="${M.t}" width="${(half * 2).toFixed(1)}" height="${plotH}"/>`);
+  });
+
+  svg.innerHTML = parts.join("");
+  for (const hit of svg.querySelectorAll(".hit")) {
+    hit.addEventListener("mousemove", () => showCursor(+hit.dataset.i, qs, x, y, lines));
+    hit.addEventListener("mouseleave", hideCursor);
+  }
+  return {qs, x, y, lines, plotH};
+}
+
+function showCursor(i, qs, x, y, lines) {
+  const svg = document.getElementById("chart");
+  const q = qs[i];
+  const cursor = svg.querySelector(".cursor");
+  let markup = `<line class="cursor-line" x1="${x(i).toFixed(1)}" y1="${M.t}" x2="${x(i).toFixed(1)}" y2="${M.t + (H - M.t - M.b)}"/>`;
+  for (const {s, pts} of lines) {
+    const p = pts.find(pt => pt.i === i);
+    if (!p) continue;
+    markup += `<circle class="d-${s.key}" cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="5" stroke="var(--panel)" stroke-width="2"/>`;
+  }
+  cursor.innerHTML = markup;
+
+  const tip = document.getElementById("tip");
+  const rows = visibleSeries().map(s => {
+    const v = indexed(q, s.key);
+    const mark = q[s.key + "_approx"] ? "≈" : "";
+    return `<div class="t-row"><span class="k">${s.label_fa}</span><span>${v === null ? "بدون داده" : mark + num(v, 1)}</span></div>`;
+  }).join("");
+  const levels = visibleSeries().filter(s => q[s.key] !== null)
+    .map(s => `${s.level_label_fa}: ${q[s.key + "_approx"] ? "≈" : ""}${num(q[s.key], s.level_digits)}`).join(" · ");
+  const quality = q.housing !== null
+    ? `${toFa(q.quality.districts_present)} منطقه · ${toFa(q.quality.months_observed)} ماه` +
+      (q.quality.modeled_months ? ` · ${toFa(q.quality.modeled_months)} ماه مدل‌شده` : "")
+    : "دادهٔ مسکن برای این فصل وجود ندارد";
+  tip.innerHTML = `<div class="t-title">${q.label_fa}</div>${rows}<div class="t-q">${levels}<br>${quality}</div>`;
+
+  const rect = svg.getBoundingClientRect(), k = rect.width / W;
+  const px = x(i) * k;
+  tip.style.display = "block";
+  const tw = tip.offsetWidth;
+  let left = px + 16;
+  if (left + tw > rect.width) left = Math.max(0, px - tw - 16);
+  tip.style.left = left + "px";
+  tip.style.top = "10px";
+  tip.style.direction = "rtl";
+}
+
+function hideCursor() {
+  const cursor = document.querySelector("#chart .cursor");
+  if (cursor) cursor.innerHTML = "";
+  document.getElementById("tip").style.display = "none";
+}
+
+/* ---------- summary cards, legend, table, footer ---------- */
+function renderSummary() {
+  const win = summaryWindow();
+  const legend = document.getElementById("legend");
+  legend.innerHTML = DATA.series.map(s => {
+    const on = isVisible(s.key);
+    return `<span class="item" role="button" tabindex="0" data-key="${s.key}" aria-pressed="${on}"` +
+           `${s.trust_note_fa ? ` title="${s.trust_note_fa}"` : ""}>` +
+           `<span class="line" style="background:var(--${s.key})"></span>${s.label_fa} ${badgeOf(s)}` +
+           `<span class="mul">${mul(indexed(win.last, s.key) / 100)}</span></span>`;
+  }).join("");
+  for (const item of legend.querySelectorAll(".item")) {
+    const toggle = () => toggleSeries(item.dataset.key);
+    item.addEventListener("click", toggle);
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
+    });
+  }
+
+  document.getElementById("cards").innerHTML = DATA.series.map(s => {
+    const to = indexed(win.last, s.key);
+    const levelFrom = win.first[s.key], levelTo = win.last[s.key];
+    return `<div class="card" data-hidden="${!isVisible(s.key)}">` +
+      `<div class="k"><span class="line" style="background:var(--${s.key});width:18px;height:3px;border-radius:2px"></span>${s.label_fa} ${badgeOf(s)}</div>` +
+      `<div class="v">${mul(to / 100)}</div>` +
+      `<div class="u">${pct(to - 100)} در ${toFa(win.count)} فصل<br>${num(levelFrom, s.level_digits)} ← ${num(levelTo, s.level_digits)}</div></div>`;
+  }).join("") +
+  `<div class="card"><div class="k">بازهٔ مقایسه (هر سه سری)</div><div class="v">${toFa(win.count)} فصل</div>` +
+  `<div class="u">از ${win.first.label_fa} تا ${win.last.label_fa}<br>نمودار با ${toFa(visibleSeries().length)} خط از ۳ خط رسم شده است</div></div>`;
+}
+
+function renderTable() {
+  const qs = [...drawableQuarters()].reverse();
+  const head = `<thead><tr><th>فصل</th>` +
+    DATA.series.map(s => `<th${isVisible(s.key) ? "" : ' style="opacity:.5"'}>${s.label_fa} ${badgeOf(s)}</th>`).join("") +
+    `<th>شاخص مسکن (تومان/م²)</th><th>دلار (تومان)</th><th>CPI (۱۴۰۰=۱۰۰)</th><th>کیفیت دادهٔ مسکن</th></tr></thead>`;
+  const body = qs.map(q => {
+    const cells = DATA.series.map(s => {
+      const v = indexed(q, s.key);
+      const mark = v !== null && q[s.key + "_approx"] ? "≈" : "";
+      return `<td>${v === null ? "—" : mark + num(v, 1)}</td>`;
+    }).join("");
+    const quality = q.housing === null ? "—" : q.housing_quality;
+    const warn = q.housing !== null && q.quality.modeled_months ? ' class="warn"' : "";
+    return `<tr${q.code === base ? ' class="base"' : ""}><td class="q">${q.label_fa}</td>${cells}` +
+      `<td>${num(q.housing, 0)}</td><td>${num(q.fx, 0)}</td><td>${num(q.cpi, 1)}</td><td${warn}>${quality}</td></tr>`;
+  }).join("");
+  document.getElementById("table").innerHTML = head + `<tbody>${body}</tbody>`;
+  const all = drawableQuarters();
+  const exact = all.filter(q => !q.cpi_approx).map(q => q.label_fa);
+  document.getElementById("table-note").textContent =
+    `«≈» یعنی آن عدد تقریبی یا گردشده است: همهٔ ${toFa(all.length)} فصل ارز و ${toFa(all.length - exact.length)} فصل از CPI. ` +
+    `فقط ${toFa(exact.length)} فصل CPI دقیق است — ${exact.join("، ")}.`;
+}
+
+function renderFooter() {
+  document.getElementById("footer").innerHTML = `
+    <h3>منابع</h3>
+    <ul>${DATA.sources.map(s => `<li>${s}</li>`).join("")}</ul>
+    <h3>روش</h3>
+    <ul>${DATA.meta.method.map(s => `<li>${s}</li>`).join("")}</ul>
+    <h3>این ارقام چه هستند و چه نیستند</h3>
+    <ul>${DATA.caveats.map(s => `<li>${s}</li>`).join("")}</ul>
+    <p>ساخته‌شده با <code>python3 scripts/build_housing_price_index.py</code> — دادهٔ درون‌صفحه از
+    <code>data/housing_price/index_data.json</code> است؛ فایل را دستی ویرایش نکنید.</p>`;
+}
+
+/* ---------- controls ---------- */
+function toggleSeries(key) {
+  if (isVisible(key)) {
+    if (visibleSeries().length === 1) return; // never leave the chart completely empty
+    hiddenSeries.add(key);
+  } else {
+    hiddenSeries.delete(key);
+  }
+  render();
+}
+
+function render() {
+  hideCursor();
+  for (const btn of document.querySelectorAll("#scale button"))
+    btn.setAttribute("aria-pressed", String(btn.dataset.scale === scale));
+
+  const qs = visibleQuarters();
+  document.getElementById("sub").textContent =
+    `سه سری فصلی روی یک محور: قیمت پیشنهادی فروش مسکن در تهران (کیلیک)، نرخ دلار آزاد و شاخص تورم — ` +
+    `همه از ${qs[0].label_fa} تا ${qs[qs.length - 1].label_fa} و همه با پایهٔ ${byCode[base].label_fa} = ۱۰۰.`;
+
+  const approx = qs.length - qs.filter(q => !q.cpi_approx).length;
+  document.getElementById("hint").textContent =
+    `هر سه سری دقیقاً همین ${toFa(qs.length)} فصل را پوشش می‌دهند؛ هیچ خطی از دیگری کوتاه‌تر نیست و مقداری درون‌یابی نشده. ` +
+    `نقاط تقریبی با «≈» در راهنما علامت خورده‌اند (${toFa(approx)} فصل از CPI گردشده است و همهٔ ارقام ارز تقریبی‌اند). ` +
+    (scale === "log"
+      ? "مقیاس لگاریتمی: شیب برابر یعنی نرخ رشد برابر — برای مقایسهٔ سرعت رشد سه سری مناسب‌تر است."
+      : "مقیاس خطی: اختلاف قدر مطلق را نشان می‌دهد، پس سری‌های بزرگ‌تر خطوط بالایی را می‌گیرند.");
+
+  draw();
+  renderSummary();
+  renderTable();
+}
+
+for (const btn of document.querySelectorAll("#scale button"))
+  btn.onclick = () => { scale = btn.dataset.scale; render(); };
+
+document.getElementById("theme").onclick = () => {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "dark" ? "light" : "dark";
+  html.dataset.theme = next;
+  try { localStorage.setItem("hp-theme", next); } catch (e) {}
+};
+try {
+  const saved = localStorage.getItem("hp-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+renderFooter();
+render();
+</script>
+</body>
+</html>

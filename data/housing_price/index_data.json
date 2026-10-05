@@ -1,0 +1,694 @@
+{
+  "meta": {
+    "title_fa": "قیمت مسکن، ارز و تورم — تهران",
+    "base_default": "1400-2",
+    "housing_window": {
+      "first": "1400-2",
+      "last": "1405-2",
+      "first_label_fa": "تابستان ۱۴۰۰",
+      "last_label_fa": "تابستان ۱۴۰۵"
+    },
+    "macro_window": {
+      "first": "1400-2",
+      "last": "1405-2",
+      "first_label_fa": "تابستان ۱۴۰۰",
+      "last_label_fa": "تابستان ۱۴۰۵"
+    },
+    "inputs": {
+      "housing": {
+        "path": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "sha256": "5d74007569fdab97c7724b91e3e0cde0574688d1a053805da44622d980916b5b",
+        "rows": 1320,
+        "districts": 22
+      },
+      "macro": {
+        "path": "data/housing_price/fx_cpi_quarterly.csv",
+        "sha256": "d5c1fb391e6dad1e9dbb9e8e70156278de7dd5bda544f1d62c2c387605d95ef0"
+      }
+    },
+    "method": [
+      "هر ماه به فصل شمسی نگاشت می‌شود: فصل = (ماه − ۱) ÷ ۳ + ۱ (بهار تا زمستان).",
+      "برای هر منطقه در هر فصل، میانهٔ میانه‌های ماهانهٔ همان منطقه گرفته می‌شود.",
+      "شاخص شهر در هر فصل = میانهٔ ۲۲ مقدار منطقه‌ای (هر منطقه یک رأی) — نه میانگین وزنی‌شده با حجم.",
+      "شاخص = مقدار ÷ مقدارِ فصل پایه × ۱۰۰؛ پایه به‌طور یکسان روی هر سه سری اعمال می‌شود."
+    ]
+  },
+  "series": [
+    {
+      "key": "housing",
+      "label_fa": "قیمت مسکن — تهران (کیلیک)",
+      "unit_fa": "تومان در هر متر مربع — قیمت پیشنهادی فروش",
+      "level_label_fa": "قیمت پیشنهادی فروش هر متر مربع",
+      "level_digits": 0,
+      "approx": false,
+      "trust_label_fa": "منبع کم‌اعتماد",
+      "trust_note_fa": "سری کیلیک در اردیبهشت ۱۴۰۲ یک شکست سطحی دارد (هر ۲۲ منطقه در یک ماه ۳۱٪ تا ۷۸٪ جهش می‌کنند) و منطقهٔ ۱ در بهمن ۱۴۰۱ تا فروردین ۱۴۰۲ خراب است؛ به همین دلیل به‌طور پیش‌فرض خاموش است.",
+      "hidden_default": true
+    },
+    {
+      "key": "fx",
+      "label_fa": "نرخ ارز آزاد",
+      "unit_fa": "تومان در هر دلار — تقریبی",
+      "level_label_fa": "نرخ دلار آزاد",
+      "level_digits": 0,
+      "approx": true
+    },
+    {
+      "key": "cpi",
+      "label_fa": "شاخص تورم (CPI)",
+      "unit_fa": "شاخص کل CPI، پایهٔ ۱۴۰۰ = ۱۰۰ — بخشی تقریبی",
+      "level_label_fa": "شاخص CPI (۱۴۰۰=۱۰۰)",
+      "level_digits": 1,
+      "approx": true
+    }
+  ],
+  "quarters": [
+    {
+      "code": "1400-2",
+      "year": 1400,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۰",
+      "quarter_fa": "تابستان",
+      "housing": 23142622.95,
+      "fx": 24800.0,
+      "cpi": 100.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 1,
+        "months_first": "1400-06",
+        "months_last": "1400-06",
+        "modeled_months": 0,
+        "median_sample_size": 1204.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 100.0,
+      "fx_index": 100.0,
+      "cpi_index": 100.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, ONLY 1 MONTH(S)"
+    },
+    {
+      "code": "1400-3",
+      "year": 1400,
+      "quarter": 3,
+      "label_fa": "پائیز ۱۴۰۰",
+      "quarter_fa": "پائیز",
+      "housing": 23666666.665,
+      "fx": 29000.0,
+      "cpi": 110.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1400-07",
+        "months_last": "1400-09",
+        "modeled_months": 0,
+        "median_sample_size": 1085.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 102.26440933740399,
+      "fx_index": 116.93548387096774,
+      "cpi_index": 110.00000000000001,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1400-4",
+      "year": 1400,
+      "quarter": 4,
+      "label_fa": "زمستان ۱۴۰۰",
+      "quarter_fa": "زمستان",
+      "housing": 24541245.79,
+      "fx": 26000.0,
+      "cpi": 120.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1400-10",
+        "months_last": "1400-12",
+        "modeled_months": 0,
+        "median_sample_size": 1066.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 106.04349318148485,
+      "fx_index": 104.83870967741935,
+      "cpi_index": 120.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1401-1",
+      "year": 1401,
+      "quarter": 1,
+      "label_fa": "بهار ۱۴۰۱",
+      "quarter_fa": "بهار",
+      "housing": 26431353.945,
+      "fx": 30000.0,
+      "cpi": 130.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1401-01",
+        "months_last": "1401-03",
+        "modeled_months": 0,
+        "median_sample_size": 1420.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 114.21070983226645,
+      "fx_index": 120.96774193548387,
+      "cpi_index": 130.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1401-2",
+      "year": 1401,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۱",
+      "quarter_fa": "تابستان",
+      "housing": 31228545.62,
+      "fx": 34000.0,
+      "cpi": 140.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1401-04",
+        "months_last": "1401-06",
+        "modeled_months": 0,
+        "median_sample_size": 3803.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 134.93952559945242,
+      "fx_index": 137.09677419354838,
+      "cpi_index": 140.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1401-3",
+      "year": 1401,
+      "quarter": 3,
+      "label_fa": "پائیز ۱۴۰۱",
+      "quarter_fa": "پائیز",
+      "housing": 34372276.405,
+      "fx": 38000.0,
+      "cpi": 150.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1401-07",
+        "months_last": "1401-09",
+        "modeled_months": 0,
+        "median_sample_size": 1624.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 148.52368497409236,
+      "fx_index": 153.2258064516129,
+      "cpi_index": 150.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1401-4",
+      "year": 1401,
+      "quarter": 4,
+      "label_fa": "زمستان ۱۴۰۱",
+      "quarter_fa": "زمستان",
+      "housing": 40363636.364999995,
+      "fx": 55000.0,
+      "cpi": 160.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1401-10",
+        "months_last": "1401-12",
+        "modeled_months": 0,
+        "median_sample_size": 2262.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 174.41253937466928,
+      "fx_index": 221.7741935483871,
+      "cpi_index": 160.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1402-1",
+      "year": 1402,
+      "quarter": 1,
+      "label_fa": "بهار ۱۴۰۲",
+      "quarter_fa": "بهار",
+      "housing": 61953601.955,
+      "fx": 52000.0,
+      "cpi": 170.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1402-01",
+        "months_last": "1402-03",
+        "modeled_months": 0,
+        "median_sample_size": 3452.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 267.7034581985444,
+      "fx_index": 209.6774193548387,
+      "cpi_index": 170.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1402-2",
+      "year": 1402,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۲",
+      "quarter_fa": "تابستان",
+      "housing": 63870967.74,
+      "fx": 50000.0,
+      "cpi": 193.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": false,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1402-04",
+        "months_last": "1402-06",
+        "modeled_months": 0,
+        "median_sample_size": 8621.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 275.98845592392115,
+      "fx_index": 201.61290322580646,
+      "cpi_index": 193.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1402-3",
+      "year": 1402,
+      "quarter": 3,
+      "label_fa": "پائیز ۱۴۰۲",
+      "quarter_fa": "پائیز",
+      "housing": 58533695.03,
+      "fx": 52000.0,
+      "cpi": 205.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1402-07",
+        "months_last": "1402-09",
+        "modeled_months": 0,
+        "median_sample_size": 7112.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 252.9259330563479,
+      "fx_index": 209.6774193548387,
+      "cpi_index": 204.99999999999997,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1402-4",
+      "year": 1402,
+      "quarter": 4,
+      "label_fa": "زمستان ۱۴۰۲",
+      "quarter_fa": "زمستان",
+      "housing": 60555555.555,
+      "fx": 58000.0,
+      "cpi": 220.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1402-10",
+        "months_last": "1402-12",
+        "modeled_months": 0,
+        "median_sample_size": 6231.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 261.6624558323887,
+      "fx_index": 233.8709677419355,
+      "cpi_index": 220.00000000000003,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1403-1",
+      "year": 1403,
+      "quarter": 1,
+      "label_fa": "بهار ۱۴۰۳",
+      "quarter_fa": "بهار",
+      "housing": 66412466.845,
+      "fx": 65000.0,
+      "cpi": 240.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1403-01",
+        "months_last": "1403-03",
+        "modeled_months": 0,
+        "median_sample_size": 5562.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 286.97035331079445,
+      "fx_index": 262.0967741935484,
+      "cpi_index": 240.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1403-2",
+      "year": 1403,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۳",
+      "quarter_fa": "تابستان",
+      "housing": 67607526.88499999,
+      "fx": 60000.0,
+      "cpi": 260.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1403-04",
+        "months_last": "1403-06",
+        "modeled_months": 0,
+        "median_sample_size": 7064.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 292.1342452455243,
+      "fx_index": 241.93548387096774,
+      "cpi_index": 260.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1403-3",
+      "year": 1403,
+      "quarter": 3,
+      "label_fa": "پائیز ۱۴۰۳",
+      "quarter_fa": "پائیز",
+      "housing": 68107549.565,
+      "fx": 75000.0,
+      "cpi": 280.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1403-07",
+        "months_last": "1403-09",
+        "modeled_months": 0,
+        "median_sample_size": 7841.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 294.294858936895,
+      "fx_index": 302.4193548387097,
+      "cpi_index": 280.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1403-4",
+      "year": 1403,
+      "quarter": 4,
+      "label_fa": "زمستان ۱۴۰۳",
+      "quarter_fa": "زمستان",
+      "housing": 70785985.65,
+      "fx": 95000.0,
+      "cpi": 315.7,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": false,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1403-10",
+        "months_last": "1403-12",
+        "modeled_months": 0,
+        "median_sample_size": 7745.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 305.8684653115347,
+      "fx_index": 383.06451612903226,
+      "cpi_index": 315.7,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1404-1",
+      "year": 1404,
+      "quarter": 1,
+      "label_fa": "بهار ۱۴۰۴",
+      "quarter_fa": "بهار",
+      "housing": 73700408.91,
+      "fx": 105000.0,
+      "cpi": 360.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1404-01",
+        "months_last": "1404-03",
+        "modeled_months": 0,
+        "median_sample_size": 6341.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 318.4617796748056,
+      "fx_index": 423.3870967741935,
+      "cpi_index": 360.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1404-2",
+      "year": 1404,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۴",
+      "quarter_fa": "تابستان",
+      "housing": 76290054.745,
+      "fx": 120000.0,
+      "cpi": 420.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1404-04",
+        "months_last": "1404-06",
+        "modeled_months": 0,
+        "median_sample_size": 8611.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 329.65172059288983,
+      "fx_index": 483.8709677419355,
+      "cpi_index": 420.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"
+    },
+    {
+      "code": "1404-3",
+      "year": 1404,
+      "quarter": 3,
+      "label_fa": "پائیز ۱۴۰۴",
+      "quarter_fa": "پائیز",
+      "housing": 78545642.495,
+      "fx": 140000.0,
+      "cpi": 490.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": true,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1404-07",
+        "months_last": "1404-09",
+        "modeled_months": 2,
+        "median_sample_size": 11884.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 339.39818604269317,
+      "fx_index": 564.516129032258,
+      "cpi_index": 490.00000000000006,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 2 MODELED months"
+    },
+    {
+      "code": "1404-4",
+      "year": 1404,
+      "quarter": 4,
+      "label_fa": "زمستان ۱۴۰۴",
+      "quarter_fa": "زمستان",
+      "housing": 89658599.77,
+      "fx": 155000.0,
+      "cpi": 575.0,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": false,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1404-10",
+        "months_last": "1404-12",
+        "modeled_months": 3,
+        "median_sample_size": 12078.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 387.41762316099096,
+      "fx_index": 625.0,
+      "cpi_index": 575.0,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 3 MODELED months"
+    },
+    {
+      "code": "1405-1",
+      "year": 1405,
+      "quarter": 1,
+      "label_fa": "بهار ۱۴۰۵",
+      "quarter_fa": "بهار",
+      "housing": 126042347.72,
+      "fx": 170000.0,
+      "cpi": 667.5,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": false,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 3,
+        "months_first": "1405-01",
+        "months_last": "1405-03",
+        "modeled_months": 3,
+        "median_sample_size": 8306.5
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 544.63293980253,
+      "fx_index": 685.483870967742,
+      "cpi_index": 667.5,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 3 MODELED months"
+    },
+    {
+      "code": "1405-2",
+      "year": 1405,
+      "quarter": 2,
+      "label_fa": "تابستان ۱۴۰۵",
+      "quarter_fa": "تابستان",
+      "housing": 155336538.4625,
+      "fx": 265000.0,
+      "cpi": 729.8,
+      "housing_approx": false,
+      "fx_approx": true,
+      "cpi_approx": false,
+      "quality": {
+        "districts_present": 22,
+        "months_observed": 2,
+        "months_first": "1405-04",
+        "months_last": "1405-05",
+        "modeled_months": 0,
+        "median_sample_size": 12661.0
+      },
+      "source": {
+        "housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv",
+        "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"
+      },
+      "housing_index": 671.2140572747828,
+      "fx_index": 1068.5483870967741,
+      "cpi_index": 729.8,
+      "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, ONLY 2 MONTH(S)"
+    }
+  ],
+  "caveats": [
+    "هر سه سری دقیقاً بازهٔ یکسانی دارند (۲۱ فصل، تابستان ۱۴۰۰ تا تابستان ۱۴۰۵)؛ هیچ خطی بلندتر یا کوتاه‌تر از دیگری نیست و هیچ مقداری درون‌یابی یا جعل نشده است.",
+    "هشدار سری مسکن — شکست سطحی در اردیبهشت ۱۴۰۲: بین فروردین و اردیبهشت ۱۴۰۲، هر ۲۲ منطقه در یک ماه ۳۱٪ تا ۷۸٪ جهش می‌کنند (منطقهٔ ۱ حدود ۳۲۶٪) و تعداد آگهی‌ها هم در همان ماه تقریباً دو برابر می‌شود. جهش یک‌ماههٔ سراسری با این اندازه، تغییر پوشش/روش کیلیک است، نه حرکت بازار. پس پلهٔ بهار ۱۴۰۲ و «تخت‌شدنِ» پس از آن دو روی یک سکه‌اند.",
+    "هشدار سری مسکن — منطقهٔ ۱: در بهمن ۱۴۰۱ تا فروردین ۱۴۰۲ میانهٔ این منطقه ۳۰ تا ۳۱ میلیون است در حالی که p75 خودش ۱۱۰ تا ۱۲۵ میلیون است (نسبت میانه به p25 حدود ۴٫۳ برابر، در برابر حداکثر ۲٫۵ برابر برای بقیهٔ مناطق)؛ یعنی میانه بین دو تودهٔ قیمتی جابه‌جا می‌شود، نه اینکه قیمت را دنبال کند. سری کل شهر از این خطا تقریباً مصون است (اثر بر میانهٔ شهر: ۲٫۶٪−)، ولی خود این منطقه تا خرداد ۱۴۰۲ بی‌اعتبار است.",
+    "هشدار سری مسکن — پرش حجم: آذر ۱۴۰۱ فقط ۱۸٬۲۱۶ آگهی در کل شهر دارد در برابر ۶۱٬۰۹۹ آگهی در ماه قبلش؛ سری از نظر حجم فهرست هم پیوسته نیست.",
+    "پیامد در جای دیگر مخزن: پروندهٔ data/tehran_annual_price_increases پنجرهٔ ۱۲ماههٔ «۱۴۰۲» را روی همین شکست می‌سازد (۱۴۰۱-۰۶ تا ۱۴۰۲-۰۵)، پس سطح ۱۴۰۲ منطقهٔ ۱ عددی بی‌مرجع است و تغییر «۱۴۰۳ نسبت به ۱۴۰۲» آنجا ۸۷٪+ گزارش می‌شود، در حالی که رشد واقعی همان دوره حدود ۱۵٪ است.",
+    "دادهٔ مسکن «قیمت پیشنهادی» آگهی‌های کیلیک است، نه قیمت معامله‌شده و نه آمار مرکز آمار؛ سطح آن با شاخص رسمی مسکن یکی نیست.",
+    "فصل پایه (تابستان ۱۴۰۰) برای مسکن فقط یک ماه دارد (شهریور ۱۴۰۰)، چون سری کیلیک از همان ماه آغاز می‌شود؛ بقیهٔ فصل‌ها سه‌ماهه‌اند.",
+    "ارز و تورم جدول دستی کارفرماست. فقط پنج فصل CPI دقیق است (تابستان ۱۴۰۲، زمستان ۱۴۰۳، زمستان ۱۴۰۴، بهار ۱۴۰۵، تابستان ۱۴۰۵) و بقیهٔ فصل‌های CPI گردشده‌اند؛ همهٔ ارقام ارز تقریبی‌اند. نقاط تقریبی در راهنما با «≈» نشان داده می‌شوند.",
+    "شاخص CPI روی پایهٔ ۱۴۰۰ = ۱۰۰ گزارش شده و مقدار فصل پایه هم «≈۱۰۰» است؛ پس خط پایهٔ تورم خودش قطعی نیست و بازمحاسبه (rebase) روی همین عدد سوار می‌شود.",
+    "کیلیک سری را با پنجرهٔ سه‌ماهه هموار می‌کند (windowMonths=3)، پس میانه‌های فصلی روی پنجره‌های هم‌پوشان ساخته می‌شوند.",
+    "منطقهٔ ۲۰ در ۱۴۰۴–۱۴۰۵ هشت ماه trust=MODELED دارد — کل دوره هشت ماه از ۱٬۳۲۰ ردیف؛ این ماه‌ها حذف نشده‌اند، فقط در ستون کیفیت شمرده می‌شوند.",
+    "این نمودار نسبت‌ها را نشان می‌دهد، نه علت‌ها: هم‌زمانی سه خط، علیت میان ارز، تورم و قیمت مسکن را اثبات نمی‌کند."
+  ],
+  "sources": [
+    "مسکن: کیلیک، سری ماهانهٔ قیمت پیشنهادی فروش، ۲۲ منطقهٔ تهران، ۱۴۰۰-۰۶ تا ۱۴۰۵-۰۵ (kilid/kilid_data).",
+    "ارز و تورم: جدول فصلی درون‌مخزنی data/housing_price/fx_cpi_quarterly.csv (تقریبی، دستی؛ پایهٔ مشترک تابستان ۱۴۰۰ = ۱۰۰)."
+  ]
+}

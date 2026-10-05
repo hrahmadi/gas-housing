@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قیمت مسکن، ارز و تورم — تهران</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
+    --line:#2a313b; --housing:#e0a458; --fx:#5aa9e6; --cpi:#8fbf7f; --grid:#242a33; --danger:#e06c75;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --ink:#1b1f24; --ink-dim:#5a6472;
+    --line:#dfe3e8; --housing:#b8792a; --fx:#2b6cb0; --cpi:#2f7d32; --grid:#e8ebef; --danger:#b3383f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
+       font-size:15px;line-height:1.75}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 64px}
+  h1{font-size:24px;margin:0 0 6px;font-weight:700}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:20px}
+  h2{font-size:16px;margin:0 0 12px}
+  .theme-btn{position:fixed;inset-inline-end:16px;top:16px;background:var(--panel);color:var(--ink);
+             border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;font-family:inherit;z-index:20}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+  .chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .legend .item{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+                border:1px solid var(--line);border-radius:9px;padding:4px 9px;background:var(--panel-2)}
+  .legend .item[aria-pressed="false"]{opacity:.42;text-decoration:line-through}
+  .legend .item:hover{border-color:var(--ink-dim)}
+  .legend .item:focus-visible{outline:2px solid var(--housing);outline-offset:1px}
+  .legend .line{width:20px;height:3px;border-radius:2px;display:inline-block}
+  .legend .mul{color:var(--ink);font-variant-numeric:tabular-nums}
+  .badge{font-size:11px;border:1px solid var(--danger);color:var(--danger);border-radius:5px;
+         padding:0 5px;white-space:nowrap;text-decoration:none}
+  .card[data-hidden="true"]{opacity:.45}
+  .card .k .badge{margin-inline-start:2px}
+  .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .chips{display:flex;gap:6px}
+  .chips button{font-family:inherit;font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+                color:var(--ink-dim);border-radius:999px;padding:5px 12px;cursor:pointer}
+  .chips button[aria-pressed="true"]{border-color:var(--housing);color:var(--ink)}
+  .chart-wrap{position:relative}
+  svg#chart{width:100%;height:auto;display:block;touch-action:none;direction:ltr}
+  svg#chart text{font-family:Vazirmatn,system-ui,sans-serif;direction:ltr;unicode-bidi:isolate}
+  /* Persian phrases need an RTL base direction; their anchors are set for RTL below */
+  svg#chart text.axis-label,svg#chart text.base-label{unicode-bidi:isolate;direction:rtl}
+  .grid-line{stroke:var(--grid);stroke-width:1}
+  .axis-line{stroke:var(--line);stroke-width:1}
+  .tick{fill:var(--ink-dim);font-size:12px}
+  .axis-label{fill:var(--ink-dim);font-size:11.5px}
+  .s-housing{stroke:var(--housing)}.s-fx{stroke:var(--fx)}.s-cpi{stroke:var(--cpi)}
+  .line{fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .dot{stroke:var(--panel);stroke-width:1.4}
+  .d-housing{fill:var(--housing)}.d-fx{fill:var(--fx)}.d-cpi{fill:var(--cpi)}
+  .hit{fill:transparent;cursor:crosshair}
+  .hit:hover{fill:rgba(127,127,127,.08)}
+  .base-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:4 4;opacity:.7}
+  .base-label{fill:var(--ink-dim);font-size:12px}
+  .cursor-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:3 3}
+  .tip{position:absolute;display:none;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+       padding:9px 11px;font-size:12.5px;pointer-events:none;z-index:10;min-width:210px;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+  .tip .t-title{font-weight:700;margin-bottom:6px}
+  .tip .t-row{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+  .tip .t-row .k{color:var(--ink-dim)}
+  .tip .t-q{color:var(--ink-dim);font-size:11.5px;margin-top:6px;border-top:1px solid var(--line);padding-top:5px}
+  .hint{color:var(--ink-dim);font-size:12.5px;margin-top:10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .card .k{font-size:12.5px;color:var(--ink-dim);display:flex;align-items:center;gap:7px}
+  .card .v{font-size:22px;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+  .card .u{font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .table-wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right;white-space:nowrap}
+  th{color:var(--ink-dim);font-weight:600;position:sticky;top:0;background:var(--panel)}
+  tr.base td{background:var(--panel-2)}
+  tr:hover td{background:var(--panel-2)}
+  td.q{color:var(--ink-dim)}
+  td.warn{color:var(--housing)}
+  footer{color:var(--ink-dim);font-size:12.5px;line-height:1.95}
+  footer h3{font-size:13.5px;color:var(--ink);margin:18px 0 6px}
+  footer ul{margin:0;padding-inline-start:18px}
+  code{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">☀ / ☾</button>
+<div class="wrap">
+  <h1>قیمت مسکن، ارز و تورم — تهران</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="panel">
+    <div class="chart-head">
+      <div class="legend" id="legend"></div>
+      <div class="controls">
+        <span>روی هر سری بزنید تا خطش خاموش/روشن شود</span>
+        <div class="chips" id="scale">
+          <button data-scale="log" type="button">مقیاس لگاریتمی</button>
+          <button data-scale="linear" type="button">مقیاس خطی</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart-wrap">
+      <svg id="chart" viewBox="0 0 1000 470" preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="نمودار خطی شاخص قیمت مسکن، نرخ ارز و شاخص تورم"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel">
+    <h2>جدول فصل‌به‌فصل (شاخص با پایهٔ انتخابی)</h2>
+    <div class="table-wrap"><table id="table"></table></div>
+    <div class="hint" id="table-note"></div>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = {"meta": {"title_fa": "قیمت مسکن، ارز و تورم — تهران", "base_default": "1400-2", "housing_window": {"first": "1400-2", "last": "1405-2", "first_label_fa": "تابستان ۱۴۰۰", "last_label_fa": "تابستان ۱۴۰۵"}, "macro_window": {"first": "1400-2", "last": "1405-2", "first_label_fa": "تابستان ۱۴۰۰", "last_label_fa": "تابستان ۱۴۰۵"}, "inputs": {"housing": {"path": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "sha256": "5d74007569fdab97c7724b91e3e0cde0574688d1a053805da44622d980916b5b", "rows": 1320, "districts": 22}, "macro": {"path": "data/housing_price/fx_cpi_quarterly.csv", "sha256": "d5c1fb391e6dad1e9dbb9e8e70156278de7dd5bda544f1d62c2c387605d95ef0"}}, "method": ["هر ماه به فصل شمسی نگاشت می‌شود: فصل = (ماه − ۱) ÷ ۳ + ۱ (بهار تا زمستان).", "برای هر منطقه در هر فصل، میانهٔ میانه‌های ماهانهٔ همان منطقه گرفته می‌شود.", "شاخص شهر در هر فصل = میانهٔ ۲۲ مقدار منطقه‌ای (هر منطقه یک رأی) — نه میانگین وزنی‌شده با حجم.", "شاخص = مقدار ÷ مقدارِ فصل پایه × ۱۰۰؛ پایه به‌طور یکسان روی هر سه سری اعمال می‌شود."]}, "series": [{"key": "housing", "label_fa": "قیمت مسکن — تهران (کیلیک)", "unit_fa": "تومان در هر متر مربع — قیمت پیشنهادی فروش", "level_label_fa": "قیمت پیشنهادی فروش هر متر مربع", "level_digits": 0, "approx": false, "trust_label_fa": "منبع کم‌اعتماد", "trust_note_fa": "سری کیلیک در اردیبهشت ۱۴۰۲ یک شکست سطحی دارد (هر ۲۲ منطقه در یک ماه ۳۱٪ تا ۷۸٪ جهش می‌کنند) و منطقهٔ ۱ در بهمن ۱۴۰۱ تا فروردین ۱۴۰۲ خراب است؛ به همین دلیل به‌طور پیش‌فرض خاموش است.", "hidden_default": true}, {"key": "fx", "label_fa": "نرخ ارز آزاد", "unit_fa": "تومان در هر دلار — تقریبی", "level_label_fa": "نرخ دلار آزاد", "level_digits": 0, "approx": true}, {"key": "cpi", "label_fa": "شاخص تورم (CPI)", "unit_fa": "شاخص کل CPI، پایهٔ ۱۴۰۰ = ۱۰۰ — بخشی تقریبی", "level_label_fa": "شاخص CPI (۱۴۰۰=۱۰۰)", "level_digits": 1, "approx": true}], "quarters": [{"code": "1400-2", "year": 1400, "quarter": 2, "label_fa": "تابستان ۱۴۰۰", "quarter_fa": "تابستان", "housing": 23142622.95, "fx": 24800.0, "cpi": 100.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 1, "months_first": "1400-06", "months_last": "1400-06", "modeled_months": 0, "median_sample_size": 1204.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 100.0, "fx_index": 100.0, "cpi_index": 100.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, ONLY 1 MONTH(S)"}, {"code": "1400-3", "year": 1400, "quarter": 3, "label_fa": "پائیز ۱۴۰۰", "quarter_fa": "پائیز", "housing": 23666666.665, "fx": 29000.0, "cpi": 110.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1400-07", "months_last": "1400-09", "modeled_months": 0, "median_sample_size": 1085.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 102.26440933740399, "fx_index": 116.93548387096774, "cpi_index": 110.00000000000001, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1400-4", "year": 1400, "quarter": 4, "label_fa": "زمستان ۱۴۰۰", "quarter_fa": "زمستان", "housing": 24541245.79, "fx": 26000.0, "cpi": 120.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1400-10", "months_last": "1400-12", "modeled_months": 0, "median_sample_size": 1066.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 106.04349318148485, "fx_index": 104.83870967741935, "cpi_index": 120.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1401-1", "year": 1401, "quarter": 1, "label_fa": "بهار ۱۴۰۱", "quarter_fa": "بهار", "housing": 26431353.945, "fx": 30000.0, "cpi": 130.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1401-01", "months_last": "1401-03", "modeled_months": 0, "median_sample_size": 1420.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 114.21070983226645, "fx_index": 120.96774193548387, "cpi_index": 130.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1401-2", "year": 1401, "quarter": 2, "label_fa": "تابستان ۱۴۰۱", "quarter_fa": "تابستان", "housing": 31228545.62, "fx": 34000.0, "cpi": 140.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1401-04", "months_last": "1401-06", "modeled_months": 0, "median_sample_size": 3803.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 134.93952559945242, "fx_index": 137.09677419354838, "cpi_index": 140.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1401-3", "year": 1401, "quarter": 3, "label_fa": "پائیز ۱۴۰۱", "quarter_fa": "پائیز", "housing": 34372276.405, "fx": 38000.0, "cpi": 150.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1401-07", "months_last": "1401-09", "modeled_months": 0, "median_sample_size": 1624.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 148.52368497409236, "fx_index": 153.2258064516129, "cpi_index": 150.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1401-4", "year": 1401, "quarter": 4, "label_fa": "زمستان ۱۴۰۱", "quarter_fa": "زمستان", "housing": 40363636.364999995, "fx": 55000.0, "cpi": 160.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1401-10", "months_last": "1401-12", "modeled_months": 0, "median_sample_size": 2262.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 174.41253937466928, "fx_index": 221.7741935483871, "cpi_index": 160.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1402-1", "year": 1402, "quarter": 1, "label_fa": "بهار ۱۴۰۲", "quarter_fa": "بهار", "housing": 61953601.955, "fx": 52000.0, "cpi": 170.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1402-01", "months_last": "1402-03", "modeled_months": 0, "median_sample_size": 3452.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 267.7034581985444, "fx_index": 209.6774193548387, "cpi_index": 170.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1402-2", "year": 1402, "quarter": 2, "label_fa": "تابستان ۱۴۰۲", "quarter_fa": "تابستان", "housing": 63870967.74, "fx": 50000.0, "cpi": 193.0, "housing_approx": false, "fx_approx": true, "cpi_approx": false, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1402-04", "months_last": "1402-06", "modeled_months": 0, "median_sample_size": 8621.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 275.98845592392115, "fx_index": 201.61290322580646, "cpi_index": 193.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1402-3", "year": 1402, "quarter": 3, "label_fa": "پائیز ۱۴۰۲", "quarter_fa": "پائیز", "housing": 58533695.03, "fx": 52000.0, "cpi": 205.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1402-07", "months_last": "1402-09", "modeled_months": 0, "median_sample_size": 7112.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 252.9259330563479, "fx_index": 209.6774193548387, "cpi_index": 204.99999999999997, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1402-4", "year": 1402, "quarter": 4, "label_fa": "زمستان ۱۴۰۲", "quarter_fa": "زمستان", "housing": 60555555.555, "fx": 58000.0, "cpi": 220.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1402-10", "months_last": "1402-12", "modeled_months": 0, "median_sample_size": 6231.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 261.6624558323887, "fx_index": 233.8709677419355, "cpi_index": 220.00000000000003, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1403-1", "year": 1403, "quarter": 1, "label_fa": "بهار ۱۴۰۳", "quarter_fa": "بهار", "housing": 66412466.845, "fx": 65000.0, "cpi": 240.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1403-01", "months_last": "1403-03", "modeled_months": 0, "median_sample_size": 5562.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 286.97035331079445, "fx_index": 262.0967741935484, "cpi_index": 240.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1403-2", "year": 1403, "quarter": 2, "label_fa": "تابستان ۱۴۰۳", "quarter_fa": "تابستان", "housing": 67607526.88499999, "fx": 60000.0, "cpi": 260.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1403-04", "months_last": "1403-06", "modeled_months": 0, "median_sample_size": 7064.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 292.1342452455243, "fx_index": 241.93548387096774, "cpi_index": 260.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1403-3", "year": 1403, "quarter": 3, "label_fa": "پائیز ۱۴۰۳", "quarter_fa": "پائیز", "housing": 68107549.565, "fx": 75000.0, "cpi": 280.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1403-07", "months_last": "1403-09", "modeled_months": 0, "median_sample_size": 7841.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 294.294858936895, "fx_index": 302.4193548387097, "cpi_index": 280.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1403-4", "year": 1403, "quarter": 4, "label_fa": "زمستان ۱۴۰۳", "quarter_fa": "زمستان", "housing": 70785985.65, "fx": 95000.0, "cpi": 315.7, "housing_approx": false, "fx_approx": true, "cpi_approx": false, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1403-10", "months_last": "1403-12", "modeled_months": 0, "median_sample_size": 7745.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 305.8684653115347, "fx_index": 383.06451612903226, "cpi_index": 315.7, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1404-1", "year": 1404, "quarter": 1, "label_fa": "بهار ۱۴۰۴", "quarter_fa": "بهار", "housing": 73700408.91, "fx": 105000.0, "cpi": 360.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1404-01", "months_last": "1404-03", "modeled_months": 0, "median_sample_size": 6341.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 318.4617796748056, "fx_index": 423.3870967741935, "cpi_index": 360.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1404-2", "year": 1404, "quarter": 2, "label_fa": "تابستان ۱۴۰۴", "quarter_fa": "تابستان", "housing": 76290054.745, "fx": 120000.0, "cpi": 420.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1404-04", "months_last": "1404-06", "modeled_months": 0, "median_sample_size": 8611.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 329.65172059288983, "fx_index": 483.8709677419355, "cpi_index": 420.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts"}, {"code": "1404-3", "year": 1404, "quarter": 3, "label_fa": "پائیز ۱۴۰۴", "quarter_fa": "پائیز", "housing": 78545642.495, "fx": 140000.0, "cpi": 490.0, "housing_approx": false, "fx_approx": true, "cpi_approx": true, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1404-07", "months_last": "1404-09", "modeled_months": 2, "median_sample_size": 11884.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 339.39818604269317, "fx_index": 564.516129032258, "cpi_index": 490.00000000000006, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 2 MODELED months"}, {"code": "1404-4", "year": 1404, "quarter": 4, "label_fa": "زمستان ۱۴۰۴", "quarter_fa": "زمستان", "housing": 89658599.77, "fx": 155000.0, "cpi": 575.0, "housing_approx": false, "fx_approx": true, "cpi_approx": false, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1404-10", "months_last": "1404-12", "modeled_months": 3, "median_sample_size": 12078.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 387.41762316099096, "fx_index": 625.0, "cpi_index": 575.0, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 3 MODELED months"}, {"code": "1405-1", "year": 1405, "quarter": 1, "label_fa": "بهار ۱۴۰۵", "quarter_fa": "بهار", "housing": 126042347.72, "fx": 170000.0, "cpi": 667.5, "housing_approx": false, "fx_approx": true, "cpi_approx": false, "quality": {"districts_present": 22, "months_observed": 3, "months_first": "1405-01", "months_last": "1405-03", "modeled_months": 3, "median_sample_size": 8306.5}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 544.63293980253, "fx_index": 685.483870967742, "cpi_index": 667.5, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, 3 MODELED months"}, {"code": "1405-2", "year": 1405, "quarter": 2, "label_fa": "تابستان ۱۴۰۵", "quarter_fa": "تابستان", "housing": 155336538.4625, "fx": 265000.0, "cpi": 729.8, "housing_approx": false, "fx_approx": true, "cpi_approx": false, "quality": {"districts_present": 22, "months_observed": 2, "months_first": "1405-04", "months_last": "1405-05", "modeled_months": 0, "median_sample_size": 12661.0}, "source": {"housing": "kilid/kilid_data/normalized/kilid_tehran_sale_price_monthly.csv", "macro": "owner-supplied quarterly macro table (base 1400 Q2 = 100)"}, "housing_index": 671.2140572747828, "fx_index": 1068.5483870967741, "cpi_index": 729.8, "housing_quality": "OBSERVED (Kilid listing prices), 22/22 districts, ONLY 2 MONTH(S)"}], "caveats": ["هر سه سری دقیقاً بازهٔ یکسانی دارند (۲۱ فصل، تابستان ۱۴۰۰ تا تابستان ۱۴۰۵)؛ هیچ خطی بلندتر یا کوتاه‌تر از دیگری نیست و هیچ مقداری درون‌یابی یا جعل نشده است.", "هشدار سری مسکن — شکست سطحی در اردیبهشت ۱۴۰۲: بین فروردین و اردیبهشت ۱۴۰۲، هر ۲۲ منطقه در یک ماه ۳۱٪ تا ۷۸٪ جهش می‌کنند (منطقهٔ ۱ حدود ۳۲۶٪) و تعداد آگهی‌ها هم در همان ماه تقریباً دو برابر می‌شود. جهش یک‌ماههٔ سراسری با این اندازه، تغییر پوشش/روش کیلیک است، نه حرکت بازار. پس پلهٔ بهار ۱۴۰۲ و «تخت‌شدنِ» پس از آن دو روی یک سکه‌اند.", "هشدار سری مسکن — منطقهٔ ۱: در بهمن ۱۴۰۱ تا فروردین ۱۴۰۲ میانهٔ این منطقه ۳۰ تا ۳۱ میلیون است در حالی که p75 خودش ۱۱۰ تا ۱۲۵ میلیون است (نسبت میانه به p25 حدود ۴٫۳ برابر، در برابر حداکثر ۲٫۵ برابر برای بقیهٔ مناطق)؛ یعنی میانه بین دو تودهٔ قیمتی جابه‌جا می‌شود، نه اینکه قیمت را دنبال کند. سری کل شهر از این خطا تقریباً مصون است (اثر بر میانهٔ شهر: ۲٫۶٪−)، ولی خود این منطقه تا خرداد ۱۴۰۲ بی‌اعتبار است.", "هشدار سری مسکن — پرش حجم: آذر ۱۴۰۱ فقط ۱۸٬۲۱۶ آگهی در کل شهر دارد در برابر ۶۱٬۰۹۹ آگهی در ماه قبلش؛ سری از نظر حجم فهرست هم پیوسته نیست.", "پیامد در جای دیگر مخزن: پروندهٔ data/tehran_annual_price_increases پنجرهٔ ۱۲ماههٔ «۱۴۰۲» را روی همین شکست می‌سازد (۱۴۰۱-۰۶ تا ۱۴۰۲-۰۵)، پس سطح ۱۴۰۲ منطقهٔ ۱ عددی بی‌مرجع است و تغییر «۱۴۰۳ نسبت به ۱۴۰۲» آنجا ۸۷٪+ گزارش می‌شود، در حالی که رشد واقعی همان دوره حدود ۱۵٪ است.", "دادهٔ مسکن «قیمت پیشنهادی» آگهی‌های کیلیک است، نه قیمت معامله‌شده و نه آمار مرکز آمار؛ سطح آن با شاخص رسمی مسکن یکی نیست.", "فصل پایه (تابستان ۱۴۰۰) برای مسکن فقط یک ماه دارد (شهریور ۱۴۰۰)، چون سری کیلیک از همان ماه آغاز می‌شود؛ بقیهٔ فصل‌ها سه‌ماهه‌اند.", "ارز و تورم جدول دستی کارفرماست. فقط پنج فصل CPI دقیق است (تابستان ۱۴۰۲، زمستان ۱۴۰۳، زمستان ۱۴۰۴، بهار ۱۴۰۵، تابستان ۱۴۰۵) و بقیهٔ فصل‌های CPI گردشده‌اند؛ همهٔ ارقام ارز تقریبی‌اند. نقاط تقریبی در راهنما با «≈» نشان داده می‌شوند.", "شاخص CPI روی پایهٔ ۱۴۰۰ = ۱۰۰ گزارش شده و مقدار فصل پایه هم «≈۱۰۰» است؛ پس خط پایهٔ تورم خودش قطعی نیست و بازمحاسبه (rebase) روی همین عدد سوار می‌شود.", "کیلیک سری را با پنجرهٔ سه‌ماهه هموار می‌کند (windowMonths=3)، پس میانه‌های فصلی روی پنجره‌های هم‌پوشان ساخته می‌شوند.", "منطقهٔ ۲۰ در ۱۴۰۴–۱۴۰۵ هشت ماه trust=MODELED دارد — کل دوره هشت ماه از ۱٬۳۲۰ ردیف؛ این ماه‌ها حذف نشده‌اند، فقط در ستون کیفیت شمرده می‌شوند.", "این نمودار نسبت‌ها را نشان می‌دهد، نه علت‌ها: هم‌زمانی سه خط، علیت میان ارز، تورم و قیمت مسکن را اثبات نمی‌کند."], "sources": ["مسکن: کیلیک، سری ماهانهٔ قیمت پیشنهادی فروش، ۲۲ منطقهٔ تهران، ۱۴۰۰-۰۶ تا ۱۴۰۵-۰۵ (kilid/kilid_data).", "ارز و تورم: جدول فصلی درون‌مخزنی data/housing_price/fx_cpi_quarterly.csv (تقریبی، دستی؛ پایهٔ مشترک تابستان ۱۴۰۰ = ۱۰۰)."]};
+
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const toFa = s => String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]);
+const num = (v, d = 0) => (v === null || v === undefined || !isFinite(v)) ? "—"
+  : Number(v).toLocaleString("fa-IR", {minimumFractionDigits: d, maximumFractionDigits: d});
+const pct = v => (v === null || !isFinite(v)) ? "—" : (v > 0 ? "+" : "") + num(v, 0) + "٪";
+const mul = v => (v === null || !isFinite(v)) ? "—" : "×" + num(v, 2);
+
+const W = 1000, H = 470, M = {t: 26, r: 26, b: 48, l: 66};
+
+/* the base is fixed: the first quarter Kilid and the macro table both cover */
+const base = DATA.meta.base_default;
+let scale = "log";
+
+/* series are toggled from the legend; the low-trust housing line starts off */
+const hiddenSeries = new Set(DATA.series.filter(s => s.hidden_default).map(s => s.key));
+const isVisible = key => !hiddenSeries.has(key);
+const visibleSeries = () => DATA.series.filter(s => isVisible(s.key));
+
+const byCode = Object.fromEntries(DATA.quarters.map(q => [q.code, q]));
+const seriesOf = key => DATA.series.find(s => s.key === key);
+const badgeOf = s => s.trust_label_fa ? `<span class="badge" title="${s.trust_note_fa || ""}">${s.trust_label_fa}</span>` : "";
+
+/* ---------- index maths (base is fixed, so this is a plain division) ---------- */
+function baseValues() { return byCode[base]; }
+function indexed(quarter, key) {
+  const b = baseValues();
+  if (!quarter || quarter[key] === null || !b || b[key] === null || !b[key]) return null;
+  return quarter[key] / b[key] * 100;
+}
+function drawableQuarters() {
+  return DATA.quarters.filter(q => q.housing !== null || q.fx !== null || q.cpi !== null);
+}
+/* all three series span the same window, so the visible range is simply that window */
+function visibleQuarters() {
+  return drawableQuarters();
+}
+/* used only to keep the axes readable when every line is switched off */
+function allIndexValues(qs) {
+  return DATA.series.flatMap(s => qs.map(q => indexed(q, s.key))).filter(v => v !== null && isFinite(v));
+}
+/* the window the summary describes: from the chosen base to the last quarter that all
+   three series share inside the current view — so the three growth factors stay comparable */
+function summaryWindow() {
+  const shared = visibleQuarters().filter(q => q.housing !== null && q.fx !== null && q.cpi !== null);
+  const first = byCode[base];
+  const last = shared[shared.length - 1] || first;
+  const all = DATA.quarters;
+  const from = all.findIndex(q => q.code === base);
+  const to = all.findIndex(q => q.code === last.code);
+  return {first, last, count: Math.max(1, to - from + 1)};
+}
+
+/* ---------- chart ---------- */
+function niceTicks(lo, hi, logScale, count = 6) {
+  const out = [];
+  if (logScale) {
+    for (let e = 0; e <= 5; e++) for (const m of [1, 2, 5]) {
+      const v = m * Math.pow(10, e);
+      if (v >= lo && v <= hi) out.push(v);
+    }
+    return out;
+  }
+  const raw = (hi - lo) / count, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = ([1, 2, 2.5, 5, 10].find(s => s * mag >= raw) || 10) * mag;
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(6));
+  return out;
+}
+
+function draw() {
+  const svg = document.getElementById("chart");
+  const qs = visibleQuarters();
+  const plotW = W - M.l - M.r, plotH = H - M.t - M.b;
+  const log = scale === "log";
+
+  const lines = visibleSeries().map(s => ({
+    s,
+    pts: qs.map((q, i) => ({i, q, v: indexed(q, s.key)})).filter(p => p.v !== null && isFinite(p.v) && p.v > 0)
+  }));
+
+  let values = lines.flatMap(l => l.pts.map(p => p.v));
+  if (!values.length) values = allIndexValues(qs); // keep readable axes when everything is off
+  let lo = Math.min(...values), hi = Math.max(...values);
+  if (log) { lo /= 1.18; hi *= 1.12; } else { const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad; }
+  if (!(lo > 0)) lo = Math.min(...values) / 2;
+
+  const y = v => log
+    ? M.t + plotH * (1 - (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)))
+    : M.t + plotH * (1 - (v - lo) / (hi - lo));
+  const x = i => qs.length < 2 ? M.l + plotW / 2 : M.l + plotW * i / (qs.length - 1);
+
+  const parts = [];
+
+  // horizontal grid + y labels
+  for (const t of niceTicks(lo, hi, log)) {
+    const yy = y(t);
+    if (yy < M.t - 1 || yy > M.t + plotH + 1) continue;
+    parts.push(`<line class="grid-line" x1="${M.l}" y1="${yy.toFixed(1)}" x2="${M.l + plotW}" y2="${yy.toFixed(1)}"/>`);
+    parts.push(`<text class="tick" x="${M.l - 8}" y="${(yy + 4).toFixed(1)}" text-anchor="end">${toFa(num(t, t < 10 ? 1 : 0))}</text>`);
+  }
+  parts.push(`<line class="axis-line" x1="${M.l}" y1="${M.t + plotH}" x2="${M.l + plotW}" y2="${M.t + plotH}"/>`);
+  const cy = M.t + plotH / 2;
+  parts.push(
+    `<text class="axis-label" x="16" y="${(cy + 3).toFixed(1)}" text-anchor="middle" ` +
+    `transform="rotate(-90 16 ${(cy + 3).toFixed(1)})">شاخص (پایهٔ ۱۰۰)</text>`
+  );
+
+  // x labels: one per بهار, i.e. the first quarter of each Jalali year
+  qs.forEach((q, i) => {
+    if (q.quarter !== 1) return;
+    parts.push(`<text class="tick" x="${x(i).toFixed(1)}" y="${M.t + plotH + 20}" text-anchor="middle">${toFa(q.year)}</text>`);
+  });
+
+  // the base quarter: dashed marker
+  const baseIndex = qs.findIndex(q => q.code === base);
+  if (baseIndex >= 0) {
+    const bx = x(baseIndex);
+    parts.push(`<line class="base-line" x1="${bx.toFixed(1)}" y1="${M.t}" x2="${bx.toFixed(1)}" y2="${M.t + plotH}"/>`);
+    const anchor = bx < M.l + 60 ? "end" : (bx > M.l + plotW - 60 ? "start" : "middle");
+    parts.push(`<text class="base-label" x="${bx.toFixed(1)}" y="${M.t - 10}" text-anchor="${anchor}">پایه: ${byCode[base].label_fa} = ۱۰۰</text>`);
+  }
+
+  // series lines + dots
+  for (const {s, pts} of lines) {
+    let path = "", pen = false;
+    for (const p of pts) {
+      const cmd = pen ? "L" : "M";
+      path += `${cmd}${x(p.i).toFixed(1)} ${y(p.v).toFixed(1)} `;
+      pen = true;
+    }
+    if (path) parts.push(`<path class="line s-${s.key}" d="${path.trim()}"/>`);
+    for (const p of pts) {
+      parts.push(`<circle class="dot d-${s.key}" cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6"/>`);
+    }
+  }
+
+  parts.push(`<g class="cursor"></g>`);
+
+  // hit areas on top
+  qs.forEach((q, i) => {
+    const half = qs.length < 2 ? plotW / 2 : plotW / (qs.length - 1) / 2;
+    parts.push(`<rect class="hit" data-i="${i}" x="${(x(i) - half).toFixed(1)}" y="${M.t}" width="${(half * 2).toFixed(1)}" height="${plotH}"/>`);
+  });
+
+  svg.innerHTML = parts.join("");
+  for (const hit of svg.querySelectorAll(".hit")) {
+    hit.addEventListener("mousemove", () => showCursor(+hit.dataset.i, qs, x, y, lines));
+    hit.addEventListener("mouseleave", hideCursor);
+  }
+  return {qs, x, y, lines, plotH};
+}
+
+function showCursor(i, qs, x, y, lines) {
+  const svg = document.getElementById("chart");
+  const q = qs[i];
+  const cursor = svg.querySelector(".cursor");
+  let markup = `<line class="cursor-line" x1="${x(i).toFixed(1)}" y1="${M.t}" x2="${x(i).toFixed(1)}" y2="${M.t + (H - M.t - M.b)}"/>`;
+  for (const {s, pts} of lines) {
+    const p = pts.find(pt => pt.i === i);
+    if (!p) continue;
+    markup += `<circle class="d-${s.key}" cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="5" stroke="var(--panel)" stroke-width="2"/>`;
+  }
+  cursor.innerHTML = markup;
+
+  const tip = document.getElementById("tip");
+  const rows = visibleSeries().map(s => {
+    const v = indexed(q, s.key);
+    const mark = q[s.key + "_approx"] ? "≈" : "";
+    return `<div class="t-row"><span class="k">${s.label_fa}</span><span>${v === null ? "بدون داده" : mark + num(v, 1)}</span></div>`;
+  }).join("");
+  const levels = visibleSeries().filter(s => q[s.key] !== null)
+    .map(s => `${s.level_label_fa}: ${q[s.key + "_approx"] ? "≈" : ""}${num(q[s.key], s.level_digits)}`).join(" · ");
+  const quality = q.housing !== null
+    ? `${toFa(q.quality.districts_present)} منطقه · ${toFa(q.quality.months_observed)} ماه` +
+      (q.quality.modeled_months ? ` · ${toFa(q.quality.modeled_months)} ماه مدل‌شده` : "")
+    : "دادهٔ مسکن برای این فصل وجود ندارد";
+  tip.innerHTML = `<div class="t-title">${q.label_fa}</div>${rows}<div class="t-q">${levels}<br>${quality}</div>`;
+
+  const rect = svg.getBoundingClientRect(), k = rect.width / W;
+  const px = x(i) * k;
+  tip.style.display = "block";
+  const tw = tip.offsetWidth;
+  let left = px + 16;
+  if (left + tw > rect.width) left = Math.max(0, px - tw - 16);
+  tip.style.left = left + "px";
+  tip.style.top = "10px";
+  tip.style.direction = "rtl";
+}
+
+function hideCursor() {
+  const cursor = document.querySelector("#chart .cursor");
+  if (cursor) cursor.innerHTML = "";
+  document.getElementById("tip").style.display = "none";
+}
+
+/* ---------- summary cards, legend, table, footer ---------- */
+function renderSummary() {
+  const win = summaryWindow();
+  const legend = document.getElementById("legend");
+  legend.innerHTML = DATA.series.map(s => {
+    const on = isVisible(s.key);
+    return `<span class="item" role="button" tabindex="0" data-key="${s.key}" aria-pressed="${on}"` +
+           `${s.trust_note_fa ? ` title="${s.trust_note_fa}"` : ""}>` +
+           `<span class="line" style="background:var(--${s.key})"></span>${s.label_fa} ${badgeOf(s)}` +
+           `<span class="mul">${mul(indexed(win.last, s.key) / 100)}</span></span>`;
+  }).join("");
+  for (const item of legend.querySelectorAll(".item")) {
+    const toggle = () => toggleSeries(item.dataset.key);
+    item.addEventListener("click", toggle);
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
+    });
+  }
+
+  document.getElementById("cards").innerHTML = DATA.series.map(s => {
+    const to = indexed(win.last, s.key);
+    const levelFrom = win.first[s.key], levelTo = win.last[s.key];
+    return `<div class="card" data-hidden="${!isVisible(s.key)}">` +
+      `<div class="k"><span class="line" style="background:var(--${s.key});width:18px;height:3px;border-radius:2px"></span>${s.label_fa} ${badgeOf(s)}</div>` +
+      `<div class="v">${mul(to / 100)}</div>` +
+      `<div class="u">${pct(to - 100)} در ${toFa(win.count)} فصل<br>${num(levelFrom, s.level_digits)} ← ${num(levelTo, s.level_digits)}</div></div>`;
+  }).join("") +
+  `<div class="card"><div class="k">بازهٔ مقایسه (هر سه سری)</div><div class="v">${toFa(win.count)} فصل</div>` +
+  `<div class="u">از ${win.first.label_fa} تا ${win.last.label_fa}<br>نمودار با ${toFa(visibleSeries().length)} خط از ۳ خط رسم شده است</div></div>`;
+}
+
+function renderTable() {
+  const qs = [...drawableQuarters()].reverse();
+  const head = `<thead><tr><th>فصل</th>` +
+    DATA.series.map(s => `<th${isVisible(s.key) ? "" : ' style="opacity:.5"'}>${s.label_fa} ${badgeOf(s)}</th>`).join("") +
+    `<th>شاخص مسکن (تومان/م²)</th><th>دلار (تومان)</th><th>CPI (۱۴۰۰=۱۰۰)</th><th>کیفیت دادهٔ مسکن</th></tr></thead>`;
+  const body = qs.map(q => {
+    const cells = DATA.series.map(s => {
+      const v = indexed(q, s.key);
+      const mark = v !== null && q[s.key + "_approx"] ? "≈" : "";
+      return `<td>${v === null ? "—" : mark + num(v, 1)}</td>`;
+    }).join("");
+    const quality = q.housing === null ? "—" : q.housing_quality;
+    const warn = q.housing !== null && q.quality.modeled_months ? ' class="warn"' : "";
+    return `<tr${q.code === base ? ' class="base"' : ""}><td class="q">${q.label_fa}</td>${cells}` +
+      `<td>${num(q.housing, 0)}</td><td>${num(q.fx, 0)}</td><td>${num(q.cpi, 1)}</td><td${warn}>${quality}</td></tr>`;
+  }).join("");
+  document.getElementById("table").innerHTML = head + `<tbody>${body}</tbody>`;
+  const all = drawableQuarters();
+  const exact = all.filter(q => !q.cpi_approx).map(q => q.label_fa);
+  document.getElementById("table-note").textContent =
+    `«≈» یعنی آن عدد تقریبی یا گردشده است: همهٔ ${toFa(all.length)} فصل ارز و ${toFa(all.length - exact.length)} فصل از CPI. ` +
+    `فقط ${toFa(exact.length)} فصل CPI دقیق است — ${exact.join("، ")}.`;
+}
+
+function renderFooter() {
+  document.getElementById("footer").innerHTML = `
+    <h3>منابع</h3>
+    <ul>${DATA.sources.map(s => `<li>${s}</li>`).join("")}</ul>
+    <h3>روش</h3>
+    <ul>${DATA.meta.method.map(s => `<li>${s}</li>`).join("")}</ul>
+    <h3>این ارقام چه هستند و چه نیستند</h3>
+    <ul>${DATA.caveats.map(s => `<li>${s}</li>`).join("")}</ul>
+    <p>ساخته‌شده با <code>python3 scripts/build_housing_price_index.py</code> — دادهٔ درون‌صفحه از
+    <code>data/housing_price/index_data.json</code> است؛ فایل را دستی ویرایش نکنید.</p>`;
+}
+
+/* ---------- controls ---------- */
+function toggleSeries(key) {
+  if (isVisible(key)) {
+    if (visibleSeries().length === 1) return; // never leave the chart completely empty
+    hiddenSeries.add(key);
+  } else {
+    hiddenSeries.delete(key);
+  }
+  render();
+}
+
+function render() {
+  hideCursor();
+  for (const btn of document.querySelectorAll("#scale button"))
+    btn.setAttribute("aria-pressed", String(btn.dataset.scale === scale));
+
+  const qs = visibleQuarters();
+  document.getElementById("sub").textContent =
+    `سه سری فصلی روی یک محور: قیمت پیشنهادی فروش مسکن در تهران (کیلیک)، نرخ دلار آزاد و شاخص تورم — ` +
+    `همه از ${qs[0].label_fa} تا ${qs[qs.length - 1].label_fa} و همه با پایهٔ ${byCode[base].label_fa} = ۱۰۰.`;
+
+  const approx = qs.length - qs.filter(q => !q.cpi_approx).length;
+  document.getElementById("hint").textContent =
+    `هر سه سری دقیقاً همین ${toFa(qs.length)} فصل را پوشش می‌دهند؛ هیچ خطی از دیگری کوتاه‌تر نیست و مقداری درون‌یابی نشده. ` +
+    `نقاط تقریبی با «≈» در راهنما علامت خورده‌اند (${toFa(approx)} فصل از CPI گردشده است و همهٔ ارقام ارز تقریبی‌اند). ` +
+    (scale === "log"
+      ? "مقیاس لگاریتمی: شیب برابر یعنی نرخ رشد برابر — برای مقایسهٔ سرعت رشد سه سری مناسب‌تر است."
+      : "مقیاس خطی: اختلاف قدر مطلق را نشان می‌دهد، پس سری‌های بزرگ‌تر خطوط بالایی را می‌گیرند.");
+
+  draw();
+  renderSummary();
+  renderTable();
+}
+
+for (const btn of document.querySelectorAll("#scale button"))
+  btn.onclick = () => { scale = btn.dataset.scale; render(); };
+
+document.getElementById("theme").onclick = () => {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "dark" ? "light" : "dark";
+  html.dataset.theme = next;
+  try { localStorage.setItem("hp-theme", next); } catch (e) {}
+};
+try {
+  const saved = localStorage.getItem("hp-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+renderFooter();
+render();
+</script>
+</body>
+</html>
