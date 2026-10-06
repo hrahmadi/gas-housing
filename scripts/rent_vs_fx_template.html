@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اجاره در برابر ارز — تهران</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
+    --line:#2a313b; --grid:#242a33; --danger:#e06c75;
+    --fx:#e5534b; --cpi:#dd8b20; --rent:#5aa9e6; --usd:#56b26b;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --ink:#1b1f24; --ink-dim:#5a6472;
+    --line:#dfe3e8; --grid:#e8ebef; --danger:#b3383f;
+    --fx:#c53030; --cpi:#b45309; --rent:#2b6cb0; --usd:#2f7d32;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
+       font-size:15px;line-height:1.75}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 64px}
+  h1{font-size:24px;margin:0 0 6px;font-weight:700}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:20px}
+  h2{font-size:16px;margin:0 0 12px}
+  .theme-btn{position:fixed;inset-inline-end:16px;top:16px;background:var(--panel);color:var(--ink);
+             border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;font-family:inherit;z-index:20}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+  .chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .legend .item{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+                border:1px solid var(--line);border-radius:9px;padding:4px 9px;background:var(--panel-2)}
+  .legend .item[aria-pressed="false"]{opacity:.42;text-decoration:line-through}
+  .legend .item:hover{border-color:var(--ink-dim)}
+  .legend .item:focus-visible{outline:2px solid var(--rent);outline-offset:1px}
+  .legend .line{width:22px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
+  .legend .mul{color:var(--ink);font-variant-numeric:tabular-nums}
+  .legend .axis-tag{font-size:10.5px;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+  .badge{font-size:11px;border:1px solid var(--ink-dim);color:var(--ink-dim);border-radius:5px;padding:0 5px;white-space:nowrap}
+  .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+  .chips{display:flex;gap:6px}
+  .chips button{font-family:inherit;font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+                color:var(--ink-dim);border-radius:999px;padding:5px 12px;cursor:pointer}
+  .chips button[aria-pressed="true"]{border-color:var(--rent);color:var(--ink)}
+  .chart-wrap{position:relative}
+  .chart-scroll{overflow:hidden}
+  svg#chart{width:100%;height:auto;display:block;touch-action:none;direction:ltr}
+  /* below this width the scaled-down SVG type stops being legible, so the chart scrolls instead */
+  @media (max-width:760px){
+    .chart-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    svg#chart{min-width:820px}
+  }
+  svg#chart text{font-family:Vazirmatn,system-ui,sans-serif;direction:ltr;unicode-bidi:isolate}
+  svg#chart text.axis-label{unicode-bidi:isolate;direction:rtl}
+  .grid-line{stroke:var(--grid);stroke-width:1}
+  .axis-line{stroke:var(--line);stroke-width:1}
+  .tick{fill:var(--ink-dim);font-size:12px}
+  .axis-label{fill:var(--ink-dim);font-size:11.5px}
+  .line{fill:none;stroke-linejoin:round;stroke-linecap:round}
+  .dot{stroke:var(--panel);stroke-width:1.4}
+  .s-fx{stroke:var(--fx)}.s-cpi{stroke:var(--cpi)}.s-rent{stroke:var(--rent)}.s-usd{stroke:var(--usd)}
+  .d-fx{fill:var(--fx)}.d-cpi{fill:var(--cpi)}.d-rent{fill:var(--rent)}.d-usd{fill:var(--usd)}
+  .hit{fill:transparent;cursor:crosshair}
+  .hit:hover{fill:rgba(127,127,127,.08)}
+  .mark-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:3 5;opacity:.55}
+  .mark-dot{fill:var(--panel);stroke:var(--ink-dim);stroke-width:1}
+  .mark-num{fill:var(--ink-dim);font-size:10.5px}
+  .cursor-line{stroke:var(--ink-dim);stroke-width:1;stroke-dasharray:3 3}
+  .tip{position:absolute;display:none;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+       padding:9px 11px;font-size:12.5px;pointer-events:none;z-index:10;min-width:250px;
+       box-shadow:0 6px 18px rgba(0,0,0,.28)}
+  .tip .t-title{font-weight:700;margin-bottom:6px}
+  .tip .t-row{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+  .tip .t-row .k{color:var(--ink-dim);display:flex;align-items:center;gap:6px}
+  .tip .t-row .k i{width:16px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
+  .tip .t-row .v{white-space:nowrap}
+  .tip .t-row .lv{color:var(--ink-dim);font-size:11.5px}
+  .tip .t-q{color:var(--ink-dim);font-size:11.5px;margin-top:6px;border-top:1px solid var(--line);padding-top:5px}
+  .hint{color:var(--ink-dim);font-size:12.5px;margin-top:10px}
+  .mark-note{color:var(--ink-dim);font-size:12.5px;margin-top:6px;line-height:2}
+  .mark-note b{color:var(--ink);font-weight:600}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .card .k{font-size:12.5px;color:var(--ink-dim);display:flex;align-items:center;gap:6px}
+  .card .k i{width:16px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
+  .card .v{font-size:22px;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+  .card .u{font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .table-wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right;white-space:nowrap}
+  th{color:var(--ink-dim);font-weight:600}
+  th.g,td.g{border-inline-start:1px solid var(--line)}
+  tr.base td{background:var(--panel-2)}
+  tr:hover td{background:var(--panel-2)}
+  td.y{color:var(--ink-dim)}
+  footer{color:var(--ink-dim);font-size:12.5px;line-height:1.95}
+  footer h3{font-size:13.5px;color:var(--ink);margin:18px 0 6px}
+  footer ul{margin:0;padding-inline-start:18px}
+  code{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">☀ / ☾</button>
+<div class="wrap">
+  <h1 id="title">اجاره در برابر ارز — تهران</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="panel">
+    <div class="chart-head">
+      <div class="legend" id="legend"></div>
+      <div class="controls">
+        <span>روی هر سری بزنید تا خاموش/روشن شود</span>
+        <div class="chips" id="scale">
+          <button data-scale="linear" type="button">مقیاس خطی</button>
+          <button data-scale="log" type="button">مقیاس لگاریتمی</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart-wrap">
+      <div class="chart-scroll" id="chart-scroll">
+        <svg id="chart" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" role="img"
+             aria-label="نمودار واگرایی شاخص ارز، تورم و اجاره در تهران، ۱۳۹۰ تا ۱۴۰۰"></svg>
+      </div>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="hint" id="hint"></div>
+    <div class="mark-note" id="mark-note"></div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel">
+    <h2>جدول سال‌به‌سال</h2>
+    <div class="table-wrap"><table id="table"></table></div>
+    <div class="hint" id="table-note"></div>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const toFa = s => String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]);
+const num = (v, d = 0) => (v === null || v === undefined || !isFinite(v)) ? "—"
+  : Number(v).toLocaleString("fa-IR", {minimumFractionDigits: d, maximumFractionDigits: d});
+const pct = v => (v === null || !isFinite(v)) ? "—" : (v > 0 ? "+" : "−") + num(Math.abs(v), 1) + "٪";
+const mul = v => (v === null || !isFinite(v)) ? "—" : "×" + num(v, 2);
+const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const W = 1000, H = 500, M = {t: 40, r: 78, b: 62, l: 78};
+
+const base = DATA.meta.base_year;
+let scale = "linear";
+
+const seriesOf = key => DATA.series.find(s => s.key === key);
+const byYear = Object.fromEntries(DATA.years.map(y => [y.year, y]));
+const valueOf = (year, key) => {
+  const v = year.values[key];
+  return (v === undefined || v === null || !isFinite(v)) ? null : v;
+};
+
+/* series are toggled from the legend; at least one always stays on */
+const hidden = new Set();
+const isVisible = key => !hidden.has(key);
+const visibleSeries = () => DATA.series.filter(s => isVisible(s.key));
+
+function niceTicks(lo, hi, logScale, count) {
+  const out = [];
+  if (logScale) {
+    for (let e = 0; e <= 6; e++) for (const m of [1, 2, 5]) {
+      const v = m * Math.pow(10, e);
+      if (v >= lo && v <= hi) out.push(v);
+    }
+    return out;
+  }
+  const raw = (hi - lo) / count, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = ([1, 2, 2.5, 5, 10].find(s => s * mag >= raw) || 10) * mag;
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(6));
+  if (!out.length) out.push(lo, hi);
+  return out;
+}
+
+/* Each axis gets its own scale. The handoff fixes the linear domains
+   (0…2500 on the left, 0…12 on the right); they only widen if a value overflows.
+   The domain is computed from every series on the axis, not just the visible ones, so
+   toggling a line never rescales the ones that stay — and an axis cannot go degenerate
+   when all of its lines happen to be switched off. */
+function axisScale(axis) {
+  const spec = axis === "left" ? DATA.meta.left_axis : DATA.meta.right_axis;
+  const [domLo, domHi] = spec.domain;
+  const values = DATA.series.filter(s => s.axis === axis)
+                            .flatMap(s => DATA.years.map(y => valueOf(y, s.key)))
+                            .filter(v => v !== null && v > 0);
+  if (scale === "log") {
+    if (!values.length) return {lo: Math.max(domLo, 1), hi: domHi, log: true};
+    const min = Math.min(...values), max = Math.max(...values);
+    return {lo: min / 1.35, hi: max * 1.15, log: true};
+  }
+  const max = values.length ? Math.max(...values) : domHi;
+  return {lo: domLo, hi: Math.max(domHi, max * 1.06), log: false};
+}
+
+function draw() {
+  const svg = document.getElementById("chart");
+  const years = DATA.years;
+  const plotW = W - M.l - M.r, plotH = H - M.t - M.b;
+  const left = axisScale("left"), right = axisScale("right");
+
+  const makeY = s => v => s.log
+    ? M.t + plotH * (1 - (Math.log10(v) - Math.log10(s.lo)) / (Math.log10(s.hi) - Math.log10(s.lo)))
+    : M.t + plotH * (1 - (v - s.lo) / (s.hi - s.lo));
+  const yLeft = makeY(left), yRight = makeY(right);
+  const yOf = s => s.axis === "right" ? yRight : yLeft;
+  const x = i => years.length < 2 ? M.l + plotW / 2 : M.l + plotW * i / (years.length - 1);
+  const parts = [];
+
+  // horizontal grid + both axis labels
+  for (const t of niceTicks(left.lo, left.hi, left.log, 6)) {
+    const yy = yLeft(t);
+    if (yy < M.t - 1 || yy > M.t + plotH + 1) continue;
+    parts.push(`<line class="grid-line" x1="${M.l}" y1="${yy.toFixed(1)}" x2="${M.l + plotW}" y2="${yy.toFixed(1)}"/>`);
+    parts.push(`<text class="tick" x="${M.l - 8}" y="${(yy + 4).toFixed(1)}" text-anchor="end">${num(t, 0)}</text>`);
+  }
+  for (const t of niceTicks(right.lo, right.hi, right.log, 4)) {
+    const yy = yRight(t);
+    if (yy < M.t - 1 || yy > M.t + plotH + 1) continue;
+    parts.push(`<text class="tick" x="${M.l + plotW + 8}" y="${(yy + 4).toFixed(1)}" text-anchor="start">${num(t, t < 10 ? 1 : 0)}</text>`);
+  }
+  parts.push(`<line class="axis-line" x1="${M.l}" y1="${M.t + plotH}" x2="${M.l + plotW}" y2="${M.t + plotH}"/>`);
+
+  const cy = M.t + plotH / 2;
+  parts.push(`<text class="axis-label" x="18" y="${(cy + 3).toFixed(1)}" text-anchor="middle" ` +
+             `transform="rotate(-90 18 ${(cy + 3).toFixed(1)})">${esc(DATA.meta.left_axis.label_fa)}</text>`);
+  parts.push(`<text class="axis-label" x="${W - 16}" y="${(cy + 3).toFixed(1)}" text-anchor="middle" ` +
+             `transform="rotate(90 ${W - 16} ${(cy + 3).toFixed(1)})">${esc(DATA.meta.right_axis.label_fa)}</text>`);
+
+  years.forEach((year, i) => {
+    parts.push(`<text class="tick" x="${x(i).toFixed(1)}" y="${M.t + plotH + 22}" text-anchor="middle">${toFa(year.year)}</text>`);
+  });
+
+  // contextual markers (editorial context, not data)
+  for (const mark of DATA.meta.annotations) {
+    const i = years.findIndex(year => year.year === mark.year);
+    if (i < 0) continue;
+    const mx = x(i);
+    parts.push(`<line class="mark-line" x1="${mx.toFixed(1)}" y1="${M.t}" x2="${mx.toFixed(1)}" y2="${M.t + plotH}"/>`);
+    parts.push(`<circle class="mark-dot" cx="${mx.toFixed(1)}" cy="${M.t + 14}" r="9"/>`);
+    parts.push(`<text class="mark-num" x="${mx.toFixed(1)}" y="${M.t + 17.5}" text-anchor="middle">${toFa(mark.n)}</text>`);
+  }
+
+  // series: a line switched off in the legend is not drawn at all
+  for (const s of DATA.series) {
+    if (!isVisible(s.key)) continue;
+    const pts = years.map((year, i) => ({i, v: valueOf(year, s.key)}))
+                     .filter(p => p.v !== null && p.v > 0);
+    if (pts.length > 1) {
+      let path = "";
+      for (const p of pts) path += `${path ? "L" : "M"}${x(p.i).toFixed(1)} ${yOf(s)(p.v).toFixed(1)} `;
+      parts.push(`<path class="line s-${s.key}" d="${path.trim()}" stroke-width="${s.width}"` +
+                 (s.dash ? ` stroke-dasharray="${s.dash}"` : "") + `/>`);
+    }
+    for (const p of pts) {
+      parts.push(`<circle class="dot d-${s.key}" cx="${x(p.i).toFixed(1)}" cy="${yOf(s)(p.v).toFixed(1)}" r="2.8"/>`);
+    }
+  }
+
+  parts.push(`<g class="cursor"></g>`);
+
+  years.forEach((year, i) => {
+    const half = years.length < 2 ? plotW / 2 : plotW / (years.length - 1) / 2;
+    parts.push(`<rect class="hit" data-i="${i}" x="${(x(i) - half).toFixed(1)}" y="${M.t}" ` +
+               `width="${(half * 2).toFixed(1)}" height="${plotH}"/>`);
+  });
+
+  svg.innerHTML = parts.join("");
+  for (const hit of svg.querySelectorAll(".hit")) {
+    hit.addEventListener("mousemove", () => showCursor(+hit.dataset.i, x, yOf));
+    hit.addEventListener("mouseleave", hideCursor);
+  }
+}
+
+function showCursor(i, x, yOf) {
+  const svg = document.getElementById("chart");
+  const year = DATA.years[i];
+  const cursor = svg.querySelector(".cursor");
+  let markup = `<line class="cursor-line" x1="${x(i).toFixed(1)}" y1="${M.t}" ` +
+               `x2="${x(i).toFixed(1)}" y2="${(M.t + (H - M.t - M.b)).toFixed(1)}"/>`;
+  for (const s of DATA.series) {
+    if (!isVisible(s.key)) continue;
+    const v = valueOf(year, s.key);
+    if (v === null) continue;
+    markup += `<circle class="d-${s.key}" cx="${x(i).toFixed(1)}" cy="${yOf(s)(v).toFixed(1)}" r="5.4" ` +
+              `stroke="var(--panel)" stroke-width="2"/>`;
+  }
+  cursor.innerHTML = markup;
+
+  // the handoff asks the tooltip to show the index and the level behind it
+  const rows = DATA.series.map(s => {
+    if (!isVisible(s.key)) return ""; // a line switched off in the legend leaves the tooltip too
+    const v = valueOf(year, s.key);
+    if (v === null) return "";
+    let level = "";
+    if (s.key === "fx") level = `${num(year.levels.fx, 0)} تومان`;
+    else if (s.key === "rent") level = `${num(year.levels.rent, 0)} تومان/م²`;
+    else if (s.key === "cpi") level = `تورم ${num(year.inflation_pct, 1)}٪`;
+    else if (s.key === "usd") level = `در برابر ${num(year.values.usd, 1)} دلار`;
+    const diff = s.key === "usd" ? year.yoy_pct.usd : (s.key === "cpi" ? null : year.yoy_pct[s.key]);
+    const tail = diff === null || diff === undefined ? "" : ` · ${pct(diff)}`;
+    return `<div class="t-row"><span class="k"><i style="border-top-color:var(--${s.key})"></i>${s.label_fa}</span>` +
+           `<span class="v">${num(v, 1)}${tail}</span></div>` +
+           (level ? `<div class="t-row"><span class="k"></span><span class="lv">${level}</span></div>` : "");
+  }).join("");
+  const tip = document.getElementById("tip");
+  tip.innerHTML = `<div class="t-title">سال ${year.label_fa}</div>${rows}` +
+                  `<div class="t-q">شاخص‌ها با پایهٔ ${DATA.meta.base_label_fa} = ۱۰۰ · اجاره به دلار روی محور راست است.</div>`;
+
+  // the tip sits outside the scroll container, so the SVG's own offset (which already
+  // includes any horizontal scroll) has to be added back in
+  const svgRect = svg.getBoundingClientRect();
+  const wrapRect = document.getElementById("chart-wrap").getBoundingClientRect();
+  const k = svgRect.width / W;
+  const px = x(i) * k + (svgRect.left - wrapRect.left);
+  tip.style.display = "block";
+  const tw = tip.offsetWidth;
+  let left = px + 16;
+  if (left + tw > wrapRect.width) left = Math.max(0, px - tw - 16);
+  tip.style.left = left + "px";
+  tip.style.top = "10px";
+  tip.style.direction = "rtl";
+}
+
+function hideCursor() {
+  const cursor = document.querySelector("#chart .cursor");
+  if (cursor) cursor.innerHTML = "";
+  document.getElementById("tip").style.display = "none";
+}
+
+/* ---------- legend, cards, table, footer ---------- */
+function renderLegend() {
+  const stats = DATA.meta.stats;
+  const growth = {fx: stats.fx_multiple, cpi: stats.cpi_multiple, rent: stats.rent_multiple, usd: stats.rent_usd_multiple};
+  const legend = document.getElementById("legend");
+  legend.innerHTML = DATA.series.map(s => {
+    const on = isVisible(s.key);
+    return `<span class="item" role="button" tabindex="0" data-key="${s.key}" aria-pressed="${on}" ` +
+           `title="${esc(s.level_label_fa)} — ${esc(s.source_id)}">` +
+           `<span class="line" style="border-top-color:var(--${s.key})${s.dash ? `;border-top-style:dashed` : ``}"></span>` +
+           `${s.label_fa} <span class="axis-tag">${s.axis === "right" ? "محور راست" : "محور چپ"}</span> ` +
+           `<span class="mul">${mul(growth[s.key])}</span></span>`;
+  }).join("");
+  for (const item of legend.querySelectorAll(".item")) {
+    const toggle = () => toggleSeries(item.dataset.key);
+    item.addEventListener("click", toggle);
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
+    });
+  }
+}
+
+function renderCards() {
+  const s = DATA.meta.stats;
+  const span = toFa(s.span_years);
+  document.getElementById("cards").innerHTML = `
+    <div class="card"><div class="k"><i style="border-top-color:var(--fx)"></i>نرخ ارز آزاد</div>
+      <div class="v">${mul(s.fx_multiple)}</div>
+      <div class="u">${num(s.first.fx, 0)} ← ${num(s.last.fx, 0)} تومان در ${span} سال</div></div>
+    <div class="card"><div class="k"><i style="border-top-color:var(--cpi)"></i>شاخص تورم</div>
+      <div class="v">${mul(s.cpi_multiple)}</div>
+      <div class="u">۱۰۰ ← ${num(s.last.cpi_index, 1)} (پایهٔ ${DATA.meta.base_label_fa} = ۱۰۰)</div></div>
+    <div class="card"><div class="k"><i style="border-top-color:var(--rent)"></i>اجارهٔ تهران</div>
+      <div class="v">${mul(s.rent_multiple)}</div>
+      <div class="u">${num(s.last.rent, 0)} تومان/م² در ${toFa(s.last_year)}</div></div>
+    <div class="card"><div class="k"><i style="border-top-color:var(--usd)"></i>اجاره به دلار</div>
+      <div class="v">${num(s.last.rent_usd, 1)}</div>
+      <div class="u">دلار/م² · از ${num(s.first.rent_usd, 1)} (${mul(s.rent_usd_multiple)}) · کمترین: ${num(s.min_rent_usd, 1)} در ${toFa(s.min_rent_usd_year_label_fa)}</div></div>
+    <div class="card"><div class="k">اجاره در برابر تورم</div>
+      <div class="v">${pct(s.rent_vs_cpi_pct)}</div>
+      <div class="u">شاخص اجاره در برابر شاخص CPI در ${toFa(s.last_year)}</div></div>
+    <div class="card"><div class="k">پهنای شکاف ارز و تورم</div>
+      <div class="v">${mul(s.fx_over_cpi)}</div>
+      <div class="u">ارز ${num(s.fx_over_cpi, 2)} برابر CPI رشد کرده</div></div>`;
+}
+
+function renderTable() {
+  const head = `<thead><tr><th>سال</th>` +
+    `<th>ارز (تومان/دلار)</th><th>شاخص ارز</th>` +
+    `<th class="g">تورم سالانه</th><th>شاخص CPI</th>` +
+    `<th class="g">اجاره (تومان/م²)</th><th>شاخص اجاره</th>` +
+    `<th class="g">اجاره (دلار/م²)</th></tr></thead>`;
+  const body = DATA.years.map(year => {
+    const usd = year.values.usd;
+    const dot = (year.year === 1397 || year.year === 1399) ? " ◂" : "";
+    return `<tr${year.year === base ? ' class="base"' : ""}>` +
+      `<td class="y">${toFa(year.label_fa)}${dot}</td>` +
+      `<td>${num(year.levels.fx, 0)}</td><td>${num(year.values.fx, 1)}</td>` +
+      `<td class="g">${num(year.inflation_pct, 1)}٪</td><td>${num(year.values.cpi, 1)}</td>` +
+      `<td class="g">${num(year.levels.rent, 0)}</td><td>${num(year.values.rent, 1)}</td>` +
+      `<td class="g">${num(usd, 1)}</td></tr>`;
+  }).join("");
+  document.getElementById("table").innerHTML = head + `<tbody>${body}</tbody>`;
+  document.getElementById("table-note").textContent =
+    `سال ${DATA.meta.base_label_fa} پایهٔ ثابت شاخص‌هاست. «◂» سال‌هایی است که علامت زمینه‌ای روی نمودار دارند. ` +
+    `شاخص CPI از زنجیرهٔ ستون تورم ساخته می‌شود، نه از اعداد سند تحویل.`;
+}
+
+function renderFooter() {
+  document.getElementById("footer").innerHTML = `
+    <h3>منابع</h3>
+    <ul>${DATA.sources.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+    <h3>روش</h3>
+    <ul>${DATA.meta.method.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+    <h3>این ارقام چه هستند و چه نیستند</h3>
+    <ul>${DATA.caveats.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+    <p>ساخته‌شده با <code>python3 scripts/build_rent_vs_fx.py</code> — دادهٔ درون‌صفحه از
+    <code>data/rent_vs_fx/rent_data.json</code> است؛ فایل را دستی ویرایش نکنید.</p>`;
+}
+
+function toggleSeries(key) {
+  if (isVisible(key)) {
+    if (visibleSeries().length === 1) return; // never leave the chart completely empty
+    hidden.add(key);
+  } else {
+    hidden.delete(key);
+  }
+  render();
+}
+
+function render() {
+  hideCursor();
+  for (const btn of document.querySelectorAll("#scale button"))
+    btn.setAttribute("aria-pressed", String(btn.dataset.scale === scale));
+
+  const w = DATA.meta.window;
+  document.getElementById("title").textContent = DATA.meta.title_fa;
+  document.getElementById("sub").textContent =
+    `چهار سری روی یک نمودار، سالانه، ${w.first_label_fa} تا ${w.last_label_fa} (${toFa(w.count)} سال): ` +
+    `نرخ ارز آزاد، شاخص تورم، اجارهٔ تهران و اجاره به دلار — همه با پایهٔ ثابت ${DATA.meta.base_label_fa} = ۱۰۰، ` +
+    `به‌جز اجاره به دلار که روی محور راست است.`;
+  document.getElementById("hint").textContent =
+    (scale === "log"
+      ? "مقیاس لگاریتمی: شیب برابر یعنی نرخ رشد برابر. روی این مقیاس، شتاب ارز در ۱۳۹۷ به‌روشنی از تورم و اجاره جدا می‌شود."
+      : "مقیاس خطی با دامنهٔ ثابت (چپ: ۰ تا ۲٬۵۰۰ · راست: ۰ تا ۱۲). فاصلهٔ ارز از تورم و اجاره همان «شکاف قیچی‌ای» است؛ " +
+        "برای دیدن نرخ رشد به‌جای قدر مطلق، مقیاس لگاریتمی را بزنید.") +
+    " نمودارهای چندمحوره می‌توانند گمراه‌کننده باشند: محور راست برای اجاره به دلار است و ارتفاع آن با سه سری دیگر قابل مقایسه نیست.";
+  document.getElementById("mark-note").innerHTML =
+    DATA.meta.annotations.map(a =>
+      `<b>${toFa(a.n)}</b> ${toFa(a.year)} — ${esc(a.label_fa)}`).join(" &nbsp;·&nbsp; ") +
+    ` <span>— این دو علامت زمینهٔ تفسیری‌اند، نه داده؛ از سری‌ها استخراج نشده‌اند.</span>`;
+
+  draw();
+  renderLegend();
+  renderCards();
+  renderTable();
+}
+
+for (const btn of document.querySelectorAll("#scale button"))
+  btn.onclick = () => { scale = btn.dataset.scale; render(); };
+
+document.getElementById("theme").onclick = () => {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "dark" ? "light" : "dark";
+  html.dataset.theme = next;
+  try { localStorage.setItem("rvf-theme", next); } catch (e) {}
+};
+try {
+  const saved = localStorage.getItem("rvf-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+renderFooter();
+render();
+</script>
+</body>
+</html>
