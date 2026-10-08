@@ -12,8 +12,9 @@
 Inputs:
 
 * ``data/annual.csv`` — ردیف‌های ``tehran_rent`` (تومان بر متر مربع در ماه، بانک مرکزی).
-* ``data/rent_vs_fx/fx_inflation_annual.csv`` — سری سالانهٔ ارز آزاد و تورم سالانه (S16،
-  project-supplied). این فایل ورودی دستی است و ویرایشش فقط از راه همین فایل مجاز است.
+* ``data/rent_vs_fx/fx_inflation_annual.csv`` — سری سالانهٔ ارز آزاد (S16، project-supplied) و تورم
+  سالانه که **دو منبع دارد**: ۱۳۹۷–۱۴۰۰ از مرکز آمار ایران (S18) و ۱۳۹۰–۱۳۹۶ از S16 (تأییدنشده).
+  این فایل ورودی دستی است و ویرایشش فقط از راه همین فایل مجاز است.
 
 Method (هر گام از همین دو ورودی بازتولیدپذیر است):
 
@@ -22,7 +23,8 @@ Method (هر گام از همین دو ورودی بازتولیدپذیر اس�
 2. ``*_index = مقدار ÷ مقدار ۱۳۹۰ × ۱۰۰`` برای ارز و اجاره؛
 3. ``cpi_index`` زنجیرهٔ ``inflation_pct`` است: ``cpi[y] = cpi[y-1] x (1 + inflation[y])``،
    پایهٔ ۱۳۹۰ = ۱۰۰، و هر گام به **یک رقم اعشار** گرد می‌شود. (این ستون در سند تحویل اشتباه بود:
-   گام ۱۳۹۱ با تورم ۱۳۹۰ ساخته شده بود و کل ستون را حدود ۷٪ کم‌برآورد می‌کرد.)
+   گام ۱۳۹۱ با تورم ۱۳۹۰ ساخته شده بود و کل ستون را حدود ۷٪ کم‌برآورد می‌کرد. بعداً هم روشن شد که
+   ستون تورمِ آن سند یک سری مرکز آمار با دو سال نادرست بود — ۱۳۹۷ و ۱۳۹۸ — که با S18 جایگزین شد.)
 4. ``rent_usd_m2 = rent_toman_m2 / fx_toman_usd`` — نسبت میان دو سری مشاهده‌شده، نه تبدیل یکی به دیگری.
 
 Outputs (``data/rent_vs_fx/``):
@@ -99,6 +101,7 @@ PANEL_FIELDS = (
     "rent_usd_yoy_pct",
     "source_id_rent",
     "source_id_fx",
+    "source_id_inflation",
 )
 
 
@@ -142,7 +145,7 @@ def load_rent(path: Path) -> Tuple[Dict[int, float], Optional[str], int]:
 
 
 def load_macro(path: Path) -> Tuple[Dict[int, Dict[str, Any]], int]:
-    """``fx_inflation_annual.csv`` -> ({year: {fx, inflation, source_id}}, rows in the file)."""
+    """``fx_inflation_annual.csv`` -> ({year: {fx, inflation, source ids}}, rows in the file)."""
     macro: Dict[int, Dict[str, Any]] = {}
     rows = 0
     with open(path, encoding="utf-8", newline="") as handle:
@@ -156,7 +159,8 @@ def load_macro(path: Path) -> Tuple[Dict[int, Dict[str, Any]], int]:
             macro[year] = {
                 "fx": float(row["fx_toman_usd"]),
                 "inflation": float(row["inflation_pct"]),
-                "source_id": row["source_id"],
+                "source_id_fx": row["source_id_fx"],
+                "source_id_inflation": row["source_id_inflation"],
             }
     if not macro:
         raise ValueError(f"no macro rows in {FIRST_YEAR}…{LAST_YEAR} in {path}")
@@ -204,7 +208,8 @@ def build_panel(rent: Dict[int, float], macro: Dict[int, Dict[str, Any]]) -> Lis
                 "rent_usd": rent_usd[year],
                 "rent_usd_yoy_pct": yoy(rent_usd, year),
                 "source_id_rent": "S2",
-                "source_id_fx": macro[year]["source_id"],
+                "source_id_fx": macro[year]["source_id_fx"],
+                "source_id_inflation": macro[year]["source_id_inflation"],
             }
         )
     return panel
@@ -269,7 +274,8 @@ def build_payload(
                 "rent": entry["rent_yoy_pct"],
                 "usd": entry["rent_usd_yoy_pct"],
             },
-            "source_id": {"fx": entry["source_id_fx"], "rent": entry["source_id_rent"]},
+            "source_id": {"fx": entry["source_id_fx"], "rent": entry["source_id_rent"],
+                          "cpi": entry["source_id_inflation"]},
         }
         for entry in panel
     ]
@@ -311,11 +317,18 @@ def build_payload(
                     "rows_in_file": macro_rows,
                     "years_used": len(panel),
                     "source_id": panel[0]["source_id_fx"],
+                    "inflation_source_id": panel[-1]["source_id_inflation"],
+                    "inflation_source_id_early": panel[0]["source_id_inflation"],
+                    "inflation_split_year": min(
+                        entry["year"] for entry in panel if entry["source_id_inflation"] != panel[0]["source_id_inflation"]
+                    ) if any(entry["source_id_inflation"] != panel[0]["source_id_inflation"] for entry in panel) else None,
                 },
             },
             "annotations": [dict(annotation) for annotation in ANNOTATIONS],
             "method": [
-                "اجاره از data/annual.csv (متغیر tehran_rent، بانک مرکزی، S2) و ارز و تورم از data/rent_vs_fx/fx_inflation_annual.csv (S16) خوانده می‌شود.",
+                "اجاره از data/annual.csv (متغیر tehran_rent، بانک مرکزی، S2) خوانده می‌شود.",
+                "ارز از data/rent_vs_fx/fx_inflation_annual.csv (S16، project-supplied) خوانده می‌شود؛ تعریفش (پایان‌سال یا میانگین) هنوز تأیید نشده.",
+                "تورم از همان فایل خوانده می‌شود و دو منبع دارد: ۱۳۹۷–۱۴۰۰ از S18 (مرکز آمار ایران، تورم میانگین سالانه) و ۱۳۹۰–۱۳۹۶ از S16 که هنوز تأییدنشده است.",
                 f"هر دو سری به بازهٔ {fa(FIRST_YEAR)}…{fa(LAST_YEAR)} بریده و سال‌به‌سال تطبیق داده می‌شوند؛ اگر سالی در یک سری نباشد اسکریپت متوقف می‌شود — نه صفرگذاری و نه درون‌یابی.",
                 f"شاخص = مقدار ÷ مقدار {fa(BASE_YEAR)} × ۱۰۰، با پایهٔ ثابت {fa(BASE_YEAR)} برای ارز و اجاره؛ صفحه این پایه را تغییر نمی‌دهد.",
                 "شاخص تورم زنجیرهٔ تورم سالانه است: cpi[y] = cpi[y−۱] × (۱ + تورم[y])، با گردکردن یک‌رقمی در هر گام.",
@@ -344,7 +357,8 @@ def build_payload(
                 "level_label_fa": "تورم سالانه",
                 "level_digits": 1,
                 "level_suffix_fa": "٪",
-                "source_id": panel[0]["source_id_fx"],
+                "source_id": panel[-1]["source_id_inflation"],
+                "source_note_fa": "تورم میانگین سالانهٔ مرکز آمار ایران برای ۱۳۹۷–۱۴۰۰؛ ۱۳۹۰–۱۳۹۶ از منبع تأییدنشدهٔ S16 می‌آید.",
             },
             {
                 "key": "rent",
@@ -372,12 +386,17 @@ def build_payload(
         "years": years,
         "sources": [
             "بانک مرکزی ایران (S2) — میانگین اجارهٔ ماهانهٔ هر متر مربع در تهران؛ ارقام از research workbook پروژه.",
-            "نرخ ارز آزاد و تورم سالانه (S16) — project-supplied، تحویل‌شده ۲۰۲۶-۱۰-۰۶؛ تعریف نرخ ارز در سند تحویل نیامده.",
+            "نرخ ارز آزاد (S16) — project-supplied، تحویل‌شده ۲۰۲۶-۱۰-۰۶؛ تعریف نرخ ارز (پایان‌سال یا میانگین) هنوز تأیید نشده است.",
+            "تورم ۱۳۹۷–۱۴۰۰ — مرکز آمار ایران (S18)، تورم میانگین سالانه: ۲۶٫۹ / ۳۴٫۸ / ۳۶٫۴ / ۴۰٫۲ درصد.",
+            "تورم ۱۳۹۰–۱۳۹۶ (S16) — project-supplied و تأییدنشده؛ با ارقام منتشرشدهٔ مرکز آمار برای همان سال‌ها سازگار است ولی سندی برایش در مخزن نیست.",
             "شناسه و یادداشت منابع: data/sources.csv",
         ],
         "caveats": [
             "تعریف سری ارز در سند تحویل نیامده: نه «میانگین سالانه» است و نه به‌صراحت «پایان سال». ارقام با نرخ‌های پایان‌سال آزاد سازگارند. اگر مبنا میانگین سالانه باشد، ضریب رشد ارز از ×۲۳٫۳ به حدود ×۱۵ تغییر می‌کند و پهنای شکاف هم با آن — پیش از انتشار باید تعریف تأیید شود.",
-            "ستون شاخص CPI در سند تحویل با ستون تورم خودش نمی‌ساخت: گام ۱۳۹۱ با تورم ۱۳۹۰ (۲۱٫۵٪) ساخته شده بود و کل ستون حدود ۷٪ کم‌برآورد می‌شد (۱۴۰۰: ۸۰۴٫۳ در برابر ۸۶۳٫۸). این صفحه شاخص را از خود تورم بازمی‌سازد؛ ستون تورم دست‌نخورده مانده است.",
+            "تورم ۱۳۹۷–۱۴۰۰ حالا از مرکز آمار ایران می‌آید (S18): ۲۶٫۹ / ۳۴٫۸ / ۳۶٫۴ / ۴۰٫۲ درصد. پیش از این ۱۸٫۰ / ۴۱٫۰ / ۳۶٫۰ / ۴۰٫۰ بود. ۱۳۹۹ و ۱۴۰۰ از قبل با مرکز آمار می‌خواندند، ولی ۱۳۹۷ و ۱۳۹۸ نه — یعنی ستون قبلی یک سری مرکز آمار با دو سال نادرست بود، نه یک تعریف متفاوت. اثر این اصلاح کوچک است: شاخص ۱۴۰۰ از ۸۶۳٫۸ به ۸۹۱٫۹ می‌رود و نسبت ارز به تورم از ۲٫۷۰ به ۲٫۶۲.",
+            "تورم ۱۳۹۰–۱۳۹۶ همچنان از S16 می‌آید و **تأییدنشده** است. مقادیرش (۲۱٫۵ / ۳۰٫۵ / ۳۴٫۷ / ۱۵٫۶ / ۱۱٫۹ / ۹٫۰ / ۱۰٫۰) با تورم میانگین سالانهٔ منتشرشدهٔ مرکز آمار برای همان سال‌ها سازگارند، ولی سندی برایشان در مخزن نیست و باید با مرکز آمار مقابله شوند.",
+            "دو سری تورم سالانهٔ ایران در گردش است و یکی «غلط» نیست: مرکز آمار (S18) و سری بانک جهانی/صندوق بین‌المللی پول (WDI: FP.CPI.TOTL.ZG) که منبعش IFS است. این دو سیستماتیک با هم تفاوت دارند — برای ۱۳۹۷ تا ۱۳۹۹ مرکز آمار پایین‌تر است و بعد بالاتر. **این دو را نباید به هم چسباند:** یک محاسبهٔ بیرونی که ۱۳۹۷–۱۳۹۹ را از بانک جهانی و ۱۴۰۲–۱۴۰۳ را از مرکز آمار گرفته بود، نسبت ارز به تورم را ۱٫۴۸ نشان می‌داد در حالی که با مرکز آمار یکدست ۱٫۸۱ است. جزئیات در docs/fx_cpi_source_reconciliation_handoff.md.",
+            "ستون شاخص CPI در سند تحویل اولیه با ستون تورم خودش نمی‌ساخت: گام ۱۳۹۱ با تورم ۱۳۹۰ (۲۱٫۵٪) ساخته شده بود و کل ستون حدود ۷٪ کم‌برآورد می‌شد (۱۴۰۰: ۸۰۴٫۳ در برابر ۸۶۳٫۸). این صفحه شاخص را از خود تورم بازمی‌سازد.",
             "«اجاره به دلار» نسبت دو سری مشاهده‌شده است، نه تبدیل اجاره از تومان به دلار. افت آن می‌تواند از رشد ارز بیاید، از کندی اجاره، یا از هر دو؛ نمودار سهم هر کدام را جدا نمی‌کند.",
             "اجاره و ارز دو سری مستقل با دو منبع مستقل‌اند و هیچ‌جا به هم تبدیل نشده‌اند؛ «اجاره به دلار» فقط نسبت آن دو است.",
             "این سری ارز با جدول ارز/تورم پروژه در data/housing_price/fx_cpi_quarterly.csv یکی نیست: آن جدول از تابستان ۱۴۰۰ آغاز می‌شود و نرخ‌هایش فصلی و گردشده‌اند (زمستان ۱۴۰۰ آنجا ۲۶٬۰۰۰ است که با میزان پایان‌سال این سری می‌خواند، ولی مسیر میانی دو سری یکی نیست).",
@@ -431,6 +450,7 @@ def write_panel_csv(path: Path, panel: List[Dict[str, Any]]) -> None:
                     "rent_usd_yoy_pct": blank(entry["rent_usd_yoy_pct"]),
                     "source_id_rent": entry["source_id_rent"],
                     "source_id_fx": entry["source_id_fx"],
+                    "source_id_inflation": entry["source_id_inflation"],
                 }
             )
 
@@ -449,7 +469,7 @@ def write_readme(path: Path, payload: Dict[str, Any], panel: List[Dict[str, Any]
         "| سری | محور | منبع |",
         "| --- | --- | --- |",
         "| نرخ ارز آزاد (شاخص) | چپ | S16 — project-supplied |",
-        "| شاخص تورم CPI (شاخص) | چپ | S16 — زنجیرهٔ تورم سالانه |",
+        "| شاخص تورم CPI (شاخص) | چپ | S18 برای ۱۳۹۷–۱۴۰۰ (مرکز آمار ایران)، S16 برای ۱۳۹۰–۱۳۹۶ (تأییدنشده) |",
         "| اجارهٔ تهران (شاخص) | چپ | S2 — بانک مرکزی |",
         "| اجاره به دلار | راست | نسبت S2 ÷ S16 |",
         "",
@@ -490,10 +510,10 @@ def write_readme(path: Path, payload: Dict[str, Any], panel: List[Dict[str, Any]
         "",
         "* `rent_toman_m2`, `rent_index_1390`, `rent_yoy_pct` — سری اجاره، شاخص و رشد سالانهٔ آن؛",
         "* `fx_toman_usd`, `fx_index_1390`, `fx_yoy_pct` — سری ارز، شاخص و رشد سالانهٔ آن؛",
-        "* `inflation_pct` — تورم سالانهٔ ورودی (دست‌نخورده، همان‌طور که تحویل داده شده)؛",
+        "* `inflation_pct` — تورم سالانهٔ ورودی؛ ۱۳۹۷–۱۴۰۰ از مرکز آمار ایران (S18) و ۱۳۹۰–۱۳۹۶ از S16 (تأییدنشده)؛",
         "* `cpi_index_1390` — شاخص ساخته‌شده از زنجیرهٔ همان تورم؛",
         "* `rent_usd_m2`, `rent_usd_yoy_pct` — نسبت اجاره به ارز و رشد سالانهٔ آن؛",
-        "* `source_id_rent`, `source_id_fx` — شناسهٔ منبع هر سمت در `data/sources.csv`.",
+        "* `source_id_rent`, `source_id_fx`, `source_id_inflation` — شناسهٔ منبع هر ستون در `data/sources.csv`.",
         "",
         "`rent_annual.csv` نمای فقط‌اجاره است و قالب قبلی‌اش دست‌نخورده مانده.",
         "",
@@ -543,7 +563,9 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     stats = payload["meta"]["stats"]
     print(f"rent    : {rent_input} ({RENT_VARIABLE}, {len(panel)} of {rent_rows} rows, source S2)")
-    print(f"macro   : {macro_input} (fx + inflation, {len(panel)} of {macro_rows} rows, source {panel[0]['source_id_fx']})")
+    inflation_sources = sorted({entry["source_id_inflation"] for entry in panel})
+    print(f"macro   : {macro_input} (fx + inflation, {len(panel)} of {macro_rows} rows)")
+    print(f"          fx source {panel[0]['source_id_fx']}; inflation sources {', '.join(inflation_sources)}")
     print(f"years   : {len(panel)} ({panel[0]['label_fa']} … {panel[-1]['label_fa']}), base {fa(BASE_YEAR)} = 100")
     print(f"fx      : x{stats['fx_multiple']:.2f}  ({stats['first']['fx']:,.0f} -> {stats['last']['fx']:,.0f} toman)")
     print(f"cpi     : x{stats['cpi_multiple']:.2f}  (100 -> {stats['last']['cpi_index']:,.1f})")

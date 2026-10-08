@@ -346,7 +346,7 @@ function renderLegend() {
   legend.innerHTML = DATA.series.map(s => {
     const on = isVisible(s.key);
     return `<span class="item" role="button" tabindex="0" data-key="${s.key}" aria-pressed="${on}" ` +
-           `title="${esc(s.level_label_fa)} — ${esc(s.source_id)}">` +
+           `title="${esc(s.level_label_fa)} — ${esc(s.source_id)}${s.source_note_fa ? ` — ${esc(s.source_note_fa)}` : ``}">` +
            `<span class="line" style="border-top-color:var(--${s.key})${s.dash ? `;border-top-style:dashed` : ``}"></span>` +
            `${s.label_fa} <span class="axis-tag">${s.axis === "right" ? "محور راست" : "محور چپ"}</span> ` +
            `<span class="mul">${mul(growth[s.key])}</span></span>`;
@@ -402,8 +402,8 @@ function renderTable() {
   }).join("");
   document.getElementById("table").innerHTML = head + `<tbody>${body}</tbody>`;
   document.getElementById("table-note").textContent =
-    `سال ${DATA.meta.base_label_fa} پایهٔ ثابت شاخص‌هاست. «◂» سال‌هایی است که علامت زمینه‌ای روی نمودار دارند. ` +
-    `شاخص CPI از زنجیرهٔ ستون تورم ساخته می‌شود، نه از اعداد سند تحویل.`;
+    `سال ${DATA.meta.base_label_fa} پایهٔ ثابت شاخص‌هاست. تورم ۱۳۹۷–۱۴۰۰ از مرکز آمار ایران (S18) و ` +
+    `۱۳۹۰–۱۳۹۶ از S16 (تأییدنشده) می‌آید؛ ستون شاخص از زنجیرهٔ همین تورم ساخته می‌شود.`;
 }
 
 function renderFooter() {
