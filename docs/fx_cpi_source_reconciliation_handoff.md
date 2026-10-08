@@ -1,6 +1,6 @@
 # Handoff — FX vs CPI: source reconciliation
 
-**Status as of 2026-10-08. Q1 has been applied; Q2 and Q3 remain open.**
+**Status as of 2026-10-08. Q1 applied. Q2 partly applied (۱۴۰۱ and ۱۴۰۲ corrected, ۱۴۰۳ open). Q3 open.**
 
 Q1 (which CPI series) is **decided and implemented** — see "Applied" below. The outside computation's
 **arithmetic is correct**: every cell reproduces from the others (`fx_index = fx ÷ 4040 × 100`,
@@ -89,28 +89,39 @@ from it, but no sustained convergence.
 
 ---
 
-## Q2 — Annual-average free-market FX for ۱۴۰۱ and ۱۴۰۳ ⚠️ Partially answered
+## Q2 — Annual-average free-market FX ⚠️ ۱۴۰۱ and ۱۴۰۲ fixed, ۱۴۰۳ still open
 
-The outside file's FX agrees with the repo's `S17` quarterly mean within 0.3–3.8% for ۱۳۹۶–۱۴۰۰ and
-۱۴۰۲, but not for two years, both flagged `est` and both taken from the floor of a stated range:
+**Update — applied.** A 35-point sample at a regular **21-day interval** was supplied (`S19`):
+17 points from ۱۴۰۱-۰۱-۱۵ to ۱۴۰۱-۱۲-۱۵ and 18 from ۱۴۰۲-۰۱-۰۷ to ۱۴۰۲-۱۲-۲۸. It settles the
+question — and **inverts** the earlier reading:
 
-| year | outside | `S17` quarterly mean | gap | his note |
+| year | sampled (time-weighted) | outside file | `S17` quarterly mean | verdict |
 | ---: | ---: | ---: | ---: | --- |
-| ۱۴۰۱ | 34,800 | 40,250 | −13.5% | Euronews |
-| ۱۴۰۲ | 52,000 | 53,000 | −1.9% | est (range 50–61k) → 18th pct |
-| ۱۴۰۳ | 65,000 | 71,750 | −9.4% | est (range 57–94k) → **22nd pct** |
+| ۱۴۰۱ | **34,655** | 34,800 | 40,250 | **`S17` is ~14% too high** |
+| ۱۴۰۲ | **51,583** | 52,000 | 53,000 | all agree |
 
-A price-path chart was supplied (فروردین ۱۴۰۰ → فروردین ۱۴۰۴, rial-denominated). The only labelled
-value readable from it is the tooltip at **۱۴۰۳/۱۲/۲۷ = ۹۷۷٬۸۰۰ ریال ≈ ۹۷٬۷۸۰ تومان**.
+The outside file's ۱۴۰۱ was right and **our `S17` was wrong**, so the earlier note about it taking the
+floor of a range was wrong too. Quarterly means from the samples now override `S17`:
 
-That is a single endpoint, not an annual average, and a chart image cannot be turned into 48 monthly
-observations without fabricating them. It is, however, already informative: the year *ended* near
-۹۷٬۷۸۰, well above both candidate annual averages (65,000 and 71,750), which is at least consistent
-with the 65,000 estimate being too low.
+| quarter | `S17` | corrected | Δ | samples |
+| --- | ---: | ---: | ---: | ---: |
+| بهار ۱۴۰۱ | 30,000 | 29,416 | −1.9% | 4 |
+| تابستان ۱۴۰۱ | 34,000 | 31,176 | −8.3% | 5 |
+| پائیز ۱۴۰۱ | 42,000 | 35,097 | −16.4% | 4 |
+| زمستان ۱۴۰۱ | 55,000 | 44,894 | −18.4% | 4 |
+| بهار ۱۴۰۲ | 52,000 | 51,287 | −1.4% | 5 |
+| تابستان ۱۴۰۲ | 50,000 | 49,547 | −0.9% | 4 |
+| پائیز ۱۴۰۲ | 52,000 | 50,518 | −2.8% | 4 |
+| زمستان ۱۴۰۲ | 58,000 | 55,196 | −4.8% | 5 |
 
-**Still needed:** the underlying series as data (monthly values or a CSV export), not a screenshot,
-so the annual means for ۱۴۰۱ and ۱۴۰۳ can be computed rather than chosen. Note the supplied chart
-begins at ۱۴۰۰, so it cannot validate ۱۳۹۶–۱۳۹۹ or the ۱۳۹۶ base year either.
+Annual FX growth changes materially: ۱۴۰۱ **+50% → +31%**, ۱۴۰۲ **+32% → +47%**. Originals are kept
+in `panel_quarterly.csv` (`fx_original_toman`, `fx_source_id`).
+
+**Still needed:** `S19` has no site name or URL — "a currency-conversion site" — so its provenance is
+weaker than `S17`'s and it needs identifying. And **۱۴۰۰ and ۱۴۰۳ were not sampled**, so if the same
+error exists there the chart is still wrong. The one readable point from the earlier chart image,
+۱۴۰۳-۱۲-۲۷ = ۹۷۷٬۸۰۰ ریال ≈ ۹۷٬۷۸۰ تومان, sits above both candidate ۱۴۰۳ annual means, which hints
+`S17`'s ۱۴۰۳ may be too low rather than too high — the opposite direction to ۱۴۰۱.
 
 ---
 
@@ -159,8 +170,8 @@ gap is recorded in `data/sources.csv` and in the page footer.
 ## Order of work
 
 1. ~~**Q1 — apply SCI.**~~ **Done.** What remains is a citation for the ۱۳۹۰–۱۳۹۶ continuation.
-2. **Q2 — obtain the ۱۴۰۱ and ۱۴۰۳ FX series as data.** These two values decide whether the ratio is
-   flat or converging. Still the highest-value outstanding item.
+2. ~~**Q2 — correct ۱۴۰۱–۱۴۰۲ FX.**~~ **Done.** Remaining: identify the `S19` site, and sample ۱۴۰۰ and
+   ۱۴۰۳, which the same error may affect.
 3. **Q3 — pin down the rent definition.** Lowest urgency for the FX/CPI question, but it blocks any
    single rent narrative across the site.
 

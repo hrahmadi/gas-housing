@@ -47,6 +47,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = REPO_ROOT / "data" / "rent_drivers" / "fx_house_rent_quarterly.csv"
+DEFAULT_FX_SAMPLES = REPO_ROOT / "data" / "rent_drivers" / "fx_sampled_1401_1402.csv"
 DEFAULT_OUT = REPO_ROOT / "data" / "rent_drivers"
 DEFAULT_PAGE = REPO_ROOT / "rent-drivers.html"
 TEMPLATE = Path(__file__).resolve().parent / "rent_drivers_template.html"
@@ -126,6 +127,8 @@ PANEL_FIELDS = (
     "rent_idx",
     "orphan_quarter",
     "source_id",
+    "fx_source_id",
+    "fx_original_toman",
 )
 
 ANNUAL_FIELDS = (
@@ -154,6 +157,51 @@ def round1(value: float) -> float:
     return float(round(value + 1e-9, 1))
 
 
+def load_fx_samples(path: Path) -> Dict[str, Dict[str, Any]]:
+    """Sampled FX -> {``"1401-3"``: {mean, n, source_id}}. Raises if a sampled quarter is absent from the panel."""
+    buckets: Dict[str, List[float]] = {}
+    source_id = ""
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            code = f"{int(row['jalali_year'])}-{int(row['jalali_quarter'])}"
+            buckets.setdefault(code, []).append(float(row["fx_toman_per_usd"]))
+            source_id = source_id or row["source_id"]
+    return {
+        code: {"mean": st.mean(values), "n": len(values), "source_id": source_id}
+        for code, values in buckets.items()
+    }
+
+
+def apply_fx_correction(quarters: List[Dict[str, Any]], samples: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Override panel FX with the sampled means, keeping the original value for the audit trail."""
+    corrections: List[Dict[str, Any]] = []
+    for quarter in quarters:
+        sample = samples.get(quarter["code"])
+        if sample is None:
+            continue
+        original = quarter["levels"]["fx"]
+        quarter["levels"]["fx"] = sample["mean"]
+        quarter["fx_original"] = original
+        quarter["fx_source"] = sample["source_id"]
+        corrections.append(
+            {
+                "code": quarter["code"],
+                "label_fa": quarter["label_fa"],
+                "original": original,
+                "corrected": sample["mean"],
+                "pct": round1((sample["mean"] / original - 1) * 100),
+                "samples": sample["n"],
+                "source_id": sample["source_id"],
+            }
+        )
+    missing = sorted(set(samples) - {q["code"] for q in quarters})
+    if missing:
+        raise ValueError(f"sampled FX has quarters absent from the panel: {missing}")
+    return corrections
+
+
 def load_panel(path: Path) -> Tuple[List[Dict[str, Any]], str]:
     """Read the quarterly CSV, re-derive every index, and verify it against the file."""
     quarters: List[Dict[str, Any]] = []
@@ -169,6 +217,7 @@ def load_panel(path: Path) -> Tuple[List[Dict[str, Any]], str]:
                     "label_fa": row["quarter_label_fa"],
                     "levels": {s["key"]: float(row[s["level_field"]]) for s in SERIES},
                     "idx_in_file": {s["key"]: float(row[s["idx_field"]]) for s in SERIES},
+                    "fx_source": row["source_id"],
                 }
             )
             source_id = source_id or row["source_id"]
@@ -188,8 +237,8 @@ def check_contiguity(quarters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return steps
 
 
-def apply_indices(quarters: List[Dict[str, Any]]) -> None:
-    """Index = level / base x 100, and refuse to continue if that disagrees with the file."""
+def apply_indices(quarters: List[Dict[str, Any]], verify: bool = True) -> None:
+    """Index = level / base x 100. With ``verify``, refuse to continue if the file disagrees."""
     base = next((q for q in quarters if q["year"] == BASE_YEAR and q["quarter"] == BASE_QUARTER), None)
     if base is None:
         raise ValueError(f"base quarter {BASE_YEAR}-{BASE_QUARTER} is missing")
@@ -203,7 +252,7 @@ def apply_indices(quarters: List[Dict[str, Any]]) -> None:
                 raise ValueError(f"base level for {key} is zero")
             value = quarter["levels"][key] / base_level * 100
             quarter["idx"][key] = value
-            if abs(value - quarter["idx_in_file"][key]) > 1.0:
+            if verify and abs(value - quarter["idx_in_file"][key]) > 1.0:
                 mismatches.append((quarter["code"], key, round(value, 1), quarter["idx_in_file"][key]))
     if mismatches:
         raise ValueError(f"index columns disagree with level/base*100: {mismatches}")
@@ -299,7 +348,8 @@ def build_stats(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]]) ->
 
 
 def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], stats: Dict[str, Any],
-                  input_path: Path, source_id: str, gaps: List[Dict[str, Any]]) -> Dict[str, Any]:
+                  input_path: Path, source_id: str, gaps: List[Dict[str, Any]],
+                  corrections: List[Dict[str, Any]], samples_path: Path) -> Dict[str, Any]:
     orphan_codes = {q["code"] for q in quarters if q["code"] in {"1396-1"}}
     return {
         "meta": {
@@ -318,8 +368,15 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
                     "sha256": sha256_of(input_path),
                     "rows": len(quarters),
                     "source_id": source_id,
-                }
+                },
+                "fx_samples": {
+                    "path": str(samples_path.relative_to(REPO_ROOT)),
+                    "sha256": sha256_of(samples_path),
+                    "quarters_corrected": len(corrections),
+                    "source_id": corrections[0]["source_id"] if corrections else None,
+                },
             },
+            "fx_corrections": corrections,
             "stats": stats,
         },
         "series": [
@@ -366,6 +423,8 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
             "بستهٔ فصلی پروژه (S17) — تحویل‌شده ۲۰۲۶-۱۰-۰۸؛ فصل‌بندی هر سه سری از همین بسته است.",
         ],
         "caveats": [
+            "**نرخ ارز ۱۴۰۱ و ۱۴۰۲ تصحیح شده است.** یک نمونهٔ ۲۱‌روزهٔ بیرونی (S19) نشان می‌دهد مسیر فصلی S17 در ۱۴۰۱ حدود ۱۴٪ بالاتر از واقع بوده: پائیز ۱۴۰۱ از ۴۲٬۰۰۰ به ۳۵٬۰۹۷ و زمستان از ۵۵٬۰۰۰ به ۴۴٬۸۹۴ آمد. ۱۴۰۲ اختلاف کمتری داشت (−۳٪). رشد سالانهٔ ارز با این تصحیح عوض می‌شود: ۱۴۰۱ از +۵۰٪ به +۳۱٪ و ۱۴۰۲ از +۳۲٪ به +۴۷٪. مقادیر اصلی در ستون `fx_original_toman` فایل panel_quarterly.csv مانده‌اند. **۱۴۰۰ و ۱۴۰۳ بررسی نشده‌اند** چون نمونه‌ای برایشان داده نشد.",
+            "منبع نمونهٔ ارز (S19) نام‌دار نیست: تاریخ‌ها و نرخ‌ها از یک سایت تبدیل ارز آمده‌اند ولی نام و نشانی سایت داده نشده، پس اعتبارش از S17 کمتر است. فقط ستون تومان به کار رفته؛ ستون دلاری همان صفحه مقادیر متغیر (۱٫۰۵، ۰٫۹۵۱۳۹۵، …) نشان می‌داد که کنار گذاشته شد.",
             "بازهٔ ۱۳۹۶ فقط یک فصل دارد (بهار ۱۳۹۶) و بعد از آن سه فصل خالی است. آن نقطه روی نمودار به‌صورت تک‌نقطهٔ جدا و با نشانهٔ شکاف دیده می‌شود و خط از روی فصل‌های غایب کشیده نشده — هیچ درون‌یابی‌ای انجام نشده است.",
             "دادهٔ اجاره در این بسته با سری‌های اجارهٔ دیگر مخزن یکی نیست: حدود ۱٫۴۵ تا ۱٫۷۴ برابر سری سالانهٔ بانک مرکزی در data/annual.csv و در data/rent_vs_fx/ است. تعریف‌ها متفاوت‌اند.",
             "نرخ ارز این بسته هم با data/rent_vs_fx/fx_inflation_annual.csv یکی نیست: آن فایل یک مقدار در هر سال (سازگار با نرخ پایان‌سال) دارد و این‌جا مسیر فصلی. مثلاً ۱۴۰۰ در آن فایل ۲۸٬۰۰۰ و این‌جا میانگین فصلی ۲۶٬۸۷۵ است.",
@@ -478,6 +537,8 @@ def write_panel_csv(path: Path, quarters: List[Dict[str, Any]], source_id: str) 
                     "rent_idx": f"{q['idx']['rent']:.1f}",
                     "orphan_quarter": "1" if q["code"] == "1396-1" else "",
                     "source_id": source_id,
+                    "fx_source_id": q.get("fx_source", source_id),
+                    "fx_original_toman": "" if "fx_original" not in q else f"{q['fx_original']:g}",
                 }
             )
 
@@ -537,6 +598,25 @@ def write_readme(path: Path, payload: Dict[str, Any], annual: List[Dict[str, Any
         "اندازه می‌گیرد، نه انتقال را. روی تغییرات فرو می‌ریزد و در فرکانس سالانه علامتش منفی می‌شود. پس نمودار حذف "
         "شد و ادعای «تأخیر یک تا دو فصل» از متن‌ها هم برداشته شد.",
         "",
+        "## نرخ ارز ۱۴۰۱ و ۱۴۰۲ تصحیح شده است",
+        "",
+        "سری فصلی S17 برای ارز با یک نمونهٔ ۲۱‌روزهٔ بیرونی (S19) مقابله شد. این نمونه ۳۵ مقدار دارد:",
+        "۱۷ نمونه از ۱۵ فروردین ۱۴۰۱ تا ۱۵ اسفند ۱۴۰۱ و ۱۸ نمونه از ۰۷ فروردین ۱۴۰۲ تا ۲۸ اسفند ۱۴۰۲،",
+        "همه با فاصلهٔ دقیقاً ۲۱ روز. میانگین فصلی همان نمونه‌ها جایگزین مقادیر S17 شد:",
+        "",
+        "| فصل | S17 | تصحیح‌شده | اختلاف | نمونه |",
+        "| --- | ---: | ---: | ---: | ---: |",
+        *[
+            f"| {c['label_fa']} | {c['original']:,.0f} | {c['corrected']:,.0f} | {c['pct']:+.1f}٪ | {fa(c['samples'])} |"
+            for c in payload["meta"]["fx_corrections"]
+        ],
+        "",
+        "اثر روی رشد سالانهٔ ارز قابل توجه است: ۱۴۰۱ از +۵۰٪ به +۳۱٪ و ۱۴۰۲ از +۳۲٪ به +۴۷٪ می‌رود.",
+        "مقادیر اصلی و منبع هر فصل در `panel_quarterly.csv` ستون‌های `fx_original_toman` و `fx_source_id` مانده‌اند.",
+        "",
+        "۱۴۰۰ و ۱۴۰۳ نمونه‌ای نداشتند و تصحیح نشده‌اند؛ اگر همان خطا در آن‌ها هم باشد، نمودار همچنان نادرست است.",
+        "منبع نمونه (S19) هم نام‌دار نیست — فقط «یک سایت تبدیل ارز» — پس اعتبارش از S17 کمتر است.",
+        "",
         "## جدول رشد سالانه",
         "",
         "| سال | دلار | مسکن | اجاره |",
@@ -573,20 +653,25 @@ def render_page(template: Path, out_page: Path, payload: Dict[str, Any], narrati
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", default=str(DEFAULT_INPUT))
+    parser.add_argument("--fx-samples", default=str(DEFAULT_FX_SAMPLES))
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     parser.add_argument("--page", default=str(DEFAULT_PAGE))
     args = parser.parse_args(argv)
 
     input_path = Path(args.input)
+    samples_path = Path(args.fx_samples)
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     quarters, source_id = load_panel(input_path)
     gaps = check_contiguity(quarters)
-    apply_indices(quarters)
+    apply_indices(quarters)                       # verify the file's own index columns first
+    corrections = apply_fx_correction(quarters, load_fx_samples(samples_path))
+    if corrections:
+        apply_indices(quarters, verify=False)     # re-derive against the corrected levels
     annual = build_annual(quarters)
     stats = build_stats(quarters, annual)
-    payload = build_payload(quarters, annual, stats, input_path, source_id, gaps)
+    payload = build_payload(quarters, annual, stats, input_path, source_id, gaps, corrections, samples_path)
     narrative = build_narrative(stats)
 
     write_panel_csv(out_dir / "panel_quarterly.csv", quarters, source_id)
@@ -611,6 +696,12 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"  {a['label_fa']}: base / incomplete (only {a['quarters_present']} quarter(s) present)")
         else:
             print(f"  {a['label_fa']}: fx {a['yoy']['fx']:+7.1f}  house {a['yoy']['house']:+7.1f}  rent {a['yoy']['rent']:+7.1f}")
+    if corrections:
+        print(f"fx fix  : {len(corrections)} quarters overridden from {samples_path.name} ({corrections[0]['source_id']})")
+        for c in corrections:
+            print(f"  {c['label_fa']}: {c['original']:>9,.0f} -> {c['corrected']:>9,.0f}  ({c['pct']:+5.1f}%, n={c['samples']})")
+    else:
+        print("fx fix  : none")
     print(f"outputs : {out_dir}/panel_quarterly.csv, annual_growth.csv, drivers_data.json, README.md")
     print(f"page    : {args.page}")
     return 0
