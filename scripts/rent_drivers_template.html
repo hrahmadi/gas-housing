@@ -138,7 +138,10 @@
   </figure>
 
   <figure>
-    <h2>قیمت مسکن و اجاره به دلار</h2>
+    <div class="chart-head">
+      <h2>قیمت مسکن و اجاره به دلار</h2>
+      <div class="legend" id="c2-legend"></div>
+    </div>
     <div class="chart-wrap">
       <div class="chart-scroll"><svg class="chart" id="chart2" viewBox="0 0 1000 400"
            preserveAspectRatio="xMidYMid meet" role="img"
@@ -489,16 +492,24 @@ function drawUsd() {
     parts.push(`<text class="tick" x="${x(i).toFixed(1)}" y="${M2.t + plotH + 22}" text-anchor="middle">${a.label_fa}</text>`);
   });
 
+  // with two independent scales the two lines can run close together, so house labels sit
+  // above its line and rent labels below, and any label that would still collide is dropped
+  const placed = [];
   for (const spec of specs) {
+    if (!isVisible(spec.key)) continue;   // the legend is shared with the other two charts
     const sc = scales[spec.key];
+    const below = spec.key === "rent";
     let d = "";
     rows.forEach((a, i) => { d += `${d ? "L" : "M"}${x(i).toFixed(1)} ${sc.y(a.usd[spec.key]).toFixed(1)} `; });
     parts.push(`<path class="line s-${spec.key}" d="${d.trim()}" stroke-width="2.5"/>`);
     rows.forEach((a, i) => {
       const px = x(i), py = sc.y(a.usd[spec.key]);
       parts.push(`<circle class="dot d-${spec.key}" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3.2"/>`);
-      parts.push(`<text class="tick" x="${px.toFixed(1)}" y="${(py - 10).toFixed(1)}" text-anchor="middle" ` +
-                 `style="font-size:10.5px">${num(a.usd[spec.key], spec.digits)}</text>`);
+      const ly = below ? py + 15 : py - 10;
+      if (placed.some(p => Math.abs(p.y - ly) < 13 && Math.abs(p.x - px) < 46)) return;
+      placed.push({x: px, y: ly});
+      parts.push(`<text class="tick" x="${px.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" ` +
+                 `style="font-size:10.5px;fill:var(--${spec.key})">${num(a.usd[spec.key], spec.digits)}</text>`);
     });
   }
 
@@ -514,8 +525,15 @@ function renderLegend() {
            `title="${esc(s.unit_fa)}">` +
            `<span class="line" style="border-top-color:var(--${s.key})"></span>${s.label_fa}</span>`;
   }).join("");
-  const legend3 = document.getElementById("c3-legend");
-  legend3.innerHTML = series.map(s =>
+  const legend2 = document.getElementById("c2-legend");
+  legend2.innerHTML = DATA.usd_chart.series.map(s => {
+    const on = isVisible(s.key);
+    return `<span class="item" role="button" tabindex="0" data-key="${s.key}" data-legend="1" aria-pressed="${on}" ` +
+           `title="${esc(s.unit_fa)}">` +
+           `<span class="line" style="border-top-color:var(--${s.key})"></span>${s.label_fa}` +
+           `<span class="mul">${esc(s.unit_fa)}</span></span>`;
+  }).join("");
+  const legend3 = document.getElementById("c3-legend");  legend3.innerHTML = series.map(s =>
     `<span class="item" data-key="${s.key}" data-legend="3" title="${esc(s.unit_fa)}">` +
     `<span class="line" style="border-top-color:var(--${s.key})"></span>${s.label_fa}</span>`).join("");
   for (const node of document.querySelectorAll("[data-legend]")) {
@@ -611,9 +629,9 @@ function render() {
     "قیاس راست برای اجاره است و قیاس چپ برای مسکن؛ ارتفاع دو خط با هم قابل مقایسه نیست. " +
     "هر دو مقدار از تقسیم سطح تومانی همان فصل بر نرخ ارز همان فصل به دست آمده‌اند.";
   document.getElementById("c2-caption").innerHTML =
-    `<b>قیمت مسکن و اجاره به دلار،</b> میانگین سالانه از ۱۳۹۷ تا ۱۴۰۳. اجاره به دلار بر متر مربع در ماه است. ` +
+    `<b>قیمت مسکن و اجاره به دلار،</b> میانگین سالانه از ۱۳۹۷ تا ۱۴۰۳. اجاره به دلار بر متر مربع <b>در ماه</b> است. ` +
     `این نسبت دو سری مشاهده‌شده است، نه تبدیل قیمت از تومان به دلار؛ هر دو سری از S17 می‌آیند و ۱۴۰۱ و ۱۴۰۲ ` +
-    `با نمونهٔ S19 تصحیح شده‌اند.`;
+    `با نمونهٔ S19 تصحیح شده‌اند. راهنما با دو نمودار دیگر مشترک است، پس خاموش‌کردن هر خط در همان‌ها هم اثر می‌گذارد.`;
 
   document.getElementById("c3-heading").textContent = "رشد سالانه — چه کسی جلو زد؟";
   document.getElementById("hint3").textContent =
