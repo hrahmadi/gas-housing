@@ -18,3 +18,8 @@ __pycache__/
 /Screenshot*.jpg
 /Screen Shot*.png
 /Screen Shot*.jpg
+
+# Source publications kept locally, not published: ~64 MB of CBI "تحولات بازار
+# معاملات مسکن" PDFs + extractions. Only the derived CSVs under data/ are tracked,
+# so that the repo and every clone stay small. See data/sources.csv for provenance.
+/data/*گزارش تحولات*/
