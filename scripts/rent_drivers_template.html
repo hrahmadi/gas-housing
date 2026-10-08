@@ -137,6 +137,17 @@
     <figcaption id="c1-caption"></figcaption>
   </figure>
 
+  <figure>
+    <h2>قیمت مسکن و اجاره به دلار</h2>
+    <div class="chart-wrap">
+      <div class="chart-scroll"><svg class="chart" id="chart2" viewBox="0 0 1000 400"
+           preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="نمودار قیمت مسکن و اجاره به دلار، ۱۳۹۷ تا ۱۴۰۳"></svg></div>
+    </div>
+    <div class="hint" id="hint2"></div>
+    <figcaption id="c2-caption"></figcaption>
+  </figure>
+
   <section class="prose" id="text1"></section>
 
   <figure>
@@ -437,6 +448,63 @@ function drawAnnual() {
   svg.innerHTML = parts.join("");
 }
 
+/* ---------- chart 2: sales and rent in USD, annual ---------- */
+const W2 = 1000, H2 = 400, M2 = {t: 26, r: 78, b: 50, l: 66};
+
+function drawUsd() {
+  const svg = document.getElementById("chart2");
+  const rows = DATA.annual.filter(a => a.year >= DATA.usd_chart.first_year);
+  const specs = DATA.usd_chart.series;
+  const plotW = W2 - M2.l - M2.r, plotH = H2 - M2.t - M2.b;
+
+  // two independent scales: house is ~$900–1,450/m², rent ~$4–7/m²/month
+  const scaleOf = key => {
+    const vs = rows.map(a => a.usd[key]).filter(v => v !== null && isFinite(v));
+    const lo = 0, hi = Math.max(...vs) * 1.12;
+    return {lo, hi, y: v => M2.t + plotH * (1 - (v - lo) / (hi - lo))};
+  };
+  const scales = {house: scaleOf("house"), rent: scaleOf("rent")};
+  const x = i => M2.l + plotW * (rows.length < 2 ? 0.5 : i / (rows.length - 1));
+  const parts = [];
+
+  for (const t of niceTicks(0, scales.house.hi, false, 5)) {
+    const yy = scales.house.y(t);
+    if (yy < M2.t - 1 || yy > M2.t + plotH + 1) continue;
+    parts.push(`<line class="grid-line" x1="${M2.l}" y1="${yy.toFixed(1)}" x2="${M2.l + plotW}" y2="${yy.toFixed(1)}"/>`);
+    parts.push(`<text class="tick" x="${M2.l - 8}" y="${(yy + 4).toFixed(1)}" text-anchor="end">${num(t, 0)}</text>`);
+  }
+  for (const t of niceTicks(0, scales.rent.hi, false, 4)) {
+    const yy = scales.rent.y(t);
+    if (yy < M2.t - 1 || yy > M2.t + plotH + 1) continue;
+    parts.push(`<text class="tick" x="${M2.l + plotW + 8}" y="${(yy + 4).toFixed(1)}" text-anchor="start">${num(t, 0)}</text>`);
+  }
+  parts.push(`<line class="axis-line" x1="${M2.l}" y1="${M2.t + plotH}" x2="${M2.l + plotW}" y2="${M2.t + plotH}"/>`);
+  const cy2 = M2.t + plotH / 2;
+  parts.push(`<text class="axis-label" x="18" y="${(cy2 + 3).toFixed(1)}" text-anchor="middle" ` +
+             `transform="rotate(-90 18 ${(cy2 + 3).toFixed(1)})">قیمت مسکن (دلار بر متر مربع)</text>`);
+  parts.push(`<text class="axis-label" x="${W2 - 16}" y="${(cy2 + 3).toFixed(1)}" text-anchor="middle" ` +
+             `transform="rotate(90 ${W2 - 16} ${(cy2 + 3).toFixed(1)})">اجاره (دلار بر متر مربع در ماه)</text>`);
+
+  rows.forEach((a, i) => {
+    parts.push(`<text class="tick" x="${x(i).toFixed(1)}" y="${M2.t + plotH + 22}" text-anchor="middle">${a.label_fa}</text>`);
+  });
+
+  for (const spec of specs) {
+    const sc = scales[spec.key];
+    let d = "";
+    rows.forEach((a, i) => { d += `${d ? "L" : "M"}${x(i).toFixed(1)} ${sc.y(a.usd[spec.key]).toFixed(1)} `; });
+    parts.push(`<path class="line s-${spec.key}" d="${d.trim()}" stroke-width="2.5"/>`);
+    rows.forEach((a, i) => {
+      const px = x(i), py = sc.y(a.usd[spec.key]);
+      parts.push(`<circle class="dot d-${spec.key}" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3.2"/>`);
+      parts.push(`<text class="tick" x="${px.toFixed(1)}" y="${(py - 10).toFixed(1)}" text-anchor="middle" ` +
+                 `style="font-size:10.5px">${num(a.usd[spec.key], spec.digits)}</text>`);
+    });
+  }
+
+  svg.innerHTML = parts.join("");
+}
+
 /* ---------- renderers ---------- */
 function renderLegend() {
   const legend = document.getElementById("c1-legend");
@@ -539,6 +607,14 @@ function render() {
     DATA.meta.annotations.map(a => `<b>${toFa(a.n)}</b> ${esc(a.label_fa)}`).join(" &nbsp;·&nbsp; ") +
     ` <span>— این علامت‌ها زمینهٔ تفسیری‌اند، نه داده؛ از سری‌ها استخراج نشده‌اند.</span>`;
 
+  document.getElementById("hint2").textContent =
+    "قیاس راست برای اجاره است و قیاس چپ برای مسکن؛ ارتفاع دو خط با هم قابل مقایسه نیست. " +
+    "هر دو مقدار از تقسیم سطح تومانی همان فصل بر نرخ ارز همان فصل به دست آمده‌اند.";
+  document.getElementById("c2-caption").innerHTML =
+    `<b>قیمت مسکن و اجاره به دلار،</b> میانگین سالانه از ۱۳۹۷ تا ۱۴۰۳. اجاره به دلار بر متر مربع در ماه است. ` +
+    `این نسبت دو سری مشاهده‌شده است، نه تبدیل قیمت از تومان به دلار؛ هر دو سری از S17 می‌آیند و ۱۴۰۱ و ۱۴۰۲ ` +
+    `با نمونهٔ S19 تصحیح شده‌اند.`;
+
   document.getElementById("c3-heading").textContent = "رشد سالانه — چه کسی جلو زد؟";
   document.getElementById("hint3").textContent =
     "هر گروه یک سال است و چهار ستون، چهار سری. خط صفر پررنگ است و ستون‌های منفی کم‌رنگ‌تر دیده می‌شوند. " +
@@ -556,6 +632,7 @@ function render() {
     `آنچه می‌ماند توالی و هم‌زمانی است، نه یک تأخیر اندازه‌گیری‌شده.`;
 
   drawTimeline();
+  drawUsd();
   drawAnnual();
   renderLegend();
   renderTable();

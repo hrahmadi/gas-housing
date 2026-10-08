@@ -87,6 +87,9 @@ SERIES: Tuple[Dict[str, Any], ...] = (
 #: ۱۳۹۷ ف۱ — the base quarter every index is normalised to.
 BASE_YEAR, BASE_QUARTER = 1397, 1
 
+#: The USD chart starts here: ۱۳۹۶ has a single quarter, so a yearly USD figure would be unrepresentative.
+USD_FIRST_YEAR = 1397
+
 #: Contextual markers. Editorial context, not data — labelled as such on the page.
 ANNOTATIONS: Tuple[Dict[str, Any], ...] = (
     {"quarter": "1397-2", "n": 1, "label_fa": "تحریم‌های ترامپ", "side": "top"},
@@ -291,6 +294,11 @@ def build_annual(quarters: List[Dict[str, Any]], cpi: Dict[int, Dict[str, Any]])
     for year in sorted(by_year):
         present = by_year[year]
         means = {s["key"]: st.mean(q["levels"][s["key"]] for q in present) for s in SERIES}
+        # the same levels divided by that quarter's FX: a ratio of two observed series, not a conversion
+        usd = {
+            "house": st.mean(q["levels"]["house"] * 100_000 / q["levels"]["fx"] for q in present),
+            "rent": st.mean(q["levels"]["rent"] * 100 / q["levels"]["fx"] for q in present),
+        }
         previous = by_year.get(year - 1, [])
         complete = len(present) == 4 and len(previous) == 4
         yoy: Dict[str, Optional[float]] = {}
@@ -309,6 +317,7 @@ def build_annual(quarters: List[Dict[str, Any]], cpi: Dict[int, Dict[str, Any]])
                 "label_fa": fa(year),
                 "quarters_present": len(present),
                 "means": means,
+                "usd": usd,
                 "yoy": yoy,
                 "cpi_idx": cpi[year]["idx"] if year in cpi else None,
                 "complete": complete,
@@ -473,10 +482,19 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
                 "complete": a["complete"],
                 "yoy": a["yoy"],
                 "means": a["means"],
+                "usd": a["usd"],
                 "cpi_idx": a["cpi_idx"],
             }
             for a in annual
         ],
+        "usd_chart": {
+            "first_year": next(a["year"] for a in annual if a["year"] >= USD_FIRST_YEAR),
+            "last_year": annual[-1]["year"],
+            "series": [
+                {"key": "house", "label_fa": "قیمت هر متر مسکن", "unit_fa": "دلار بر متر مربع", "digits": 0},
+                {"key": "rent", "label_fa": "اجارهٔ ماهانهٔ هر متر", "unit_fa": "دلار بر متر مربع در ماه", "digits": 2},
+            ],
+        },
         "sources": [
             "قیمت مسکن: بانک مرکزی جمهوری اسلامی ایران — گزارش تحولات بازار معاملات مسکن شهر تهران (۱۳۹۶–۱۴۰۳).",
             "نرخ اجاره: مرکز آمار ایران؛ تصویرسازی: alitayebi.github.io/maps/rent.",
