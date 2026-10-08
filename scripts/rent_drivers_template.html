@@ -11,12 +11,12 @@
     --bg:#12151a; --panel:#181c23; --panel-2:#1e232b; --ink:#e8eaed; --ink-dim:#9aa4b2;
     --line:#2a313b; --grid:#242a33; --danger:#e06c75;
     /* the handoff palette is tuned for a light background; these two are lifted for dark */
-    --fx:#e63946; --house:#6aa6c9; --rent:#4fa97c;
+    --fx:#e63946; --house:#6aa6c9; --rent:#4fa97c; --cpi:#9aa3ad;
   }
   html[data-theme="light"]{
     --bg:#fafafa; --panel:#ffffff; --panel-2:#f2f4f6; --ink:#111827; --ink-dim:#5b6674;
     --line:#e3e7eb; --grid:#eeeeee; --danger:#b3383f;
-    --fx:#e63946; --house:#457b9d; --rent:#2d6a4f;
+    --fx:#e63946; --house:#457b9d; --rent:#2d6a4f; --cpi:#7c848f;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -61,9 +61,10 @@
   .axis-label{fill:var(--ink-dim);font-size:11.5px}
   .line{fill:none;stroke-linejoin:round;stroke-linecap:round}
   .dot{stroke:var(--panel);stroke-width:1.4}
-  .s-fx{stroke:var(--fx)}.s-house{stroke:var(--house)}.s-rent{stroke:var(--rent)}
-  .d-fx{fill:var(--fx)}.d-house{fill:var(--house)}.d-rent{fill:var(--rent)}
-  .b-fx{fill:var(--fx)}.b-house{fill:var(--house)}.b-rent{fill:var(--rent)}
+  .s-fx{stroke:var(--fx)}.s-house{stroke:var(--house)}.s-rent{stroke:var(--rent)}.s-cpi{stroke:var(--cpi)}
+  .d-fx{fill:var(--fx)}.d-house{fill:var(--house)}.d-rent{fill:var(--rent)}.d-cpi{fill:var(--cpi)}
+  .b-fx{fill:var(--fx)}.b-house{fill:var(--house)}.b-rent{fill:var(--rent)}.b-cpi{fill:var(--cpi)}
+  .annual-pt{stroke:var(--panel);stroke-width:1.6}
   .b-neg{opacity:.45}
   .hit{fill:transparent;cursor:crosshair}
   .hit:hover{fill:rgba(127,127,127,.08)}
@@ -184,6 +185,10 @@ const series = DATA.series;
 const byCode = Object.fromEntries(quarters.map(q => [q.code, q]));
 const seriesOf = k => series.find(s => s.key === k);
 const idxOf = (q, k) => { const v = q.idx[k]; return (v === undefined || v === null || !isFinite(v)) ? null : v; };
+/* the CPI series is annual, so it is looked up by year rather than by quarter */
+const annualCpiOf = year => DATA.annual_cpi.find(a => a.year === year) || null;
+const cpiIndexOf = year => { const a = annualCpiOf(year); return a ? a.idx : null; };
+const cpiYoyOf = year => { const a = annualCpiOf(year); return a ? a.yoy_pct : null; };
 
 let scale = DATA.meta.chart1.log_default ? "log" : "linear";
 const hidden = new Set();
@@ -280,6 +285,7 @@ function drawTimeline() {
 
   for (const s of series) {
     if (!isVisible(s.key)) continue;
+    if (s.annual) continue;   // handled below, on a yearly grid
     const pts = qs.map((q, i) => ({i, v: idxOf(q, s.key)})).filter(p => p.v !== null && p.v > 0);
     // the 1396 point is drawn alone; the line starts at 1397 Q1
     const runs = [];
@@ -298,6 +304,26 @@ function drawTimeline() {
       for (const p of r) {
         parts.push(`<circle class="dot d-${s.key}" cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.4"/>`);
       }
+    }
+  }
+
+  // annual series: one point per year, placed at the centre of that year's quarters,
+  // joined by straight segments. Nothing is invented between the yearly points.
+  for (const s of series) {
+    if (!s.annual || !isVisible(s.key)) continue;
+    const pts = DATA.annual_cpi.map(a => {
+      const idxs = qs.map((q, i) => (q.year === a.year ? i : -1)).filter(i => i >= 0);
+      if (!idxs.length) return null;
+      const centre = idxs[0] + (idxs.length - 1) / 2;
+      return {x: x(centre), v: a.idx, a};
+    }).filter(Boolean);
+    if (pts.length > 1) {
+      let d = "";
+      for (const p of pts) d += `${d ? "L" : "M"}${p.x.toFixed(1)} ${y(p.v).toFixed(1)} `;
+      parts.push(`<path class="line s-${s.key}" d="${d.trim()}" stroke-width="${s.width}"/>`);
+    }
+    for (const p of pts) {
+      parts.push(`<circle class="annual-pt d-${s.key}" cx="${p.x.toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="4"/>`);
     }
   }
 
@@ -322,7 +348,7 @@ function showTimelineCursor(i, x, y) {
   let markup = `<line class="cursor-line" x1="${x(i).toFixed(1)}" y1="${M1.t}" ` +
                `x2="${x(i).toFixed(1)}" y2="${(M1.t + (H1 - M1.t - M1.b)).toFixed(1)}"/>`;
   for (const s of series) {
-    if (!isVisible(s.key)) continue;
+    if (!isVisible(s.key) || s.annual) continue;   // the annual line has no quarterly point
     const v = idxOf(q, s.key);
     if (v === null) continue;
     markup += `<circle class="d-${s.key}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="5" ` +
@@ -332,9 +358,11 @@ function showTimelineCursor(i, x, y) {
 
   const rows = series.map(s => {
     if (!isVisible(s.key)) return "";
-    const v = idxOf(q, s.key);
+    const v = s.annual ? cpiIndexOf(q.year) : idxOf(q, s.key);
     if (v === null) return "";
-    const level = `${num(q.levels[s.key], s.level_digits)} ${s.level_suffix_fa}`;
+    const level = s.annual
+      ? `تورم سالانه ${num(cpiYoyOf(q.year), 1)}٪`
+      : `${num(q.levels[s.key], s.level_digits)} ${s.level_suffix_fa}`;
     return `<div class="t-row"><span class="k"><i style="border-top-color:var(--${s.key})"></i>${s.label_fa}</span>` +
            `<span class="v">${num(v, 1)}</span></div>` +
            `<div class="t-row"><span class="k"></span><span class="lv">${level}</span></div>`;
@@ -493,24 +521,29 @@ function render() {
     `${toFa(DATA.meta.quarters_count)} فصل، ${DATA.meta.stats.window.first_label_fa} تا ${DATA.meta.stats.window.last_label_fa} · ` +
     `همهٔ شاخص‌ها با پایهٔ ${DATA.meta.base_label_fa} = ۱۰۰`;
 
-  document.getElementById("c1-heading").textContent = "سه شاخص، یک محور — روی مقیاس لگاریتمی";
+  document.getElementById("c1-heading").textContent = "چهار شاخص، یک محور — روی مقیاس لگاریتمی";
   document.getElementById("hint1").textContent =
     (scale === "log"
       ? "مقیاس لگاریتمی: شیب برابر یعنی نرخ رشد برابر. روی این مقیاس هم‌زمانی جهش‌ها دیده می‌شود."
       : "مقیاس خطی: محور از صفر آغاز می‌شود و قدر مطلق را نشان می‌دهد، پس سال‌های آخر خطوط را بالا می‌برد.") +
-    " روی هر سال بایستید تا سه شاخص و مقدار واقعی‌شان را ببینید.";
+    " روی هر فصل بایستید تا شاخص‌ها و مقدار واقعی‌شان را ببینید.";
   document.getElementById("c1-caption").innerHTML =
     `<b>شاخص‌ها:</b> دلار، قیمت هر متر مسکن و اجارهٔ ماهانهٔ هر متر — همه با پایهٔ ${DATA.meta.base_label_fa} = ۱۰۰. ` +
     `نقطهٔ منفرد ${DATA.meta.stats.window.first_label_fa} تنها فصل پوشش‌دادهٔ ۱۳۹۶ است؛ سه فصل بعد از آن داده ندارد و ` +
-    `خط از روی آن کشیده نشده است.`;
+    `خط از روی آن کشیده نشده است.<br>` +
+    `<b>خط تورم (خاکستری) سالانه است، نه فصلی:</b> یک نقطه در هر سال در مرکز همان سال ` +
+    `(پایهٔ ${DATA.meta.cpi_base_label_fa} = ۱۰۰) و نقطه‌ها با پاره‌خط به هم وصل شده‌اند — یعنی بین دو سال هیچ مقداری ` +
+    `ساخته نشده، فقط دو میانگین سالانه به هم وصل شده‌اند. سری مرکز آمار از ۱۳۹۷ آغاز می‌شود، پس خط تورم از ` +
+    `۱۳۹۷ شروع می‌شود در حالی که سه خط دیگر از ۱۳۹۶ ف۱ هستند.`;
   document.getElementById("mark-note").innerHTML =
     DATA.meta.annotations.map(a => `<b>${toFa(a.n)}</b> ${esc(a.label_fa)}`).join(" &nbsp;·&nbsp; ") +
     ` <span>— این علامت‌ها زمینهٔ تفسیری‌اند، نه داده؛ از سری‌ها استخراج نشده‌اند.</span>`;
 
   document.getElementById("c3-heading").textContent = "رشد سالانه — چه کسی جلو زد؟";
   document.getElementById("hint3").textContent =
-    "هر گروه یک سال است و سه ستون، سه سری. خط صفر پررنگ است و ستون‌های منفی کم‌رنگ‌تر دیده می‌شوند. " +
-    "نمودار از ۱۳۹۸ آغاز می‌شود چون ۱۳۹۷ سال پایه است و سال قبلش پوشش کامل ندارد.";
+    "هر گروه یک سال است و چهار ستون، چهار سری. خط صفر پررنگ است و ستون‌های منفی کم‌رنگ‌تر دیده می‌شوند. " +
+    "ستون تورم همان نرخ میانگین سالانهٔ مرکز آمار است که روی نمودار فصلی هم به‌صورت نقطه آمده — پس این‌جا مستقیم " +
+    "با رشد اجاره و مسکن قابل مقایسه است. نمودار از ۱۳۹۸ آغاز می‌شود چون ۱۳۹۷ سال پایه است و سال قبلش پوشش کامل ندارد.";
   document.getElementById("c3-caption").innerHTML =
     `<b>رشد سالانه</b> از میانگین چهار فصلِ هر سال نسبت به میانگین چهار فصلِ سال قبل محاسبه شده — نه از یک نقطه. ` +
     `دو سری صعودی همیشه همبستگی بالایی دارند، حتی بدون هیچ رابطهٔ واقعی؛ به همین دلیل این نمودار نرخ رشد را نشان ` +

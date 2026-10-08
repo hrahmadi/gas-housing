@@ -48,6 +48,7 @@ from typing import Any, Dict, List, Optional, Tuple
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = REPO_ROOT / "data" / "rent_drivers" / "fx_house_rent_quarterly.csv"
 DEFAULT_FX_SAMPLES = REPO_ROOT / "data" / "rent_drivers" / "fx_sampled_1401_1402.csv"
+DEFAULT_SCI_CPI = REPO_ROOT / "data" / "sci_cpi_annual.csv"
 DEFAULT_OUT = REPO_ROOT / "data" / "rent_drivers"
 DEFAULT_PAGE = REPO_ROOT / "rent-drivers.html"
 TEMPLATE = Path(__file__).resolve().parent / "rent_drivers_template.html"
@@ -202,6 +203,28 @@ def apply_fx_correction(quarters: List[Dict[str, Any]], samples: Dict[str, Dict[
     return corrections
 
 
+def load_sci_cpi(path: Path) -> Dict[int, Dict[str, Any]]:
+    """SCI annual CPI -> {year: {yoy, idx, source_id}}, indexed to the first year present = 100."""
+    series: Dict[int, Dict[str, Any]] = {}
+    with open(path, encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            series[int(row["jalali_year"])] = {
+                "yoy": float(row["cpi_yoy_pct"]),
+                "source_id": row["source_id"],
+            }
+    if not series:
+        raise ValueError(f"no CPI rows in {path}")
+    # the index is a chain of the annual rates, base = the first year present
+    base_year = min(series)
+    level = 100.0
+    for year in sorted(series):
+        if year != base_year:
+            level = round1(level * (1 + series[year]["yoy"] / 100))
+        series[year]["idx"] = level
+    series[base_year]["idx"] = 100.0
+    return series
+
+
 def load_panel(path: Path) -> Tuple[List[Dict[str, Any]], str]:
     """Read the quarterly CSV, re-derive every index, and verify it against the file."""
     quarters: List[Dict[str, Any]] = []
@@ -258,8 +281,8 @@ def apply_indices(quarters: List[Dict[str, Any]], verify: bool = True) -> None:
         raise ValueError(f"index columns disagree with level/base*100: {mismatches}")
 
 
-def build_annual(quarters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Annual means, and YoY only where both years have all four quarters."""
+def build_annual(quarters: List[Dict[str, Any]], cpi: Dict[int, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Annual means, and YoY only where both years have all four quarters. CPI joins from its own annual series."""
     by_year: Dict[int, List[Dict[str, Any]]] = {}
     for quarter in quarters:
         by_year.setdefault(quarter["year"], []).append(quarter)
@@ -278,6 +301,8 @@ def build_annual(quarters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 continue
             before = st.mean(q["levels"][key] for q in previous)
             yoy[key] = round1((means[key] / before - 1) * 100) if before else None
+        # CPI is an observed annual rate, not derived from the quarters
+        yoy["cpi"] = cpi[year]["yoy"] if year in cpi else None
         annual.append(
             {
                 "year": year,
@@ -285,6 +310,7 @@ def build_annual(quarters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 "quarters_present": len(present),
                 "means": means,
                 "yoy": yoy,
+                "cpi_idx": cpi[year]["idx"] if year in cpi else None,
                 "complete": complete,
             }
         )
@@ -349,7 +375,8 @@ def build_stats(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]]) ->
 
 def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], stats: Dict[str, Any],
                   input_path: Path, source_id: str, gaps: List[Dict[str, Any]],
-                  corrections: List[Dict[str, Any]], samples_path: Path) -> Dict[str, Any]:
+                  corrections: List[Dict[str, Any]], samples_path: Path,
+                  cpi: Dict[int, Dict[str, Any]], cpi_path: Path) -> Dict[str, Any]:
     orphan_codes = {q["code"] for q in quarters if q["code"] in {"1396-1"}}
     return {
         "meta": {
@@ -375,6 +402,12 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
                     "quarters_corrected": len(corrections),
                     "source_id": corrections[0]["source_id"] if corrections else None,
                 },
+                "cpi": {
+                    "path": str(cpi_path.relative_to(REPO_ROOT)),
+                    "sha256": sha256_of(cpi_path),
+                    "years": len(cpi),
+                    "source_id": cpi[min(cpi)]["source_id"],
+                },
             },
             "fx_corrections": corrections,
             "stats": stats,
@@ -391,7 +424,34 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
                 "order_fa": index + 1,
             }
             for index, s in enumerate(SERIES)
+        ] + [
+            {
+                "key": "cpi",
+                "label_fa": "شاخص تورم",
+                "unit_fa": "تورم سالانهٔ مرکز آمار ایران",
+                "level_digits": 1,
+                "level_suffix_fa": "٪",
+                "width": 2,
+                "dash": "",
+                "annual": True,
+                "source_id": cpi[min(cpi)]["source_id"],
+                "source_note_fa": "سالانه است، نه فصلی: یک نقطه در هر سال در مرکز همان سال، و نقطه‌ها به هم وصل می‌شوند. "
+                                  "بین دو سال هیچ مقداری ساخته نشده است.",
+                "order_fa": len(SERIES) + 1,
+            }
         ],
+        "annual_cpi": [
+            {
+                "year": year,
+                "label_fa": fa(year),
+                "yoy_pct": cpi[year]["yoy"],
+                "idx": cpi[year]["idx"],
+                "source_id": cpi[year]["source_id"],
+            }
+            for year in sorted(cpi)
+        ],
+        "cpi_base_year": min(cpi),
+        "cpi_base_label_fa": fa(min(cpi)),
         "quarters": [
             {
                 "code": q["code"],
@@ -413,16 +473,22 @@ def build_payload(quarters: List[Dict[str, Any]], annual: List[Dict[str, Any]], 
                 "complete": a["complete"],
                 "yoy": a["yoy"],
                 "means": a["means"],
+                "cpi_idx": a["cpi_idx"],
             }
             for a in annual
         ],
         "sources": [
             "قیمت مسکن: بانک مرکزی جمهوری اسلامی ایران — گزارش تحولات بازار معاملات مسکن شهر تهران (۱۳۹۶–۱۴۰۳).",
             "نرخ اجاره: مرکز آمار ایران؛ تصویرسازی: alitayebi.github.io/maps/rent.",
-            "نرخ ارز: بازار آزاد (bonbast.com و گزارش‌های خبری).",
-            "بستهٔ فصلی پروژه (S17) — تحویل‌شده ۲۰۲۶-۱۰-۰۸؛ فصل‌بندی هر سه سری از همین بسته است.",
+            "نرخ ارز: بازار آزاد (bonbast.com و گزارش‌های خبری)، به‌علاوهٔ نمونهٔ ۲۱‌روزهٔ S19 برای تصحیح ۱۴۰۱ و ۱۴۰۲.",
+            "شاخص تورم: مرکز آمار ایران (S18) — نرخ میانگین سالانه، از data/sci_cpi_annual.csv (۱۳۹۷–۱۴۰۳).",
+            "بستهٔ فصلی پروژه (S17) — تحویل‌شده ۲۰۲۶-۱۰-۰۸؛ دادهٔ فصلی مسکن و اجاره از همین بسته است.",
         ],
         "caveats": [
+            "**خط تورم سالانه است، نه فصلی.** سری مرکز آمار (S18) فقط نرخ میانگین سالانه دارد، پس روی نمودار فصلی یک نقطه در مرکز هر سال گذاشته شده و نقطه‌ها با پاره‌خط به هم وصل شده‌اند. بین دو سال هیچ مقداری ساخته نشده، ولی خط صاف بین دو نقطه هم به این معنا نیست که تورم در آن بازه خطی بوده — فقط دو میانگین سالانه به هم وصل شده‌اند.",
+            "**پایهٔ تورم با پایهٔ سه سری دیگر یکی نیست.** سه سری فصلی با پایهٔ بهار ۱۳۹۷ = ۱۰۰ شاخص شده‌اند و تورم با پایهٔ سال ۱۳۹۷ = ۱۰۰ (چون فقط مقدار سالانه دارد). اختلاف در حد همان یک فصل است ولی صفر نیست.",
+            "**سری تورم از ۱۳۹۷ آغاز می‌شود** و روی نمودار از همان‌جا دیده می‌شود، در حالی که سه خط دیگر از بهار ۱۳۹۶ شروع می‌کنند. برای ۱۳۹۶ مقدار تورم وجود ندارد و هیچ‌چیز جای آن گذاشته نشده است.",
+            "تورم مرکز آمار با سری بانک جهانی/صندوق بین‌المللی پول (WDI، منبعش IFS) یکی نیست و این دو سیستماتیک تفاوت دارند: مثلاً ۱۳۹۷ مرکز آمار ۲۶٫۹ و بانک جهانی ۳۱٫۲، و ۱۴۰۳ مرکز آمار ۳۲٫۵ و بانک جهانی ۴۴٫۶. مرکز آمار انتخاب شده چون پرسش دربارهٔ سطح قیمت داخلی ایران است. **این دو را نباید به هم چسباند.**",
             "**نرخ ارز ۱۴۰۱ و ۱۴۰۲ تصحیح شده است.** یک نمونهٔ ۲۱‌روزهٔ بیرونی (S19) نشان می‌دهد مسیر فصلی S17 در ۱۴۰۱ حدود ۱۴٪ بالاتر از واقع بوده: پائیز ۱۴۰۱ از ۴۲٬۰۰۰ به ۳۵٬۰۹۷ و زمستان از ۵۵٬۰۰۰ به ۴۴٬۸۹۴ آمد. ۱۴۰۲ اختلاف کمتری داشت (−۳٪). رشد سالانهٔ ارز با این تصحیح عوض می‌شود: ۱۴۰۱ از +۵۰٪ به +۳۱٪ و ۱۴۰۲ از +۳۲٪ به +۴۷٪. مقادیر اصلی در ستون `fx_original_toman` فایل panel_quarterly.csv مانده‌اند. **۱۴۰۰ و ۱۴۰۳ بررسی نشده‌اند** چون نمونه‌ای برایشان داده نشد.",
             "منبع نمونهٔ ارز (S19) نام‌دار نیست: تاریخ‌ها و نرخ‌ها از یک سایت تبدیل ارز آمده‌اند ولی نام و نشانی سایت داده نشده، پس اعتبارش از S17 کمتر است. فقط ستون تومان به کار رفته؛ ستون دلاری همان صفحه مقادیر متغیر (۱٫۰۵، ۰٫۹۵۱۳۹۵، …) نشان می‌داد که کنار گذاشته شد.",
             "بازهٔ ۱۳۹۶ فقط یک فصل دارد (بهار ۱۳۹۶) و بعد از آن سه فصل خالی است. آن نقطه روی نمودار به‌صورت تک‌نقطهٔ جدا و با نشانهٔ شکاف دیده می‌شود و خط از روی فصل‌های غایب کشیده نشده — هیچ درون‌یابی‌ای انجام نشده است.",
@@ -575,8 +641,8 @@ def write_readme(path: Path, payload: Dict[str, Any], annual: List[Dict[str, Any
         "",
         "| نمودار | نوع | سری |",
         "| --- | --- | --- |",
-        "| ۱ | خط زمانی فصلی، پایهٔ ۱۳۹۷ ف۱ = ۱۰۰، مقیاس لگاریتمی | دلار، مسکن، اجاره |",
-        "| ۳ | ستون‌های رشد سالانهٔ گروه‌بندی‌شده | دلار، مسکن، اجاره |",
+        "| ۱ | خط زمانی فصلی، پایهٔ ۱۳۹۷ ف۱ = ۱۰۰، مقیاس لگاریتمی | دلار، مسکن، اجاره (فصلی) + شاخص تورم (سالانه، یک نقطه در هر سال) |",
+        "| ۳ | ستون‌های رشد سالانهٔ گروه‌بندی‌شده | دلار، مسکن، اجاره، شاخص تورم |",
         "",
         f"داده: `data/rent_drivers/fx_house_rent_quarterly.csv` — {fa(payload['meta']['quarters_count'])} فصل، "
         f"{stats['window']['first_label_fa']} تا {stats['window']['last_label_fa']} (منبع S17).",
@@ -597,6 +663,24 @@ def write_readme(path: Path, payload: Dict[str, Any], annual: List[Dict[str, Any
         "R² روی سطح در همهٔ تأخیرها تقریباً یکسان است — از جمله تأخیر صفر — یعنی هم‌روندی دو سری صعودی را "
         "اندازه می‌گیرد، نه انتقال را. روی تغییرات فرو می‌ریزد و در فرکانس سالانه علامتش منفی می‌شود. پس نمودار حذف "
         "شد و ادعای «تأخیر یک تا دو فصل» از متن‌ها هم برداشته شد.",
+        "",
+        "## شاخص تورم (S18) — چرا سالانه است و چطور رسم شده",
+        "",
+        "مرکز آمار نرخ تورم را فقط به‌صورت **میانگین سالانه** منتشر می‌کند، پس سری تورم فصلی نیست:",
+        "",
+        "| سال | تورم سالانه | شاخص (۱۳۹۷ = ۱۰۰) |",
+        "| ---: | ---: | ---: |",
+        *[
+            f"| {a['label_fa']} | {a['yoy_pct']:,.1f}٪ | {a['idx']:,.1f} |"
+            for a in payload["annual_cpi"]
+        ],
+        "",
+        "روی نمودار فصلی، برای هر سال **یک نقطه در مرکز همان سال** گذاشته شده و نقطه‌ها با پاره‌خط به هم",
+        "وصل شده‌اند. یعنی هیچ مقداری بین دو سال ساخته نشده است — ولی پاره‌خط صاف هم به این معنا نیست که",
+        "تورم در آن بازه خطی بوده؛ فقط دو میانگین سالانه به هم وصل شده‌اند. خط تورم خاکستری است.",
+        "",
+        "دو نکتهٔ ریز: پایهٔ تورم سال ۱۳۹۷ = ۱۰۰ است و پایهٔ سه سری دیگر بهار ۱۳۹۷ = ۱۰۰ (اختلاف در حد یک فصل)،",
+        "و سری تورم از ۱۳۹۷ آغاز می‌شود در حالی که سه خط دیگر از بهار ۱۳۹۶ — برای ۱۳۹۶ تورم موجود نیست.",
         "",
         "## نرخ ارز ۱۴۰۱ و ۱۴۰۲ تصحیح شده است",
         "",
@@ -654,6 +738,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", default=str(DEFAULT_INPUT))
     parser.add_argument("--fx-samples", default=str(DEFAULT_FX_SAMPLES))
+    parser.add_argument("--cpi", default=str(DEFAULT_SCI_CPI))
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     parser.add_argument("--page", default=str(DEFAULT_PAGE))
     args = parser.parse_args(argv)
@@ -669,9 +754,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     corrections = apply_fx_correction(quarters, load_fx_samples(samples_path))
     if corrections:
         apply_indices(quarters, verify=False)     # re-derive against the corrected levels
-    annual = build_annual(quarters)
+    cpi_path = Path(args.cpi)
+    cpi = load_sci_cpi(cpi_path)
+    annual = build_annual(quarters, cpi)
     stats = build_stats(quarters, annual)
-    payload = build_payload(quarters, annual, stats, input_path, source_id, gaps, corrections, samples_path)
+    payload = build_payload(quarters, annual, stats, input_path, source_id, gaps, corrections, samples_path,
+                            cpi, cpi_path)
     narrative = build_narrative(stats)
 
     write_panel_csv(out_dir / "panel_quarterly.csv", quarters, source_id)
